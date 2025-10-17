@@ -1,10 +1,5 @@
-// Chuyển đổi từ: AuthController.Logout action (GET)
-// File gốc: Controllers/AuthController.cs
-// Mô tả: Xử lý đăng xuất người dùng và xóa cookie/session
-
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ASM1.WebMVC.Pages.Auth
 {

@@ -1,4 +1,3 @@
-// Chuyển đổi từ: DealerController.Dashboard (placeholder)
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASM1.WebMVC.Pages.Dealer

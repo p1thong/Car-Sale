@@ -1,4 +1,3 @@
-// Chuyển đổi từ: ProductController.EditVehicleVariant (GET + POST)
 using System.ComponentModel.DataAnnotations;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;

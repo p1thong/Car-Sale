@@ -1,4 +1,3 @@
-// Chuyển đổi từ: ProductController.VehicleModelDetail
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

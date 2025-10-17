@@ -1,4 +1,3 @@
-// Chuyển đổi từ: CustomerServiceController.ScheduleTestDrive (GET + POST) - Simplified
 using System.ComponentModel.DataAnnotations;
 using ASM1.Service.Services.Interfaces;
 using ASM1.WebMVC.Hubs;

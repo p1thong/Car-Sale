@@ -1,4 +1,3 @@
-// Chuyển đổi từ: ProductController.VehicleModels
 using ASM1.Service.Services.Interfaces;
 
 namespace ASM1.WebMVC.Pages.Product

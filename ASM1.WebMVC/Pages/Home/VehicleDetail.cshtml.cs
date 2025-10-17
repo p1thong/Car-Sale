@@ -1,11 +1,5 @@
-// Chuyển đổi từ: HomeController.VehicleDetail action
-// File gốc: Controllers/HomeController.cs
-// Mô tả: Hiển thị chi tiết thông tin của một xe cụ thể
-
-using ASM1.Repository.Models;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ASM1.WebMVC.Pages.Home
 {

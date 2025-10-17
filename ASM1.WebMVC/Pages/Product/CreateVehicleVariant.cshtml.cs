@@ -1,4 +1,3 @@
-// Chuyển đổi từ: ProductController.CreateVehicleVariant (GET + POST)
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;

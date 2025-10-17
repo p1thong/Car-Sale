@@ -1,6 +1,3 @@
-// Chuyển đổi từ: HomeController.Index action
-// File gốc: Controllers/HomeController.cs
-// Mô tả: Hiển thị danh sách tất cả xe có sẵn trên trang chủ
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,6 +1,4 @@
-// Chuyển đổi từ: AdminController.Settings
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ASM1.WebMVC.Pages.Admin
 {

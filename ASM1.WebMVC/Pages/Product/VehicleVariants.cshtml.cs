@@ -1,4 +1,3 @@
-// Chuyển đổi từ: ProductController.VehicleVariants
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;

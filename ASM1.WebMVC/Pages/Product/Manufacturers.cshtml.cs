@@ -1,4 +1,3 @@
-// Chuyển đổi từ: ProductController.Manufacturers
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

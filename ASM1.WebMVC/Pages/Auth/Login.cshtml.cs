@@ -1,12 +1,7 @@
-// Chuyển đổi từ: AuthController.Login action (GET + POST)
-// File gốc: Controllers/AuthController.cs
-// Mô tả: Xử lý đăng nhập người dùng với cookie authentication và session
-
 using System.Security.Claims;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ASM1.WebMVC.Pages.Auth
 {

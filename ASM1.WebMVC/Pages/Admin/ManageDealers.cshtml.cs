@@ -1,8 +1,5 @@
-// Chuyển đổi từ: AdminController.ManageDealers
-using ASM1.Repository.Models;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ASM1.WebMVC.Pages.Admin
 {

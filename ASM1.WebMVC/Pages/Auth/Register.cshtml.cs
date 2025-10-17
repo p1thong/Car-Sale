@@ -1,10 +1,5 @@
-// Chuyển đổi từ: AuthController.Register action (GET + POST)
-// File gốc: Controllers/AuthController.cs
-// Mô tả: Xử lý đăng ký tài khoản người dùng mới
-
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
 namespace ASM1.WebMVC.Pages.Auth

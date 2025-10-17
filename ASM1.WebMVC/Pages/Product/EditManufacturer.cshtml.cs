@@ -1,8 +1,5 @@
-// Chuyển đổi từ: ProductController.EditManufacturer (GET + POST)
-using ASM1.Repository.Models;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
 namespace ASM1.WebMVC.Pages.Product

@@ -1,13 +1,7 @@
-// Chuyển đổi từ: CustomerController.PaymentOptions (GET) và ProcessPayment (POST)
-// File gốc: Controllers/CustomerController.cs
-// Mô tả: Xử lý thanh toán đơn hàng với multiple handlers
-
 using System.ComponentModel.DataAnnotations;
-using ASM1.Repository.Models;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace ASM1.WebMVC.Pages.Customer
 {

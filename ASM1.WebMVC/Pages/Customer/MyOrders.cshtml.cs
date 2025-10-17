@@ -1,8 +1,3 @@
-// Chuyển đổi từ: CustomerController.MyOrders action
-// File gốc: Controllers/CustomerController.cs
-// Mô tả: Hiển thị danh sách đơn hàng của khách hàng hiện tại
-
-using ASM1.Repository.Models;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
