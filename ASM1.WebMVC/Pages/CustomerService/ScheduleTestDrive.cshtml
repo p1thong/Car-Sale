@@ -1,0 +1,266 @@
+@page
+@model ASM1.WebMVC.Pages.CustomerService.ScheduleTestDriveModel
+@{
+    ViewData["Title"] = "Schedule Test Drive";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-car"></i> Schedule Test Drive
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Test Drive Information:</strong>
+                        Schedule your test drive experience with us. Choose your preferred vehicle and date.
+                    </div>
+
+                    <form method="post" id="testDriveForm">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5><i class="fas fa-calendar-alt"></i> Schedule Details</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label asp-for="VariantId" class="form-label">
+                                                        <i class="fas fa-car"></i> Select Vehicle *
+                                                    </label>
+                                                    <select asp-for="VariantId" asp-items="Model.VehicleVariants" class="form-select" required>
+                                                        <option value="">-- Choose a vehicle --</option>
+                                                    </select>
+                                                    <span asp-validation-for="VariantId" class="text-danger"></span>
+                                                    <div class="form-text">Select the vehicle model you want to test drive</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label asp-for="ScheduledDate" class="form-label">
+                                                        <i class="fas fa-calendar"></i> Preferred Date *
+                                                    </label>
+                                                    <input asp-for="ScheduledDate" type="date" class="form-control" required />
+                                                    <span asp-validation-for="ScheduledDate" class="text-danger"></span>
+                                                    <div class="form-text">Choose your preferred test drive date</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label asp-for="ScheduledTimeString" class="form-label">
+                                                        <i class="fas fa-clock"></i> Preferred Time *
+                                                    </label>
+                                                    <select asp-for="ScheduledTimeString" class="form-select" required>
+                                                        <option value="">-- Select time --</option>
+                                                        <option value="08:00">08:00 AM</option>
+                                                        <option value="09:00">09:00 AM</option>
+                                                        <option value="10:00">10:00 AM</option>
+                                                        <option value="11:00">11:00 AM</option>
+                                                        <option value="12:00">12:00 PM</option>
+                                                        <option value="13:00">01:00 PM</option>
+                                                        <option value="14:00">02:00 PM</option>
+                                                        <option value="15:00">03:00 PM</option>
+                                                        <option value="16:00">04:00 PM</option>
+                                                        <option value="17:00">05:00 PM</option>
+                                                    </select>
+                                                    <span asp-validation-for="ScheduledTimeString" class="text-danger"></span>
+                                                    <div class="form-text">Available time slots</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="duration" class="form-label">
+                                                        <i class="fas fa-hourglass-half"></i> Duration
+                                                    </label>
+                                                    <select id="duration" class="form-select">
+                                                        <option value="45" selected>45 minutes</option>
+                                                    </select>
+                                                    <div class="form-text">Expected test drive duration (default: 45 minutes)</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="notes" class="form-label">
+                                                <i class="fas fa-comment"></i> Special Requests / Notes
+                                            </label>
+                                            <textarea id="notes" class="form-control" rows="3" placeholder="Any special requests or additional information..."></textarea>
+                                            <div class="form-text">Optional: Let us know if you have any specific requirements</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5><i class="fas fa-car-side"></i> Vehicle Preview</h5>
+                                    </div>
+                                    <div class="card-body" id="vehiclePreview">
+                                        <div class="text-center text-muted">
+                                            <i class="fas fa-car fa-3x mb-3"></i>
+                                            <p>Select a vehicle to see details</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card mt-3">
+                                    <div class="card-header">
+                                        <h5><i class="fas fa-info-circle"></i> Important Notes</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-unstyled">
+                                            <li><i class="fas fa-check text-success"></i> Valid driver's license required</li>
+                                            <li><i class="fas fa-check text-success"></i> Must be 21+ years old</li>
+                                            <li><i class="fas fa-check text-success"></i> Insurance coverage provided</li>
+                                            <li><i class="fas fa-check text-success"></i> Professional guidance included</li>
+                                            <li><i class="fas fa-clock text-info"></i> Default duration: 45 minutes</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <h6><i class="fas fa-shield-alt"></i> Safety & Terms</h6>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                            <label class="form-check-label" for="agreeTerms">
+                                                I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms and Conditions</a> and acknowledge that I have a valid driver's license
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-end">
+                                        <a asp-page="/CustomerService/MyTestDrives" class="btn btn-secondary me-2">
+                                            <i class="fas fa-times"></i> Cancel
+                                        </a>
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-calendar-check"></i> Schedule Test Drive
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terms Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Test Drive Terms and Conditions</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6>1. Driver Requirements</h6>
+                <ul>
+                    <li>Must be at least 21 years of age</li>
+                    <li>Must possess a valid driver's license</li>
+                    <li>Must provide identification</li>
+                </ul>
+
+                <h6>2. Vehicle Usage</h6>
+                <ul>
+                    <li>Vehicle must be returned in the same condition</li>
+                    <li>No smoking or eating in the vehicle</li>
+                    <li>Maximum speed limits must be observed</li>
+                </ul>
+
+                <h6>3. Insurance & Liability</h6>
+                <ul>
+                    <li>Insurance coverage is provided during test drive</li>
+                    <li>Driver is responsible for any traffic violations</li>
+                    <li>Any damages may result in charges</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I Understand</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function() {
+            // Set minimum date to tomorrow
+            let tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            let minDate = tomorrow.toISOString().split('T')[0];
+            $('input[type="date"]').attr('min', minDate);
+
+            // Vehicle selection change handler
+            $('#VariantId').on('change', function() {
+                var selectedOption = $(this).find('option:selected');
+                var variantText = selectedOption.text();
+                
+                if (variantText && variantText !== '-- Choose a vehicle --') {
+                    // Parse vehicle info from select text
+                    var parts = variantText.split(' - ');
+                    var name = parts[0] || 'Vehicle';
+                    var priceStr = parts[1] || '';
+                    
+                    var preview = `
+                        <div class="text-center">
+                            <i class="fas fa-car fa-3x text-primary mb-3"></i>
+                            <h6>${name}</h6>
+                            <p class="h5 text-success">${priceStr}</p>
+                            <small class="text-muted">Starting price</small>
+                        </div>
+                    `;
+                    $('#vehiclePreview').html(preview);
+                } else {
+                    resetVehiclePreview();
+                }
+            });
+
+            // Form validation
+            $('#testDriveForm').on('submit', function(e) {
+                if (!$('#agreeTerms').is(':checked')) {
+                    e.preventDefault();
+                    alert('Please agree to the terms and conditions');
+                    return false;
+                }
+
+                var selectedDate = new Date($('input[type="date"]').val());
+                var today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (selectedDate <= today) {
+                    e.preventDefault();
+                    alert('Please select a future date for your test drive');
+                    return false;
+                }
+            });
+        });
+
+        function resetVehiclePreview() {
+            $('#vehiclePreview').html(`
+                <div class="text-center text-muted">
+                    <i class="fas fa-car fa-3x mb-3"></i>
+                    <p>Select a vehicle to see details</p>
+                </div>
+            `);
+        }
+    </script>
+}

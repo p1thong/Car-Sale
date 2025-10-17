@@ -1,0 +1,240 @@
+@* 
+    Chuyển đổi từ: Views/Home/VehicleDetail.cshtml
+    Thay đổi: @model VehicleVariant -> @model VehicleDetailModel
+              Sử dụng Model.Vehicle thay vì @Model
+              Routing: asp-page thay vì asp-controller/asp-action
+*@
+@page "{id:int}"
+@model ASM1.WebMVC.Pages.Home.VehicleDetailModel
+@{
+    ViewData["Title"] = "Chi tiết xe - " + Model.Vehicle?.VehicleModel?.Name;
+}
+
+<div class="container-fluid py-5">
+    <div class="row align-items-start g-5">
+        <!-- Vehicle Image -->
+        <div class="col-lg-6 text-center">
+            <div class="vehicle-photo-box mb-4">
+                @if (!string.IsNullOrEmpty(Model.Vehicle?.VehicleModel?.ImageUrl))
+                {
+                    <img src="@Model.Vehicle.VehicleModel.ImageUrl"
+                         alt="@Model.Vehicle.VehicleModel?.Name"
+                         class="img-fluid vehicle-photo" />
+                }
+                else
+                {
+                    <div class="d-flex align-items-center justify-content-center h-100">
+                        <i class="fas fa-car fa-8x text-muted"></i>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Vehicle Info -->
+        <div class="col-lg-6">
+            <h1 class="fw-bold mb-3">@Model.Vehicle?.VehicleModel?.Name <small class="text-muted">@Model.Vehicle?.Version</small></h1>
+
+            <!-- Price -->
+            <div class="price-box mb-4">
+                <span class="price"><i class="fas fa-tag"></i> $@string.Format("{0:N0}", Model.Vehicle?.Price)</span>
+            </div>
+
+            <!-- Vehicle Specs -->
+            <div class="row g-3 specs-box">
+                <div class="col-sm-6">
+                    <div class="spec-item">
+                        <i class="fas fa-industry spec-icon"></i>
+                        <div>
+                            <strong>Hãng</strong>
+                            <p class="mb-0">@Model.Vehicle?.VehicleModel?.Manufacturer?.Name</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="spec-item">
+                        <i class="fas fa-flag spec-icon"></i>
+                        <div>
+                            <strong>Quốc gia</strong>
+                            <p class="mb-0">@Model.Vehicle?.VehicleModel?.Manufacturer?.Country</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="spec-item">
+                        <i class="fas fa-car-side spec-icon"></i>
+                        <div>
+                            <strong>Loại xe</strong>
+                            <p class="mb-0">@Model.Vehicle?.VehicleModel?.Category</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="spec-item">
+                        <i class="fas fa-palette spec-icon"></i>
+                        <div>
+                            <strong>Màu</strong>
+                            <p class="mb-0">@Model.Vehicle?.Color</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="spec-item">
+                        <i class="fas fa-calendar spec-icon"></i>
+                        <div>
+                            <strong>Năm SX</strong>
+                            <p class="mb-0">@Model.Vehicle?.ProductYear</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    @if (ViewBag.IsLoggedIn == true)
+                    {
+                        <div class="row g-2">
+                            <div class="col-md-4">
+                                @* Chuyển đổi routing sang Razor Pages *@
+                                <a asp-page="/CustomerOrder/CreateOrder" asp-route-variantId="@Model.Vehicle?.VariantId" 
+                                   class="btn btn-success btn-lg w-100">
+                                    <i class="fas fa-shopping-cart"></i> Đặt hàng
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <a asp-page="/CustomerService/ScheduleTestDrive" asp-route-variantId="@Model.Vehicle?.VariantId" 
+                                   class="btn btn-info btn-lg w-100">
+                                    <i class="fas fa-calendar"></i> Đăng ký lái thử
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <a asp-page="/Auth/Login" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-sign-in-alt"></i> Đăng nhập để mua hàng
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manufacturer Info -->
+    @if (Model.Vehicle?.VehicleModel?.Manufacturer != null)
+    {
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="manufacturer-card p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="brand-icon me-4">
+                            <i class="fas fa-industry fa-2x"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-2">@Model.Vehicle.VehicleModel.Manufacturer.Name</h4>
+                            <p class="mb-1"><i class="fas fa-flag"></i> @Model.Vehicle.VehicleModel.Manufacturer.Country</p>
+                            <p class="mb-0"><i class="fas fa-map-marker-alt"></i> @Model.Vehicle.VehicleModel.Manufacturer.Address</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Back -->
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <a asp-page="/Home/Index" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-arrow-left"></i> Quay lại danh sách xe
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: #fff;
+        position: relative;
+    }
+        /* Spotlight */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 20% 40%, rgba(0,0,0,0.06), transparent 70%), radial-gradient(circle at 80% 40%, rgba(0,0,0,0.06), transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+    .vehicle-photo-box {
+        background: #f9f9f9;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    }
+
+    .vehicle-photo {
+        max-height: 400px;
+        object-fit: contain;
+        transition: transform .5s ease;
+    }
+
+        .vehicle-photo:hover {
+            transform: scale(1.05);
+        }
+
+    .price-box {
+        background: #eaf7ef;
+        border: 1px solid #cce8d6;
+        border-radius: 12px;
+        padding: .6rem 1.2rem;
+        display: inline-block;
+    }
+
+    .price {
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: #15803d;
+    }
+
+    .specs-box {
+        margin-top: 1rem;
+    }
+
+    .spec-item {
+        display: flex;
+        align-items: center;
+        gap: .8rem;
+        background: #f8f9fa;
+        padding: .8rem 1rem;
+        border-radius: 10px;
+        transition: all .3s ease;
+    }
+
+        .spec-item:hover {
+            background: #eef5ff;
+            transform: translateY(-3px);
+        }
+
+    .spec-icon {
+        font-size: 1.4rem;
+        color: #0d6efd;
+    }
+
+    .manufacturer-card {
+        border: 1px solid rgba(0,0,0,0.08);
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+    }
+
+    .brand-icon {
+        width: 60px;
+        height: 60px;
+        background: #f1f1f1;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #555;
+    }
+</style>

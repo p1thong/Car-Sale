@@ -1,0 +1,131 @@
+@page "{testDriveId:int}"
+@model ASM1.WebMVC.Pages.CustomerService.SubmitFeedbackModel
+@{
+    ViewData["Title"] = "Gửi Đánh Giá";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-star text-warning"></i> Gửi Đánh Giá Lịch Lái Thử</h2>
+        <a asp-page="/CustomerService/MyTestDrives" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Quay Lại
+        </a>
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model.TestDrive == null)
+    {
+        <div class="alert alert-danger">Không tìm thấy thông tin lịch lái thử.</div>
+    }
+    else if (Model.TestDrive.Status != "Completed")
+    {
+        <div class="alert alert-warning">Chỉ có thể gửi phản hồi cho lịch lái thử đã hoàn thành.</div>
+    }
+    else
+    {
+        <div class="row">
+            <!-- Test Drive Info -->
+            <div class="col-md-12 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-car"></i> Thông Tin Lịch Lái Thử</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                @if (!string.IsNullOrEmpty(Model.TestDrive.Variant?.VehicleModel?.ImageUrl))
+                                {
+                                    <img src="@Model.TestDrive.Variant.VehicleModel.ImageUrl" 
+                                         alt="@Model.TestDrive.Variant.VehicleModel.Name" 
+                                         class="img-fluid rounded" />
+                                }
+                            </div>
+                            <div class="col-md-9">
+                                <h5>@Model.TestDrive.Variant?.VehicleModel?.Name</h5>
+                                <p><strong>Phiên Bản:</strong> @Model.TestDrive.Variant?.Version</p>
+                                <p><strong>Ngày Lái Thử:</strong> @Model.TestDrive.ScheduledDate?.ToString("dd/MM/yyyy") - @Model.TestDrive.ScheduledTime?.ToString("HH:mm")</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feedback Form -->
+            <div class="col-md-8 offset-md-2">
+                <div class="card shadow">
+                    <div class="card-header bg-warning text-white">
+                        <h5 class="mb-0"><i class="fas fa-comment-dots"></i> Đánh Giá Của Bạn</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            <div class="mb-4">
+                                <label class="form-label">Đánh Giá Sao <span class="text-danger">*</span></label>
+                                <div class="star-rating-input text-center py-3">
+                                    @for (int i = 5; i >= 1; i--)
+                                    {
+                                        var starId = $"star{i}";
+                                        <input type="radio" id="@starId" name="Rating" value="@i" required />
+                                        <label for="@starId" class="star">
+                                            <i class="fas fa-star"></i>
+                                        </label>
+                                    }
+                                </div>
+                                <span asp-validation-for="Rating" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Content" class="form-label">Nội Dung Đánh Giá <span class="text-danger">*</span></label>
+                                <textarea asp-for="Content" class="form-control" rows="6" 
+                                          placeholder="Chia sẻ trải nghiệm của bạn về lịch lái thử này..." required></textarea>
+                                <span asp-validation-for="Content" class="text-danger"></span>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-warning btn-lg text-white">
+                                    <i class="fas fa-paper-plane"></i> Gửi Đánh Giá
+                                </button>
+                                <a href="/CustomerService/MyTestDrives" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times"></i> Hủy
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <style>
+        .star-rating-input {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+            gap: 10px;
+        }
+        .star-rating-input input[type="radio"] {
+            display: none;
+        }
+        .star-rating-input label {
+            cursor: pointer;
+            font-size: 3rem;
+            color: #ddd;
+            transition: color 0.2s;
+        }
+        .star-rating-input input[type="radio"]:checked ~ label,
+        .star-rating-input label:hover,
+        .star-rating-input label:hover ~ label {
+            color: #ffc107;
+        }
+    </style>
+    
+    <partial name="_ValidationScriptsPartial" />
+}

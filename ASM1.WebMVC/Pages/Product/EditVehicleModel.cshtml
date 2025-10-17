@@ -1,0 +1,71 @@
+@page "{id:int}"
+@model ASM1.WebMVC.Pages.Product.EditVehicleModelModel
+@{
+    ViewData["Title"] = "Edit Vehicle Model";
+}
+
+<div class="container py-4">
+    <h1><i class="fas fa-edit"></i> Edit Vehicle Model</h1>
+    <hr />
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form method="post">
+                        <input type="hidden" asp-for="VehicleModelId" />
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Model Name</label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ManufacturerId" class="form-label">Manufacturer</label>
+                            <select asp-for="ManufacturerId" asp-items="Model.Manufacturers" class="form-select">
+                                <option value="">-- Select Manufacturer --</option>
+                            </select>
+                            <span asp-validation-for="ManufacturerId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Category" class="form-label">Category</label>
+                            <select asp-for="Category" class="form-select">
+                                <option value="">-- Select Category --</option>
+                                <option value="Sedan">Sedan</option>
+                                <option value="SUV">SUV</option>
+                                <option value="Coupe">Coupe</option>
+                                <option value="Truck">Truck</option>
+                                <option value="Hatchback">Hatchback</option>
+                                <option value="Convertible">Convertible</option>
+                                <option value="Minivan">Minivan</option>
+                            </select>
+                            <span asp-validation-for="Category" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl" class="form-label">Image URL (Optional)</label>
+                            <input asp-for="ImageUrl" class="form-control" type="url" />
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update Model
+                            </button>
+                            <a asp-page="/Product/VehicleModelDetail" asp-route-id="@Model.VehicleModelId" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

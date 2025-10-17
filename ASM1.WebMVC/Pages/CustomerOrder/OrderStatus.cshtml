@@ -1,0 +1,64 @@
+@page
+@model ASM1.WebMVC.Pages.CustomerOrder.OrderStatusModel
+@{
+    ViewData["Title"] = "Order Status";
+}
+
+<div class="container py-4">
+    <h1><i class="fas fa-clipboard-list"></i> Trạng Thái Đơn Hàng</h1>
+    <hr />
+
+    @if (Model.OrderData != null)
+    {
+        <div class="card shadow">
+            <div class="card-header @(Model.OrderData.Status == "Completed" ? "bg-success" : Model.OrderData.Status == "Confirmed" ? "bg-info" : "bg-warning") text-white">
+                <h4 class="mb-0">Đơn Hàng #@Model.OrderData.OrderId</h4>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong>Ngày Đặt:</strong> @(Model.OrderData.OrderDate.HasValue ? Model.OrderData.OrderDate.Value.ToString("dd'/'MM'/'yyyy") : "N/A")</p>
+                        <p><strong>Trạng Thái:</strong> 
+                            <span class="badge @(Model.OrderData.Status == "Completed" ? "bg-success" : Model.OrderData.Status == "Confirmed" ? "bg-info" : "bg-warning")">
+                                @Model.OrderData.Status
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Dealer:</strong> @Model.OrderData.Dealer?.FullName</p>
+                        <p><strong>Phone:</strong> @Model.OrderData.Dealer?.Phone</p>
+                    </div>
+                </div>
+
+                @if (Model.OrderData.Variant != null)
+                {
+                    <hr />
+                    <h5>Thông Tin Xe</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Model:</strong> @Model.OrderData.Variant.VehicleModel?.Manufacturer?.Name @Model.OrderData.Variant.VehicleModel?.Name</p>
+                            <p><strong>Version:</strong> @Model.OrderData.Variant.Version</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Color:</strong> <span class="badge bg-secondary">@Model.OrderData.Variant.Color</span></p>
+                            <p><strong>Price:</strong> <span class="text-success h5">$@Model.OrderData.Variant.Price?.ToString("N2")</span></p>
+                        </div>
+                    </div>
+                }
+
+                <div class="mt-4">
+                    @if (Model.OrderData.Status == "Confirmed")
+                    {
+                        <a asp-page="/CustomerOrder/Payment" asp-route-orderId="@Model.OrderData.OrderId" 
+                           class="btn btn-success">
+                            <i class="fas fa-credit-card"></i> Thanh Toán
+                        </a>
+                    }
+                    <a asp-page="/Customer/MyOrders" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Quay Lại
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

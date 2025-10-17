@@ -1,0 +1,17 @@
+@* 
+    Chuyển đổi từ: AuthController.Logout action
+    Lưu ý: Logout thường chỉ cần code-behind, không cần view phức tạp
+    Page này tự động redirect sau khi xóa session
+*@
+@page
+@model ASM1.WebMVC.Pages.Auth.LogoutModel
+@{
+    ViewData["Title"] = "Đăng xuất";
+}
+
+<div class="container">
+    <div class="text-center mt-5">
+        <h2>Đang đăng xuất...</h2>
+        <p>Vui lòng đợi trong giây lát.</p>
+    </div>
+</div>

@@ -1,0 +1,128 @@
+@page
+@model ASM1.WebMVC.Pages.CustomerService.CreateFeedbackModel
+@{
+    ViewData["Title"] = "Tạo Phản Hồi";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-comment-medical text-success"></i> Tạo Phản Hồi Mới</h2>
+        <a href="/CustomerService/Feedbacks" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Quay Lại
+        </a>
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-comment"></i> Nội Dung Phản Hồi</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        @if (Model.CustomerId > 0)
+                        {
+                            <input type="hidden" asp-for="CustomerId" />
+                            <div class="alert alert-info mb-3">
+                                <i class="fas fa-user"></i> Khách hàng: <strong>@Model.CustomerName</strong>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="mb-3">
+                                <label for="customerId" class="form-label">Chọn Khách Hàng <span class="text-danger">*</span></label>
+                                <select asp-for="CustomerId" class="form-select" required>
+                                    <option value="">-- Chọn khách hàng --</option>
+                                    @if (Model.Customers != null)
+                                    {
+                                        @foreach (var customer in Model.Customers)
+                                        {
+                                            <option value="@customer.CustomerId">@customer.FullName - @customer.Email</option>
+                                        }
+                                    }
+                                </select>
+                                <span asp-validation-for="CustomerId" class="text-danger"></span>
+                            </div>
+                        }
+
+                        @if (Model.TestDriveId.HasValue)
+                        {
+                            <input type="hidden" asp-for="TestDriveId" />
+                            <div class="alert alert-info mb-3">
+                                <i class="fas fa-car"></i> @Model.TestDriveInfo
+                            </div>
+                        }
+
+                        <div class="mb-3">
+                            <label asp-for="Content" class="form-label">Nội Dung <span class="text-danger">*</span></label>
+                            <textarea asp-for="Content" class="form-control" rows="5" 
+                                      placeholder="Nhập nội dung phản hồi..." required></textarea>
+                            <span asp-validation-for="Content" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Rating" class="form-label">Đánh Giá <span class="text-danger">*</span></label>
+                            <div class="star-rating">
+                                @for (int i = 5; i >= 1; i--)
+                                {
+                                    var starId = $"star{i}";
+                                    <input type="radio" id="@starId" name="Rating" value="@i" />
+                                    <label for="@starId" class="star">
+                                        <i class="fas fa-star"></i>
+                                    </label>
+                                }
+                            </div>
+                            <span asp-validation-for="Rating" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-paper-plane"></i> Gửi Phản Hồi
+                            </button>
+                            <a href="/CustomerService/Feedbacks" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Hủy
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            gap: 5px;
+        }
+        .star-rating input[type="radio"] {
+            display: none;
+        }
+        .star-rating label {
+            cursor: pointer;
+            font-size: 2rem;
+            color: #ddd;
+            transition: color 0.2s;
+        }
+        .star-rating input[type="radio"]:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #ffc107;
+        }
+    </style>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

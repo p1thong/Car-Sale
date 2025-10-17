@@ -1,0 +1,83 @@
+@page "{id:int}"
+@model ASM1.WebMVC.Pages.Product.VehicleVariantDetailsModel
+@{
+    ViewData["Title"] = "Variant Details";
+}
+
+<div class="container py-4">
+    <h1><i class="fas fa-info-circle"></i> Variant Details</h1>
+    <hr />
+
+    @if (Model.Variant != null)
+    {
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    @Model.Variant.VehicleModel?.Manufacturer?.Name @Model.Variant.VehicleModel?.Name
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <strong>Version/Trim:</strong>
+                        <p class="h5">@Model.Variant.Version</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Color:</strong>
+                        <p class="h5">
+                            <span class="badge bg-secondary">@Model.Variant.Color</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <strong>Production Year:</strong>
+                        <p class="h5">@Model.Variant.ProductYear</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <strong>Price:</strong>
+                        <p class="h5 text-success">$@Model.Variant.Price?.ToString("N2")</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <strong>Stock Quantity:</strong>
+                        <p class="h5">
+                            <span class="badge @(Model.Variant.Quantity > 0 ? "bg-success" : "bg-danger")">
+                                @Model.Variant.Quantity units
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                @if (Model.Variant.VehicleModel != null)
+                {
+                    <hr />
+                    <h5>Model Information</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <strong>Model Name:</strong> @Model.Variant.VehicleModel.Name
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <strong>Category:</strong> @Model.Variant.VehicleModel.Category
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <strong>Manufacturer:</strong> @Model.Variant.VehicleModel.Manufacturer?.Name
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="card-footer bg-white">
+                <div class="d-flex gap-2">
+                    <a asp-page="/Product/EditVehicleVariant" asp-route-id="@Model.Variant.VariantId" 
+                       class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a asp-page="/Product/VehicleVariants" asp-route-modelId="@Model.Variant.VehicleModelId" 
+                       class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,54 @@
+@page
+@model ASM1.WebMVC.Pages.Product.CreateManufacturerModel
+@{
+    ViewData["Title"] = "Create Manufacturer";
+}
+
+<div class="container py-4">
+    <h1><i class="fas fa-plus"></i> Create Manufacturer</h1>
+    <hr />
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Manufacturer Name</label>
+                            <input asp-for="Name" class="form-control" placeholder="e.g., Toyota, Honda" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Country" class="form-label">Country</label>
+                            <input asp-for="Country" class="form-control" placeholder="e.g., Japan, USA" />
+                            <span asp-validation-for="Country" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Address" class="form-label">Address (Optional)</label>
+                            <textarea asp-for="Address" class="form-control" rows="3" 
+                                      placeholder="Enter full address"></textarea>
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save"></i> Create Manufacturer
+                            </button>
+                            <a asp-page="/Product/Manufacturers" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

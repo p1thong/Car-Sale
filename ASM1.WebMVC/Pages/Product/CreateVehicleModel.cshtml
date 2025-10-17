@@ -1,0 +1,64 @@
+@page
+@model ASM1.WebMVC.Pages.Product.CreateVehicleModelModel
+@{
+    ViewData["Title"] = "Create Vehicle Model";
+}
+
+<div class="container py-4">
+    <h1><i class="fas fa-plus"></i> Create Vehicle Model</h1>
+    <hr />
+
+    <form method="post" class="needs-validation">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="Name" class="form-label">Model Name</label>
+                <input asp-for="Name" class="form-control" placeholder="e.g., Model 3, X5" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="ManufacturerId" class="form-label">Manufacturer</label>
+                <select asp-for="ManufacturerId" asp-items="Model.Manufacturers" class="form-select">
+                    <option value="">-- Select Manufacturer --</option>
+                </select>
+                <span asp-validation-for="ManufacturerId" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="Category" class="form-label">Category</label>
+                <select asp-for="Category" class="form-select">
+                    <option value="">-- Select Category --</option>
+                    <option value="Sedan">Sedan</option>
+                    <option value="SUV">SUV</option>
+                    <option value="Coupe">Coupe</option>
+                    <option value="Truck">Truck</option>
+                    <option value="Hatchback">Hatchback</option>
+                </select>
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="ImageUrl" class="form-label">Image URL</label>
+                <input asp-for="ImageUrl" class="form-control" placeholder="https://..." />
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Create Model
+            </button>
+            <a asp-page="/Product/VehicleModels" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,228 @@
+@page "{id:int}"
+@model ASM1.WebMVC.Pages.Sales.OrderDetailModel
+@{
+    ViewData["Title"] = "Chi Tiết Đơn Hàng #" + Model.Order?.OrderId;
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-file-invoice text-info"></i> Chi Tiết Đơn Hàng #@Model.Order?.OrderId</h2>
+        <a href="/Sales/Orders" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Quay Lại
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model.Order == null)
+    {
+        <div class="alert alert-danger">Không tìm thấy đơn hàng.</div>
+    }
+    else
+    {
+        <div class="row">
+            <!-- Order Info Card -->
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-info-circle"></i> Thông Tin Đơn Hàng</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Mã Đơn:</strong> #@Model.Order.OrderId</p>
+                        <p><strong>Ngày Đặt:</strong> @Model.Order.OrderDate?.ToString("dd/MM/yyyy")</p>
+                        <p>
+                            <strong>Trạng Thái:</strong>
+                            @if (Model.Order.Status == "Pending")
+                            {
+                                <span class="badge bg-warning">Chờ Xác Nhận</span>
+                            }
+                            else if (Model.Order.Status == "Confirmed")
+                            {
+                                <span class="badge bg-info">Đã Xác Nhận</span>
+                            }
+                            else if (Model.Order.Status == "Completed")
+                            {
+                                <span class="badge bg-success">Hoàn Thành</span>
+                            }
+                            else if (Model.Order.Status == "Cancelled" || Model.Order.Status == "Rejected")
+                            {
+                                <span class="badge bg-danger">@Model.Order.Status</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">@Model.Order.Status</span>
+                            }
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Info Card -->
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-user"></i> Thông Tin Khách Hàng</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Họ Tên:</strong> @Model.Order.Customer?.FullName</p>
+                        <p><strong>Email:</strong> @Model.Order.Customer?.Email</p>
+                        <p><strong>Số Điện Thoại:</strong> @Model.Order.Customer?.Phone</p>
+                        <p><strong>Dealer:</strong> @Model.Order.Dealer?.FullName</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vehicle Info Card -->
+            <div class="col-md-12 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="fas fa-car"></i> Thông Tin Xe</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                @if (!string.IsNullOrEmpty(Model.Order.Variant?.VehicleModel?.ImageUrl))
+                                {
+                                    <img src="@Model.Order.Variant.VehicleModel.ImageUrl" alt="@Model.Order.Variant.VehicleModel.Name" class="img-fluid rounded" />
+                                }
+                                else
+                                {
+                                    <div class="bg-light text-center py-5 rounded">
+                                        <i class="fas fa-car fa-4x text-muted"></i>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-md-9">
+                                <h5>@Model.Order.Variant?.VehicleModel?.Name</h5>
+                                <p><strong>Phiên Bản:</strong> @Model.Order.Variant?.Version</p>
+                                <p><strong>Màu Sắc:</strong> @Model.Order.Variant?.Color</p>
+                                <p><strong>Hãng:</strong> @Model.Order.Variant?.VehicleModel?.Manufacturer?.Name</p>
+                                <p><strong>Giá:</strong> <span class="text-success fw-bold fs-4">@Model.Order.Variant?.Price?.ToString("N0") VNĐ</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Info Card -->
+            <div class="col-md-12 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="fas fa-money-bill-wave"></i> Thông Tin Thanh Toán</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <p class="mb-1"><strong>Tổng Giá Trị:</strong></p>
+                                <h4 class="text-primary">@((Model.Order.Variant?.Price ?? 0).ToString("N0")) VNĐ</h4>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="mb-1"><strong>Đã Thanh Toán:</strong></p>
+                                <h4 class="text-success">@Model.TotalPaid.ToString("N0") VNĐ</h4>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="mb-1"><strong>Còn Lại:</strong></p>
+                                <h4 class="text-danger">@Model.RemainingBalance.ToString("N0") VNĐ</h4>
+                            </div>
+                        </div>
+
+                        @if (Model.Payments != null && Model.Payments.Any())
+                        {
+                            <hr />
+                            <h6 class="mb-3"><i class="fas fa-history"></i> Lịch Sử Thanh Toán</h6>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-striped">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Mã GD</th>
+                                            <th>Ngày</th>
+                                            <th>Số Tiền</th>
+                                            <th>Phương Thức</th>
+                                            <th>Trạng Thái</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var payment in Model.Payments)
+                                        {
+                                            <tr>
+                                                <td>#@payment.PaymentId</td>
+                                                <td>@payment.PaymentDate?.ToString("dd/MM/yyyy")</td>
+                                                <td><strong>@payment.Amount?.ToString("N0") VNĐ</strong></td>
+                                                <td>@payment.PaymentMethod</td>
+                                                <td>
+                                                    @if (payment.Status == "Completed")
+                                                    {
+                                                        <span class="badge bg-success">Hoàn Thành</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-secondary">@payment.Status</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info mb-0">
+                                <i class="fas fa-info-circle"></i> Chưa có giao dịch thanh toán nào.
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sales Contract Card -->
+            @if (Model.SalesContract != null)
+            {
+                <div class="col-md-12 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0"><i class="fas fa-file-contract"></i> Hợp Đồng Bán Hàng</h5>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Mã HĐ:</strong> #@Model.SalesContract.SaleContractId</p>
+                            <p><strong>Ngày Ký:</strong> @Model.SalesContract.SignedDate?.ToString("dd/MM/yyyy")</p>
+                            <p><strong>Điều Khoản:</strong> @Model.SalesContract.Terms</p>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Actions -->
+            <div class="col-md-12">
+                <div class="btn-group" role="group">
+                    @if (Model.RemainingBalance > 0)
+                    {
+                        <a href="/CustomerOrder/Payment?orderId=@Model.Order.OrderId" class="btn btn-primary">
+                            <i class="fas fa-credit-card"></i> Thanh Toán
+                        </a>
+                    }
+                    @if (Model.SalesContract == null && Model.Order.Status == "Confirmed")
+                    {
+                        <a href="/Sales/CreateSalesContract?orderId=@Model.Order.OrderId" class="btn btn-info">
+                            <i class="fas fa-file-signature"></i> Tạo Hợp Đồng
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

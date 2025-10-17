@@ -1,0 +1,80 @@
+@* 
+    Chuyển đổi từ: Views/Customer/MyOrders.cshtml
+    Thay đổi: @model IEnumerable<Order> -> @model MyOrdersModel
+              Sử dụng Model.Orders thay vì @Model
+*@
+@page
+@model ASM1.WebMVC.Pages.Customer.MyOrdersModel
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<div class="container py-5">
+    <h1 class="mb-4"><i class="fas fa-shopping-cart"></i> My Orders</h1>
+
+    @if (!Model.Orders.Any())
+    {
+        <div class="alert alert-info">
+            <h4><i class="fas fa-info-circle"></i> No orders yet</h4>
+            <p>You haven't placed any orders yet. Start shopping now!</p>
+            <a asp-page="/Home/Index" class="btn btn-primary">
+                <i class="fas fa-shopping-bag"></i> Browse Vehicles
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var order in Model.Orders)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Order #@order.OrderId</h5>
+                            <small>@(order.OrderDate?.ToString("dd/MM/yyyy") ?? "N/A")</small>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Vehicle:</strong> @order.Variant?.VehicleModel?.Name @order.Variant?.Version</p>
+                            <p><strong>Dealer:</strong> @order.Dealer?.FullName</p>
+                            <p><strong>Order Date:</strong> @(order.OrderDate?.ToString("dd/MM/yyyy") ?? "N/A")</p>
+                            <p>
+                                <strong>Status:</strong>
+                                @if (order.Status == "Pending")
+                                {
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                }
+                                else if (order.Status == "Confirmed")
+                                {
+                                    <span class="badge bg-info">Confirmed</span>
+                                }
+                                else if (order.Status == "Completed")
+                                {
+                                    <span class="badge bg-success">Completed</span>
+                                }
+                                else if (order.Status == "Paid")
+                                {
+                                    <span class="badge bg-success">Paid</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">@order.Status</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            @* Chuyển đổi routing sang Razor Pages *@
+                            <a asp-page="/Customer/PaymentOptions" asp-route-orderId="@order.OrderId" 
+                               class="btn btn-sm btn-success">
+                                <i class="fas fa-credit-card"></i> Make Payment
+                            </a>
+                            <a asp-page="/Customer/OrderDetail" asp-route-id="@order.OrderId" 
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

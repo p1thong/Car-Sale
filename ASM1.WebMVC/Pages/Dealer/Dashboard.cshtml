@@ -1,0 +1,42 @@
+@page
+@model ASM1.WebMVC.Pages.Dealer.DashboardModel
+@{
+    ViewData["Title"] = "Dealer Dashboard";
+}
+
+<div class="container py-4">
+    <h1><i class="fas fa-store"></i> Dealer Dashboard</h1>
+    <hr />
+    
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5><i class="fas fa-shopping-cart"></i> Orders</h5>
+                    <p>Manage customer orders</p>
+                    <a asp-page="/Sales/Orders" class="btn btn-primary">View Orders</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-3">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5><i class="fas fa-users"></i> Customers</h5>
+                    <p>Manage customers</p>
+                    <a asp-page="/Sales/Customers" class="btn btn-success">View Customers</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-3">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5><i class="fas fa-car"></i> Inventory</h5>
+                    <p>View vehicle inventory</p>
+                    <a asp-page="/Product/VehicleVariants" class="btn btn-info">View Inventory</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

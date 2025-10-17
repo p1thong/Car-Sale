@@ -1,0 +1,71 @@
+@page
+@model ASM1.WebMVC.Pages.Sales.CustomersModel
+@{
+    ViewData["Title"] = "Customers";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-users"></i> Customers</h1>
+        <a asp-page="/Sales/CreateCustomer" class="btn btn-success">
+            <i class="fas fa-plus"></i> Add Customer
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["InfoMessage"] != null)
+    {
+        <div class="alert alert-info">
+            @TempData["InfoMessage"]
+        </div>
+    }
+
+    @if (Model.Customers.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Birthday</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var customer in Model.Customers)
+                    {
+                        <tr>
+                            <td>@customer.CustomerId</td>
+                            <td><strong>@customer.FullName</strong></td>
+                            <td>@customer.Email</td>
+                            <td>@customer.Phone</td>
+                            <td>@(customer.Birthday.HasValue ? customer.Birthday.Value.ToString("dd'/'MM'/'yyyy") : "N/A")</td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm">
+                                    <a asp-page="/Sales/EditCustomer" asp-route-id="@customer.CustomerId" 
+                                       class="btn btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a asp-page="/Sales/CreateOrder" asp-route-customerId="@customer.CustomerId" 
+                                       class="btn btn-success">
+                                        <i class="fas fa-shopping-cart"></i> Order
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

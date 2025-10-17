@@ -1,0 +1,98 @@
+@page "{id:int}"
+@model ASM1.WebMVC.Pages.Product.VehicleModelDetailModel
+@{
+    ViewData["Title"] = "Vehicle Model Details";
+}
+
+<div class="container py-4">
+    <h1><i class="fas fa-car"></i> Vehicle Model Details</h1>
+    <hr />
+
+    @if (Model.VehicleModelData != null)
+    {
+        <div class="row">
+            <!-- Model Information -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow">
+                    @if (!string.IsNullOrEmpty(Model.VehicleModelData.ImageUrl))
+                    {
+                        <img src="@Model.VehicleModelData.ImageUrl" class="card-img-top" alt="@Model.VehicleModelData.Name" />
+                    }
+                    <div class="card-body">
+                        <h4 class="card-title">@Model.VehicleModelData.Name</h4>
+                        <p class="card-text">
+                            <strong>Manufacturer:</strong> @Model.VehicleModelData.Manufacturer?.Name<br />
+                            <strong>Category:</strong> @Model.VehicleModelData.Category<br />
+                            <strong>Country:</strong> @Model.VehicleModelData.Manufacturer?.Country
+                        </p>
+                        <div class="d-flex gap-2">
+                            <a asp-page="/Product/EditVehicleModel" asp-route-id="@Model.VehicleModelData.VehicleModelId" 
+                               class="btn btn-warning">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a asp-page="/Product/CreateVehicleVariant" asp-route-modelId="@Model.VehicleModelData.VehicleModelId" 
+                               class="btn btn-success">
+                                <i class="fas fa-plus"></i> Add Variant
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Variants List -->
+            <div class="col-md-8">
+                <h3>Available Variants</h3>
+                @if (Model.Variants.Any())
+                {
+                    <div class="row">
+                        @foreach (var variant in Model.Variants)
+                        {
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@variant.Version</h5>
+                                        <p class="mb-1">
+                                            <strong>Color:</strong> 
+                                            <span class="badge bg-secondary">@variant.Color</span>
+                                        </p>
+                                        <p class="mb-1">
+                                            <strong>Year:</strong> @variant.ProductYear
+                                        </p>
+                                        <p class="mb-1">
+                                            <strong>Price:</strong> 
+                                            <span class="text-success fw-bold">$@variant.Price?.ToString("N2")</span>
+                                        </p>
+                                        <p class="mb-2">
+                                            <strong>Stock:</strong> 
+                                            <span class="badge @(variant.Quantity > 0 ? "bg-success" : "bg-danger")">
+                                                @variant.Quantity
+                                            </span>
+                                        </p>
+                                        <a asp-page="/Product/VehicleVariantDetails" asp-route-id="@variant.VariantId" 
+                                           class="btn btn-sm btn-primary">
+                                            <i class="fas fa-eye"></i> Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> No variants available for this model.
+                        <a asp-page="/Product/CreateVehicleVariant" asp-route-modelId="@Model.VehicleModelData.VehicleModelId" 
+                           class="alert-link">Create one now</a>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <a asp-page="/Product/VehicleModels" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Models
+            </a>
+        </div>
+    }
+</div>
