@@ -5,10 +5,13 @@
 	var order = Model.Order;
 	var payments = Model.Payments;
 	var remainingBalance = Model.RemainingBalance;
+
+	// Ensure always a numeric value for HTML input
+	var safeBalance = remainingBalance < 0 ? 0 : remainingBalance;
 }
 
 <div class="container-fluid">
-	<!-- Header -->
+	<!-- HEADER -->
 	<div class="row mb-4">
 		<div class="col-12 d-flex justify-content-between align-items-center">
 			<div>
@@ -105,6 +108,13 @@
 			</div>
 		</div>
 
+		@{
+			// Use the vehicle's total price for payment (not the remaining balance)
+			var vehiclePrice = order?.Variant?.Price ?? 0;
+			var rawPriceValue = vehiclePrice.ToString(System.Globalization.CultureInfo.InvariantCulture);
+			var formattedPriceDisplay = vehiclePrice.ToString("N2");
+		}
+
 		<!-- PAYMENT FORM -->
 		<div class="col-lg-8">
 			@if (remainingBalance > 0 && (order?.Status == "Confirmed" || order?.Status == "Pending"))
@@ -116,75 +126,50 @@
 					<div class="card-body">
 						<form id="paymentForm" method="post">
 							@Html.AntiForgeryToken()
-							<input type="hidden" id="orderId" value="@order?.OrderId" />
+							<input type="hidden" id="orderId" name="OrderId" value="@order?.OrderId" />
 
-							<!-- PAYMENT AMOUNT -->
+							<!-- PAYMENT AMOUNT (auto car price) -->
 							<div class="mb-4">
-								<label class="form-label">Payment Amount *</label>
+								<label class="form-label">Payment Amount</label>
 								<div class="input-group">
 									<span class="input-group-text">$</span>
 									<input type="number"
 										   class="form-control"
 										   id="paymentAmount"
-										   max="@remainingBalance"
-										   min="1"
+										   name="PaymentAmount"
+										   value="@rawPriceValue"
 										   step="0.01"
-										   required
-										   placeholder="Enter amount" />
+										   readonly />
 								</div>
-								<div class="form-text">Maximum: $@remainingBalance.ToString("N2")</div>
+								<div class="form-text">
+									Full payment of $@formattedPriceDisplay is required.
+								</div>
 							</div>
 
-							<!-- PAYMENT METHOD -->
+							<!-- PAYMENT METHOD (Cash only) -->
 							<div class="mb-4">
-								<label class="form-label">Payment Method *</label>
-								<div class="row">
-									<div class="col-md-3">
-										<div class="card payment-method" onclick="selectPaymentMethod('Credit Card', this)">
-											<div class="card-body text-center">
-												<i class="fas fa-credit-card fa-2x text-primary mb-2"></i>
-												<div>Credit Card</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-3">
-										<div class="card payment-method" onclick="selectPaymentMethod('Bank Transfer', this)">
-											<div class="card-body text-center">
-												<i class="fas fa-university fa-2x text-success mb-2"></i>
-												<div>Bank Transfer</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-3">
-										<div class="card payment-method" onclick="selectPaymentMethod('Cash', this)">
-											<div class="card-body text-center">
-												<i class="fas fa-money-bill-wave fa-2x text-warning mb-2"></i>
-												<div>Cash</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-3">
-										<div class="card payment-method" onclick="selectPaymentMethod('Check', this)">
-											<div class="card-body text-center">
-												<i class="fas fa-file-invoice-dollar fa-2x text-info mb-2"></i>
-												<div>Check</div>
-											</div>
-										</div>
+								<label class="form-label">Payment Method</label>
+								<div class="card border-success bg-light">
+									<div class="card-body text-center">
+										<i class="fas fa-money-bill-wave fa-2x text-success mb-2"></i>
+										<div><strong>Cash Payment Only</strong></div>
 									</div>
 								</div>
-								<input type="hidden" id="paymentMethod" required />
+								<input type="hidden" id="paymentMethod" name="PaymentMethod" value="Cash" />
 							</div>
 
 							<!-- SUBMIT -->
 							<div class="text-end">
 								<button type="submit" class="btn btn-success btn-lg">
-									<i class="fas fa-credit-card"></i> Process Payment
+									<i class="fas fa-money-bill"></i> Process Full Cash Payment
 								</button>
 							</div>
 						</form>
 					</div>
 				</div>
 			}
+		</div>
+
 
 			<!-- PAYMENT HISTORY -->
 			@if (payments?.Any() == true)
@@ -234,76 +219,41 @@
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
 	<script>
-		$('#paymentForm').on('submit', function (e) {
+		document.querySelector('#paymentForm')?.addEventListener('submit', function (e) {
 			e.preventDefault();
 
-			const orderId = $('#orderId').val();
-			const amount = $('#paymentAmount').val();
-			const method = $('#paymentMethod').val();
-			const token = $('input[name="__RequestVerificationToken"]').val();
+			const orderId = document.querySelector('#orderId').value;
+			const amount = parseFloat(document.querySelector('#paymentAmount').value) || 0;
+			const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
-			if (!amount || amount <= 0) {
-				alert('Please enter a valid payment amount.');
-				return;
-			}
-			if (!method) {
-				alert('Please select a payment method.');
-				return;
-			}
+			if (confirm(`Confirm full cash payment of $${amount.toLocaleString()}?`)) {
+				const btn = this.querySelector('button[type="submit"]');
+				btn.disabled = true;
 
-			if (confirm(`Confirm payment of $${parseFloat(amount).toLocaleString()} via ${method}?`)) {
-				$('#paymentForm button').prop('disabled', true);
-
-				$.ajax({
-					url: window.location.pathname,
-					type: 'POST',
-					data: {
+				fetch(window.location.pathname, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					body: new URLSearchParams({
 						OrderId: orderId,
 						PaymentAmount: amount,
-						PaymentMethod: method,
+						PaymentMethod: 'Cash',
 						__RequestVerificationToken: token
-					},
-					success: function (res) {
+					})
+				})
+					.then(r => r.json())
+					.then(res => {
 						if (res.success) {
 							alert(res.message);
 							location.reload();
 						} else {
 							alert('Error: ' + res.message);
 						}
-					},
-					error: function () {
-						alert('Payment failed. Try again.');
-					},
-					complete: function () {
-						$('#paymentForm button').prop('disabled', false);
-					}
-				});
+					})
+					.catch(() => alert('Payment failed. Try again.'))
+					.finally(() => btn.disabled = false);
 			}
 		});
-
-		function selectPaymentMethod(method, el) {
-			$('.payment-method').removeClass('border-primary bg-light');
-			$(el).addClass('border-primary bg-light');
-			$('#paymentMethod').val(method);
-		}
 	</script>
-
-	<style>
-		.payment-method {
-			cursor: pointer;
-			border: 2px solid #dee2e6;
-			transition: all 0.2s;
-		}
-
-			.payment-method:hover {
-				border-color: #007bff;
-				transform: translateY(-2px);
-				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-			}
-
-			.payment-method.border-primary {
-				border-color: #007bff !important;
-				box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
-			}
-	</style>
 }
