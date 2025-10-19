@@ -1,8 +1,8 @@
+using System.Security.Claims;
 using ASM1.Service.Services.Interfaces;
 using ASM1.WebMVC.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using System.Security.Claims;
 
 namespace ASM1.WebMVC.Pages.DealerOrder
 {
@@ -12,7 +12,11 @@ namespace ASM1.WebMVC.Pages.DealerOrder
         private readonly IDealerService _dealerService;
         private readonly IHubContext<HubServer> _hubContext;
 
-        public OrderDetailModel(ISalesService salesService, IDealerService dealerService, IHubContext<Hubs.HubServer> hubContext)
+        public OrderDetailModel(
+            ISalesService salesService,
+            IDealerService dealerService,
+            IHubContext<Hubs.HubServer> hubContext
+        )
         {
             _salesService = salesService;
             _dealerService = dealerService;
@@ -196,7 +200,10 @@ namespace ASM1.WebMVC.Pages.DealerOrder
             }
         }
 
-        public async Task<IActionResult> OnPostUpdatePaymentStatusAsync(int paymentId, string status)
+        public async Task<IActionResult> OnPostUpdatePaymentStatusAsync(
+            int paymentId,
+            string status
+        )
         {
             try
             {
@@ -220,7 +227,7 @@ namespace ASM1.WebMVC.Pages.DealerOrder
 
                 string statusText = status == "Delivering" ? "Đang giao" : "Đã giao";
                 TempData["Success"] = $"Đã cập nhật trạng thái thanh toán thành '{statusText}'!";
-                
+
                 return RedirectToPage();
             }
             catch (Exception ex)
