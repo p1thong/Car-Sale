@@ -1,272 +1,135 @@
 @page "{orderId:int?}"
 @model ASM1.WebMVC.Pages.CustomerOrder.PaymentModel
 @{
-    ViewData["Title"] = "Thanh toán đơn hàng";
+	ViewData["Title"] = "Thanh toán đơn hàng";
 }
 
 <div class="container mt-4">
-    <!-- Header -->
-    <div class="d-flex align-items-center mb-4">
-        <a asp-page="/Customer/OrderDetail" asp-route-id="@Model.OrderData?.OrderId" class="btn btn-outline-secondary me-3">
-            <i class="fas fa-arrow-left"></i>
-        </a>
-        <h2 class="mb-0">
-            <i class="fas fa-credit-card text-success me-2"></i>
-            Thanh toán đơn hàng #@Model.OrderData?.OrderId
-        </h2>
-    </div>
+	<!-- Header -->
+	<div class="d-flex align-items-center mb-4">
+		<a asp-page="/Customer/OrderDetail" asp-route-id="@Model.OrderData?.OrderId" class="btn btn-outline-secondary me-3">
+			<i class="fas fa-arrow-left"></i>
+		</a>
+		<h2 class="mb-0">
+			<i class="fas fa-credit-card text-success me-2"></i>
+			Thanh toán đơn hàng #@Model.OrderData?.OrderId
+		</h2>
+	</div>
 
-    <div class="row">
-        <div class="col-12">
-            @if (TempData["SuccessMessage"] != null)
-            {
-                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-            }
-            @if (TempData["ErrorMessage"] != null)
-            {
-                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
-            }
-        </div>
-        <!-- Thông tin thanh toán -->
-        <div class="col-lg-8">
-            <!-- Tóm tắt đơn hàng -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">
-                        <i class="fas fa-receipt me-2"></i> Tóm tắt đơn hàng
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3">
-                            @if (!string.IsNullOrEmpty(Model.OrderData?.Variant?.VehicleModel?.ImageUrl))
-                            {
-                                <img src="@Model.OrderData.Variant.VehicleModel.ImageUrl"
-                                     alt="@Model.OrderData.Variant.VehicleModel.ModelName"
-                                     class="img-fluid rounded"
-                                     style="height: 120px; object-fit: cover;">
-                            }
-                            else
-                            {
-                                <div class="bg-light d-flex align-items-center justify-content-center rounded" style="height: 120px;">
-                                    <i class="fas fa-car fa-2x text-muted"></i>
-                                </div>
-                            }
-                        </div>
-                        <div class="col-md-9">
-                            <h5 class="text-primary">@Model.OrderData?.Variant?.VehicleModel?.ModelName</h5>
-                            <p class="text-muted mb-2">@Model.OrderData?.Variant?.VehicleModel?.Manufacturer?.Name</p>
+	<div class="row">
+		<div class="col-12">
+			@if (TempData["SuccessMessage"] != null)
+			{
+				<div class="alert alert-success">@TempData["SuccessMessage"]</div>
+			}
+			@if (TempData["ErrorMessage"] != null)
+			{
+				<div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+			}
+		</div>
 
-                            <div class="row">
-                                <div class="col-6">
-                                    <strong>Phiên bản:</strong> @Model.OrderData?.Variant?.Version<br>
-                                    <strong>Màu sắc:</strong> @Model.OrderData?.Variant?.Color
-                                </div>
-                                <div class="col-6">
-                                    <strong>Ngày đặt:</strong> @Model.OrderData?.OrderDate?.ToString("dd/MM/yyyy")<br>
-                                    <strong>Số lượng:</strong> 1 xe
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+		<!-- LEFT: Order Summary -->
+		<div class="col-lg-7 mb-4">
+			<div class="card shadow-sm">
+				<div class="card-header bg-primary text-white">
+					<h5 class="mb-0">
+						<i class="fas fa-receipt me-2"></i> Tóm tắt đơn hàng
+					</h5>
+				</div>
+				<div class="card-body">
+					<div class="row">
+						<div class="col-md-4">
+							@if (!string.IsNullOrEmpty(Model.OrderData?.Variant?.VehicleModel?.ImageUrl))
+							{
+								<img src="@Model.OrderData.Variant.VehicleModel.ImageUrl"
+									 alt="@Model.OrderData.Variant.VehicleModel.ModelName"
+									 class="img-fluid rounded shadow-sm"
+									 style="height: 150px; object-fit: cover;">
+							}
+							else
+							{
+								<div class="bg-light d-flex align-items-center justify-content-center rounded" style="height: 150px;">
+									<i class="fas fa-car fa-3x text-muted"></i>
+								</div>
+							}
+						</div>
+						<div class="col-md-8">
+							<h4 class="text-primary fw-bold">@Model.OrderData?.Variant?.VehicleModel?.ModelName</h4>
+							<p class="text-muted mb-2">
+								@Model.OrderData?.Variant?.VehicleModel?.Manufacturer?.Name
+							</p>
+							<div class="row">
+								<div class="col-6">
+									<strong>Phiên bản:</strong> @Model.OrderData?.Variant?.Version<br>
+									<strong>Màu sắc:</strong> @Model.OrderData?.Variant?.Color
+								</div>
+								<div class="col-6">
+									<strong>Ngày đặt:</strong> @Model.OrderData?.OrderDate?.ToString("dd/MM/yyyy")<br>
+									<strong>Số lượng:</strong> 1 xe
+								</div>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div class="d-flex justify-content-between align-items-center">
+						<span class="fs-5 fw-bold">Giá xe:</span>
+						<span class="fs-4 text-success fw-bold">
+							@Model.OrderData?.Variant?.Price?.ToString("C0", new System.Globalization.CultureInfo("en-US"))
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
 
-            <!-- Lịch sử thanh toán -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">
-                        <i class="fas fa-history me-2"></i> Lịch sử thanh toán
-                    </h5>
-                </div>
-                <div class="card-body">
-                    @if (Model.Payments != null && Model.Payments.Any())
-                    {
-                        <div class="table-responsive">
-                            <table class="table table-sm">
-                                <thead>
-                                    <tr>
-                                        <th>Ngày</th>
-                                        <th>Phương thức</th>
-                                        <th>Số tiền</th>
-                                        <th>Trạng thái</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var payment in Model.Payments.OrderByDescending(p => p.PaymentDate))
-                                    {
-                                        <tr>
-                                            <td>@payment.PaymentDate?.ToString("dd/MM/yyyy HH:mm")</td>
-                                            <td>
-                                                @switch (payment.PaymentMethod)
-                                                {
-                                                    case "Cash":
-                                                        <span class="badge bg-success">Tiền mặt</span>
-                                                        break;
-                                                    case "Transfer":
-                                                    case "Bank Transfer":
-                                                        <span class="badge bg-primary">Chuyển khoản</span>
-                                                        break;
-                                                    case "Card":
-                                                    case "Credit Card":
-                                                        <span class="badge bg-warning text-dark">Thẻ tín dụng</span>
-                                                        break;
-                                                    default:
-                                                        <span class="badge bg-secondary">@payment.PaymentMethod</span>
-                                                        break;
-                                                }
-                                            </td>
-                                            <td class="fw-bold text-success">
-                                                @payment.Amount?.ToString("C0", new System.Globalization.CultureInfo("en-US"))
-                                            </td>
-                                            <td>
-                                                @switch (payment.Status)
-                                                {
-                                                    case "Completed":
-                                                        <span class="badge bg-success">Thành công</span>
-                                                        break;
-                                                    case "Delivering":
-                                                        <span class="badge bg-warning">
-                                                            <i class="fas fa-truck me-1"></i>Đang giao
-                                                        </span>
-                                                        break;
-                                                    case "Delivered":
-                                                        <span class="badge bg-info">
-                                                            <i class="fas fa-check-circle me-1"></i>Đã giao
-                                                        </span>
-                                                        break;
-                                                    case "Received":
-                                                        <span class="badge bg-primary">
-                                                            <i class="fas fa-handshake me-1"></i>Đã nhận
-                                                        </span>
-                                                        break;
-                                                    default:
-                                                        <span class="badge bg-secondary">@payment.Status</span>
-                                                        break;
-                                                }
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="text-center text-muted py-3">
-                            <i class="fas fa-credit-card fa-2x mb-2"></i>
-                            <p>Chưa có giao dịch thanh toán nào</p>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
+		<!-- RIGHT: Payment Form -->
+		<div class="col-lg-5">
+			<div class="card shadow-lg border-success">
+				<div class="card-header bg-success text-white text-center">
+					<h4 class="mb-0">
+						<i class="fas fa-money-bill-wave fa-lg me-2"></i> Thanh Toán Bằng Tiền Mặt
+					</h4>
+				</div>
+				<div class="card-body">
+					<div class="text-center mb-4">
+						<div class="bg-light d-inline-flex align-items-center justify-content-center rounded-circle shadow-sm"
+							 style="width: 90px; height: 90px;">
+							<i class="fas fa-hand-holding-usd fa-3x text-success"></i>
+						</div>
+						<h5 class="mt-3 text-muted">Thanh toán toàn bộ giá trị xe</h5>
+					</div>
 
-        <!-- Form thanh toán -->
-        <div class="col-lg-4">
-            <!-- Tổng kết -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">
-                        <i class="fas fa-calculator me-2"></i> Tổng kết thanh toán
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Tổng giá trị đơn hàng:</span>
-                        <span class="fw-bold">@Model.OrderTotal.ToString("C0", new System.Globalization.CultureInfo("en-US"))</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Đã thanh toán:</span>
-                        <span class="fw-bold text-success">@Model.TotalPaid.ToString("C0", new System.Globalization.CultureInfo("en-US"))</span>
-                    </div>
-                    <hr>
-                    <div class="d-flex justify-content-between">
-                        <span class="fw-bold">Còn lại:</span>
-                        <span class="fw-bold text-@(Model.IsFullyPaid ? "success" : "danger")">
-                            @Model.RemainingBalance.ToString("C0", new System.Globalization.CultureInfo("en-US"))
-                        </span>
-                    </div>
+					<form method="post">
+						@Html.AntiForgeryToken()
+						<input type="hidden" asp-for="OrderId" />
+						<input type="hidden" asp-for="PaymentMethod" value="Cash" />
 
-                    @if (Model.IsFullyPaid)
-                    {
-                        <div class="alert alert-success mt-3 mb-0">
-                            <i class="fas fa-check-circle me-2"></i> Đã thanh toán đủ!
-                        </div>
-                    }
-                </div>
-            </div>
+						<div class="mb-3">
+							<label asp-for="Amount" class="form-label fw-bold">Số tiền cần thanh toán</label>
+							<div class="input-group input-group-lg">
+								<span class="input-group-text bg-success text-white fw-bold">$</span>
+								<input asp-for="Amount" type="number" class="form-control form-control-lg text-end fw-bold"
+									   value="@(Convert.ToInt32(Model.OrderData?.Variant?.Price ?? 0))" readonly
+									   style="background-color: #f8f9fa;" />
+							</div>
+							<small class="text-muted">Bạn cần thanh toán toàn bộ giá trị xe bằng tiền mặt.</small>
+						</div>
 
-            @if (!Model.IsFullyPaid)
-            {
-                <div class="card shadow-sm">
-                    <div class="card-header bg-warning text-dark">
-                        <h5 class="mb-0">
-                            <i class="fas fa-money-bill me-2"></i> Thanh toán
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <form method="post">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" asp-for="OrderId" />
-
-                            <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
-
-                            <div class="mb-3">
-                                <label asp-for="Amount" class="form-label">Số tiền thanh toán</label>
-                                <div class="input-group">
-                                    <input asp-for="Amount" type="number" class="form-control" value="@Model.RemainingBalance" readonly style="background-color: #f8f9fa;" />
-                                    <span class="input-group-text">USD</span>
-                                </div>
-                                <small class="form-text text-muted">Thanh toán toàn bộ số tiền còn lại</small>
-                                <span asp-validation-for="Amount" class="text-danger"></span>
-                            </div>
-
-                            <div class="mb-3">
-                                <label asp-for="PaymentMethod" class="form-label">Phương thức thanh toán <span class="text-danger">*</span></label>
-                                <select asp-for="PaymentMethod" class="form-select" required>
-                                    <option value="Cash">Tiền mặt</option>
-                                    <option value="Transfer">Chuyển khoản</option>
-                                    <option value="Card">Thẻ tín dụng</option>
-                                </select>
-                                <span asp-validation-for="PaymentMethod" class="text-danger"></span>
-                            </div>
-
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-success">
-                                    <i class="fas fa-check me-2"></i> Xác nhận thanh toán
-                                </button>
-                                <a asp-page="/Customer/OrderDetail" asp-route-id="@Model.OrderData?.OrderId"
-                                   class="btn btn-outline-secondary">
-                                    <i class="fas fa-times me-2"></i> Hủy bỏ
-                                </a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            }
-            else
-            {
-                <div class="card shadow-sm">
-                    <div class="card-header bg-success text-white">
-                        <h5 class="mb-0">
-                            <i class="fas fa-check-circle me-2"></i> Hoàn thành
-                        </h5>
-                    </div>
-                    <div class="card-body text-center">
-                        <i class="fas fa-thumbs-up fa-3x text-success mb-3"></i>
-                        <h5>Thanh toán hoàn tất!</h5>
-                        <p class="text-muted mb-3">Đơn hàng của bạn đã được thanh toán đầy đủ. Dealer sẽ liên hệ để giao xe sớm nhất.</p>
-                        <a asp-page="/Customer/OrderDetail" asp-route-id="@Model.OrderData?.OrderId" class="btn btn-primary">
-                            <i class="fas fa-eye me-2"></i> Xem trạng thái đơn hàng
-                        </a>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
+						<div class="d-grid gap-2 mt-4">
+							<button type="submit" class="btn btn-success btn-lg">
+								<i class="fas fa-check-circle me-2"></i> Xác nhận thanh toán
+							</button>
+							<a asp-page="/Customer/OrderDetail" asp-route-id="@Model.OrderData?.OrderId"
+							   class="btn btn-outline-secondary btn-lg">
+								<i class="fas fa-times me-2"></i> Hủy bỏ
+							</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+	<partial name="_ValidationScriptsPartial" />
 }
