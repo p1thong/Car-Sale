@@ -129,7 +129,7 @@
                         @if (Model.RemainingBalance > 0 && (Model.Order.Status == "Confirmed" || Model.Order.Status == "Pending"))
                         {
                             <div class="text-center mt-3">
-                                <a asp-page="/Customer/PaymentOptions" asp-route-orderId="@Model.Order.OrderId" 
+                                <a asp-page="/CustomerOrder/Payment" asp-route-orderId="@Model.Order.OrderId" 
                                    class="btn btn-success btn-lg">
                                     <i class="fas fa-credit-card"></i> Make Payment
                                 </a>
@@ -139,6 +139,98 @@
                 </div>
             </div>
         </div>
+
+        <!-- Delivery Status -->
+        @if (Model.Order.Status == "Completed" && Model.Payments.Any())
+        {
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fas fa-shipping-fast"></i> Trạng thái giao hàng</h5>
+                        </div>
+                        <div class="card-body">
+                            @{
+                                var hasDelivering = Model.Payments.Any(p => p.Status == "Delivering");
+                                var hasDelivered = Model.Payments.Any(p => p.Status == "Delivered");
+                                var hasReceived = Model.Payments.Any(p => p.Status == "Received");
+                                var allDelivered = Model.Payments.All(p => p.Status == "Delivered" || p.Status == "Received");
+                                var allReceived = Model.Payments.All(p => p.Status == "Received");
+                            }
+                            
+                            <div class="row text-center">
+                                <div class="col-md-3">
+                                    <div class="delivery-step @(Model.RemainingBalance <= 0 ? "completed" : "")">
+                                        <div class="step-icon">
+                                            <i class="fas fa-check-circle @(Model.RemainingBalance <= 0 ? "text-success" : "text-muted")"></i>
+                                        </div>
+                                        <h6>Thanh toán hoàn tất</h6>
+                                        <small class="text-muted">Đã thanh toán đủ số tiền</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="delivery-step @(hasDelivering ? "active" : (hasDelivered || hasReceived ? "completed" : ""))">
+                                        <div class="step-icon">
+                                            <i class="fas fa-truck @(hasDelivering ? "text-warning" : (hasDelivered || hasReceived ? "text-success" : "text-muted"))"></i>
+                                        </div>
+                                        <h6>Đang giao hàng</h6>
+                                        <small class="text-muted">Xe đang được vận chuyển</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="delivery-step @(hasDelivered && !hasReceived ? "active" : (hasReceived ? "completed" : ""))">
+                                        <div class="step-icon">
+                                            <i class="fas fa-home @(hasDelivered && !hasReceived ? "text-warning" : (hasReceived ? "text-success" : "text-muted"))"></i>
+                                        </div>
+                                        <h6>Đã giao</h6>
+                                        <small class="text-muted">Xe đã được giao đến</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="delivery-step @(allReceived ? "completed" : "")">
+                                        <div class="step-icon">
+                                            <i class="fas fa-handshake @(allReceived ? "text-success" : "text-muted")"></i>
+                                        </div>
+                                        <h6>Đã nhận</h6>
+                                        <small class="text-muted">Khách hàng đã nhận xe</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (allReceived)
+                            {
+                                <div class="alert alert-success mt-3 text-center">
+                                    <i class="fas fa-trophy me-2"></i>
+                                    <strong>Chúc mừng!</strong> Bạn đã nhận xe thành công! Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi!
+                                </div>
+                            }
+                            else if (hasDelivered && !hasReceived)
+                            {
+                                <div class="alert alert-info mt-3 text-center">
+                                    <i class="fas fa-handshake me-2"></i>
+                                    Xe đã được giao đến bạn. Vui lòng xác nhận đã nhận xe để hoàn tất đơn hàng.
+                                </div>
+                                <div class="text-center mt-3">
+                                    <form method="post" asp-page-handler="ConfirmReceived" class="d-inline">
+                                        <input type="hidden" name="orderId" value="@Model.Order.OrderId" />
+                                        <button type="submit" class="btn btn-success btn-lg">
+                                            <i class="fas fa-handshake me-2"></i>Xác nhận đã nhận xe
+                                        </button>
+                                    </form>
+                                </div>
+                            }
+                            else if (hasDelivering)
+                            {
+                                <div class="alert alert-warning mt-3 text-center">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Xe của bạn đang được vận chuyển. Vui lòng kiểm tra thông tin giao hàng và chuẩn bị nhận xe.
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
 
         <!-- Payment History -->
         @if (Model.Payments.Any())
@@ -169,7 +261,37 @@
                                                 <td>@payment.PaymentDate?.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
                                                 <td>$@payment.Amount?.ToString("N0") VND</td>
                                                 <td>@payment.PaymentMethod</td>
-                                                <td><span class="badge bg-success">@(payment.Status ?? "Completed")</span></td>
+                                                <td>
+                                                    @{
+                                                        var status = payment.Status ?? "Completed";
+                                                    }
+                                                    @switch (status)
+                                                    {
+                                                        case "Completed":
+                                                            <span class="badge bg-success">
+                                                                <i class="fas fa-check me-1"></i>Thành công
+                                                            </span>
+                                                            break;
+                                                        case "Delivering":
+                                                            <span class="badge bg-warning">
+                                                                <i class="fas fa-truck me-1"></i>Đang giao
+                                                            </span>
+                                                            break;
+                                                        case "Delivered":
+                                                            <span class="badge bg-info">
+                                                                <i class="fas fa-check-circle me-1"></i>Đã giao
+                                                            </span>
+                                                            break;
+                                                        case "Received":
+                                                            <span class="badge bg-primary">
+                                                                <i class="fas fa-handshake me-1"></i>Đã nhận
+                                                            </span>
+                                                            break;
+                                                        default:
+                                                            <span class="badge bg-secondary">@status</span>
+                                                            break;
+                                                    }
+                                                </td>
                                             </tr>
                                         }
                                     </tbody>
@@ -182,3 +304,50 @@
         }
     }
 </div>
+
+<style>
+    .delivery-step {
+        padding: 20px;
+        text-align: center;
+        position: relative;
+    }
+
+    .delivery-step .step-icon {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+
+    .delivery-step.completed .step-icon i {
+        color: #28a745 !important;
+    }
+
+    .delivery-step.active .step-icon i {
+        color: #ffc107 !important;
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .delivery-step h6 {
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    .delivery-step.completed h6 {
+        color: #28a745;
+    }
+
+    .delivery-step.active h6 {
+        color: #ffc107;
+    }
+</style>

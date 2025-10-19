@@ -1,5 +1,6 @@
 @page "{orderId:int}"
 @model ASM1.WebMVC.Pages.DealerOrder.OrderDetailModel
+@using System.Linq
 @{
     ViewData["Title"] = "Chi Tiết Đơn Hàng #" + Model.Order?.OrderId;
 }
@@ -122,6 +123,16 @@
 
                         @if (Model.Payments != null && Model.Payments.Any())
                         {
+                            var receivedPayment = Model.Payments.FirstOrDefault(p => p.Status == "Received");
+                            
+                            if (receivedPayment != null)
+                            {
+                                <div class="alert alert-success">
+                                    <i class="fas fa-check-circle"></i> 
+                                    <strong>Giao dịch hoàn tất!</strong> Khách hàng đã xác nhận nhận xe vào ngày @receivedPayment.PaymentDate?.ToString("dd/MM/yyyy").
+                                </div>
+                            }
+
                             <hr>
                             <h6>Lịch Sử Thanh Toán:</h6>
                             <table class="table table-sm">
@@ -130,6 +141,8 @@
                                         <th>Ngày</th>
                                         <th>Số Tiền</th>
                                         <th>Phương Thức</th>
+                                        <th>Trạng Thái</th>
+                                        <th>Thao Tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -139,6 +152,50 @@
                                             <td>@payment.PaymentDate?.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
                                             <td>@payment.Amount?.ToString("N0") VNĐ</td>
                                             <td>@payment.PaymentMethod</td>
+                                            <td>
+                                                @switch (payment.Status)
+                                                {
+                                                    case "Completed":
+                                                        <span class="badge bg-success">Hoàn thành</span>
+                                                        break;
+                                                    case "Delivering":
+                                                        <span class="badge bg-warning">Đang giao</span>
+                                                        break;
+                                                    case "Delivered":
+                                                        <span class="badge bg-info">Đã giao</span>
+                                                        break;
+                                                    case "Received":
+                                                        <span class="badge bg-success">
+                                                            <i class="fas fa-handshake"></i> Đã nhận
+                                                        </span>
+                                                        break;
+                                                    default:
+                                                        <span class="badge bg-secondary">@payment.Status</span>
+                                                        break;
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (payment.Status == "Completed" && Model.Order.Status == "Completed")
+                                                {
+                                                    <form method="post" asp-page-handler="UpdatePaymentStatus" class="d-inline">
+                                                        <input type="hidden" name="paymentId" value="@payment.PaymentId" />
+                                                        <input type="hidden" name="status" value="Delivering" />
+                                                        <button type="submit" class="btn btn-warning btn-sm">
+                                                            <i class="fas fa-truck"></i> Đang giao
+                                                        </button>
+                                                    </form>
+                                                }
+                                                @if (payment.Status == "Delivering")
+                                                {
+                                                    <form method="post" asp-page-handler="UpdatePaymentStatus" class="d-inline">
+                                                        <input type="hidden" name="paymentId" value="@payment.PaymentId" />
+                                                        <input type="hidden" name="status" value="Delivered" />
+                                                        <button type="submit" class="btn btn-info btn-sm">
+                                                            <i class="fas fa-check"></i> Đã giao
+                                                        </button>
+                                                    </form>
+                                                }
+                                            </td>
                                         </tr>
                                     }
                                 </tbody>

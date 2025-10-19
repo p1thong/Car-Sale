@@ -187,5 +187,37 @@ namespace ASM1.WebMVC.Pages.DealerOrder
                 return RedirectToPage("./OrderDetail", new { orderId });
             }
         }
+
+        public async Task<IActionResult> OnPostUpdatePaymentStatusAsync(int paymentId, string status)
+        {
+            try
+            {
+                var dealerId = await GetCurrentDealerIdFromEmailAsync();
+                if (dealerId == null)
+                {
+                    TempData["Error"] = "Vui lòng đăng nhập lại.";
+                    return RedirectToPage("/Auth/Login");
+                }
+
+                // Validate status
+                if (status != "Delivering" && status != "Delivered")
+                {
+                    TempData["Error"] = "Trạng thái không hợp lệ.";
+                    return RedirectToPage();
+                }
+
+                await _salesService.UpdatePaymentStatusAsync(paymentId, status);
+
+                string statusText = status == "Delivering" ? "Đang giao" : "Đã giao";
+                TempData["Success"] = $"Đã cập nhật trạng thái thanh toán thành '{statusText}'!";
+                
+                return RedirectToPage();
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Lỗi khi cập nhật trạng thái: {ex.Message}";
+                return RedirectToPage();
+            }
+        }
     }
 }

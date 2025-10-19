@@ -63,5 +63,56 @@ namespace ASM1.WebMVC.Pages.Customer
                 return RedirectToPage("./MyOrders");
             }
         }
+
+        public async Task<IActionResult> OnPostConfirmReceivedAsync(int orderId)
+        {
+            try
+            {
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                if (string.IsNullOrEmpty(email))
+                {
+                    TempData["Error"] = "Vui lòng đăng nhập lại.";
+                    return RedirectToPage("/Auth/Login");
+                }
+
+                var customer = await _customerService.GetCustomerByEmailAsync(email);
+                if (customer == null)
+                {
+                    TempData["Error"] = "Không tìm thấy thông tin khách hàng.";
+                    return RedirectToPage("/Auth/Login");
+                }
+
+                var order = await _salesService.GetOrderAsync(orderId);
+                if (order == null || order.CustomerId != customer.CustomerId)
+                {
+                    TempData["Error"] = "Không tìm thấy đơn hàng hoặc bạn không có quyền xử lý.";
+                    return RedirectToPage("./MyOrders");
+                }
+
+                // Kiểm tra có payment nào đã được giao chưa
+                var payments = await _salesService.GetPaymentsByOrderAsync(orderId);
+                var hasDelivered = payments.Any(p => p.Status == "Delivered");
+
+                if (!hasDelivered)
+                {
+                    TempData["Error"] = "Xe chưa được giao, không thể xác nhận nhận xe.";
+                    return RedirectToPage("./OrderDetail", new { id = orderId });
+                }
+
+                // Cập nhật tất cả payment status thành "Received"
+                foreach (var payment in payments.Where(p => p.Status == "Delivered"))
+                {
+                    await _salesService.UpdatePaymentStatusAsync(payment.PaymentId, "Received");
+                }
+
+                TempData["Success"] = "Bạn đã xác nhận nhận xe thành công! Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.";
+                return RedirectToPage("./OrderDetail", new { id = orderId });
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Lỗi khi xác nhận nhận xe: {ex.Message}";
+                return RedirectToPage("./OrderDetail", new { id = orderId });
+            }
+        }
     }
 }

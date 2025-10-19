@@ -199,5 +199,15 @@ namespace ASM1.Service.Services
             var remainingBalance = await GetRemainingBalanceAsync(orderId);
             return remainingBalance <= 0;
         }
+
+        public async Task<Payment> UpdatePaymentStatusAsync(int paymentId, string status)
+        {
+            var payment = await _paymentRepository.GetPaymentByIdAsync(paymentId);
+            if (payment == null)
+                throw new ArgumentException("Payment not found");
+
+            payment.Status = status;
+            return await _paymentRepository.UpdatePaymentAsync(payment);
+        }
     }
 }
