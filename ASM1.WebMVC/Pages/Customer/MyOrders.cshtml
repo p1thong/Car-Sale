@@ -77,7 +77,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var order in Model.Orders.OrderByDescending(o => o.OrderDate))
+                          @foreach (var order in Model.Orders.OrderByDescending(o => o.OrderId))
                             {
                                 <tr>
                                     <td><strong class="text-primary">#@order.OrderId</strong></td>
