@@ -2,16 +2,19 @@ using ASM1.Repository.Data;
 using ASM1.Repository.Models;
 using ASM1.Repository.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace ASM1.Repository.Repositories
 {
     public class PaymentRepository : IPaymentRepository
     {
         private readonly CarSalesDbContext _context;
+        private readonly ILogger<PaymentRepository> _logger;
 
-        public PaymentRepository(CarSalesDbContext context)
+        public PaymentRepository(CarSalesDbContext context, ILogger<PaymentRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<Payment>> GetAllPaymentsAsync()
@@ -41,8 +44,22 @@ namespace ASM1.Repository.Repositories
         public async Task<Payment> CreatePaymentAsync(Payment payment)
         {
             _context.Payments.Add(payment);
-            await _context.SaveChangesAsync();
-            return payment;
+            try
+            {
+                await _context.SaveChangesAsync();
+                return payment;
+            }
+            catch (Exception ex)
+            {
+                // Log detailed inner exception information to aid debugging
+                try
+                {
+                    var inner = ex.InnerException?.Message ?? "(no inner exception)";
+                    _logger?.LogError(ex, "Error saving Payment entity. OrderId={OrderId}, Amount={Amount}. Inner: {Inner}", payment.OrderId, payment.Amount, inner);
+                }
+                catch { }
+                throw; // rethrow to preserve original behavior
+            }
         }
 
         public async Task<Payment> UpdatePaymentAsync(Payment payment)

@@ -27,6 +27,7 @@ namespace ASM1.Service.Services.Interfaces
         Task<Payment> ProcessPaymentAsync(int orderId, decimal amount, string paymentMethod);
         Task<IEnumerable<Payment>> GetPaymentsByOrderAsync(int orderId);
         Task<decimal> GetRemainingBalanceAsync(int orderId);
+        Task<Payment> UpdatePaymentStatusAsync(int paymentId, string status);
 
         // Vehicle Delivery
         Task<Order> CompleteOrderAsync(int orderId);
