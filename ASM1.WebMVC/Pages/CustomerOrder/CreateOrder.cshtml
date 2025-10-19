@@ -18,12 +18,42 @@
                         <h5 class="mb-0">Thông Tin Xe</h5>
                     </div>
                     <div class="card-body">
-                        <h4>@Model.Variant.VehicleModel?.Manufacturer?.Name @Model.Variant.VehicleModel?.Name</h4>
+                        <!-- Vehicle Image -->
+                        <div class="text-center mb-3">
+                            @if (!string.IsNullOrEmpty(Model.Variant.VehicleModel?.ImageUrl))
+                            {
+                                <img src="@Model.Variant.VehicleModel.ImageUrl"
+                                     alt="@Model.Variant.VehicleModel?.Name"
+                                     class="img-fluid rounded shadow-sm"
+                                     style="max-height: 250px; object-fit: cover;">
+                            }
+                            else
+                            {
+                                <div class="bg-light d-flex align-items-center justify-content-center rounded"
+                                     style="height: 200px;">
+                                    <i class="fas fa-car fa-3x text-muted"></i>
+                                </div>
+                            }
+                        </div>
+
+                        <h4 class="text-primary">
+                            @Model.Variant.VehicleModel?.Manufacturer?.Name
+                            @Model.Variant.VehicleModel?.Name
+                        </h4>
+
                         <p class="mb-2"><strong>Version:</strong> @Model.Variant.Version</p>
                         <p class="mb-2"><strong>Color:</strong> <span class="badge bg-secondary">@Model.Variant.Color</span></p>
                         <p class="mb-2"><strong>Year:</strong> @Model.Variant.ProductYear</p>
-                        <p class="mb-2"><strong>Price:</strong> <span class="text-success h5">$@Model.Variant.Price?.ToString("N2")</span></p>
-                        <p class="mb-2"><strong>Available:</strong> <span class="badge bg-success">@Model.Variant.Quantity units</span></p>
+                        <p class="mb-2">
+                            <strong>Price:</strong>
+                            <span class="text-success h5">
+                                $@Model.Variant.Price?.ToString("N2")
+                            </span>
+                        </p>
+                        <p class="mb-2">
+                            <strong>Available:</strong>
+                            <span class="badge bg-success">@Model.Variant.Quantity units</span>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -51,7 +81,7 @@
 
                             <div class="mb-3">
                                 <label asp-for="Quantity" class="form-label">Số Lượng</label>
-                                <input asp-for="Quantity" type="number" class="form-control" 
+                                <input asp-for="Quantity" type="number" class="form-control"
                                        min="1" max="@Model.MaxQuantity" />
                                 <span asp-validation-for="Quantity" class="text-danger"></span>
                                 <small class="text-muted">Tối đa: @Model.MaxQuantity xe</small>
@@ -59,13 +89,15 @@
 
                             <div class="mb-3">
                                 <label asp-for="Notes" class="form-label">Ghi Chú (Optional)</label>
-                                <textarea asp-for="Notes" class="form-control" rows="3" 
+                                <textarea asp-for="Notes" class="form-control" rows="3"
                                           placeholder="Yêu cầu đặc biệt..."></textarea>
                             </div>
 
                             <div class="alert alert-info">
-                                <strong>Tổng tiền:</strong> 
-                                <span class="h5 text-success">$@(((Model.Variant.Price ?? 0) * Model.Quantity).ToString("N2"))</span>
+                                <strong>Tổng tiền:</strong>
+                                <span class="h5 text-success">
+                                    $@(((Model.Variant.Price ?? 0) * Model.Quantity).ToString("N2"))
+                                </span>
                             </div>
 
                             <button type="submit" class="btn btn-success btn-lg w-100">
@@ -86,7 +118,7 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        // Auto-calculate total when quantity changes
+        // Auto-update total when quantity changes
         document.querySelector('input[name="Quantity"]').addEventListener('input', function() {
             var price = @(Model.Variant?.Price ?? 0);
             var qty = parseInt(this.value) || 1;

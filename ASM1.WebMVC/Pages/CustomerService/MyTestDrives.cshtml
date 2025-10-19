@@ -81,7 +81,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var testDrive in Model.TestDrives)
+									@foreach (var testDrive in Model.TestDrives.OrderByDescending(td => td.TestDriveId))
                                     {
                                         <tr class="test-drive-row" data-status="@testDrive.Status">
                                             <td>
