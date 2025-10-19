@@ -126,7 +126,7 @@
                             </div>
                         </div>
                         
-                        @if (Model.RemainingBalance > 0 && (Model.Order.Status == "Confirmed" || Model.Order.Status == "Pending"))
+                        @if (Model.RemainingBalance > 0 && (Model.Order.Status == "Confirmed"))
                         {
                             <div class="text-center mt-3">
                                 <a asp-page="/CustomerOrder/Payment" asp-route-orderId="@Model.Order.OrderId" 

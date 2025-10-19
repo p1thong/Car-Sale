@@ -1,6 +1,8 @@
-using ASM1.Service.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using ASM1.Service.Services.Interfaces;
+using ASM1.WebMVC.Hubs;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ASM1.WebMVC.Pages.CustomerOrder
 {
@@ -9,12 +11,19 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
         private readonly ISalesService _salesService;
         private readonly IVehicleService _vehicleService;
         private readonly ICustomerRelationshipService _customerService;
+        private readonly IHubContext<HubServer> _hubContext;
 
-        public CreateOrderModel(ISalesService salesService, IVehicleService vehicleService, ICustomerRelationshipService customerService)
+        public CreateOrderModel(
+            ISalesService salesService,
+            IVehicleService vehicleService,
+            ICustomerRelationshipService customerService,
+            IHubContext<HubServer> hubContext
+        )
         {
             _salesService = salesService;
             _vehicleService = vehicleService;
             _customerService = customerService;
+            _hubContext = hubContext;
         }
 
         public VehicleVariant? Variant { get; set; }
@@ -35,7 +44,7 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
         public async Task<IActionResult> OnGetAsync(int variantId)
         {
             VariantId = variantId;
-            
+
             try
             {
                 // Get vehicle info
@@ -58,7 +67,8 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
                 CustomerData = await _customerService.GetCustomerByEmailAsync(email);
                 if (CustomerData == null)
                 {
-                    TempData["ErrorMessage"] = $"Không tìm thấy thông tin khách hàng với email {email}.";
+                    TempData["ErrorMessage"] =
+                        $"Không tìm thấy thông tin khách hàng với email {email}.";
                     return RedirectToPage("/Auth/Login");
                 }
 
@@ -94,7 +104,8 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
                 var customer = await _customerService.GetCustomerByEmailAsync(email);
                 if (customer == null)
                 {
-                    TempData["ErrorMessage"] = $"Không tìm thấy thông tin khách hàng với email {email}.";
+                    TempData["ErrorMessage"] =
+                        $"Không tìm thấy thông tin khách hàng với email {email}.";
                     return RedirectToPage("/Auth/Login");
                 }
 
@@ -108,7 +119,10 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
 
                 if (Quantity <= 0 || Quantity > variant.Quantity)
                 {
-                    ModelState.AddModelError(nameof(Quantity), $"Số lượng không hợp lệ. Chỉ có {variant.Quantity} xe có sẵn.");
+                    ModelState.AddModelError(
+                        nameof(Quantity),
+                        $"Số lượng không hợp lệ. Chỉ có {variant.Quantity} xe có sẵn."
+                    );
                     await OnGetAsync(VariantId);
                     return Page();
                 }
@@ -120,12 +134,16 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
                     DealerId = customer.DealerId,
                     VariantId = VariantId,
                     Status = "Pending",
-                    OrderDate = DateOnly.FromDateTime(DateTime.Now)
+                    OrderDate = DateOnly.FromDateTime(DateTime.Now),
                 };
 
                 var createdOrder = await _salesService.CreateOrderAsync(order);
 
-                TempData["SuccessMessage"] = $"Đặt hàng thành công! Mã đơn hàng: #{createdOrder.OrderId}. Đơn hàng đang chờ dealer xác nhận.";
+                // Gửi SignalR notification cho đúng user role
+                await _hubContext.Clients.All.SendAsync("ShowOrdersForDealer");
+
+                TempData["SuccessMessage"] =
+                    $"Đặt hàng thành công! Mã đơn hàng: #{createdOrder.OrderId}. Đơn hàng đang chờ dealer xác nhận.";
                 return RedirectToPage("/Customer/MyOrders");
             }
             catch (Exception ex)

@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using ASM1.Service.Services.Interfaces;
+using ASM1.WebMVC.Hubs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ASM1.WebMVC.Pages.CustomerOrder
 {
@@ -9,12 +11,14 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
         private readonly ISalesService _salesService;
         private readonly ICustomerRelationshipService _customerService;
         private readonly ILogger<PaymentModel> _logger;
+        private readonly IHubContext<HubServer> _hubContext;
 
-        public PaymentModel(ISalesService salesService, ICustomerRelationshipService customerService, ILogger<PaymentModel> logger)
+        public PaymentModel(ISalesService salesService, ICustomerRelationshipService customerService, ILogger<PaymentModel> logger, IHubContext<HubServer> hubContext)
         {
             _salesService = salesService;
             _customerService = customerService;
             _logger = logger;
+            _hubContext = hubContext;
         }
 
         public Order? OrderData { get; set; }
@@ -162,9 +166,11 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
                     await _salesService.UpdateOrderStatusAsync(OrderId, "Completed");
                     TempData["SuccessMessage"] =
                         "Thanh toán hoàn tất! Đơn hàng của bạn đã được thanh toán đầy đủ.";
+
+                    await _hubContext.Clients.All.SendAsync("CustomerPayOrder");
+                    
                     return RedirectToPage("/Customer/MyOrders");
                 }
-
                 return RedirectToPage(new { orderId = OrderId });
             }
             catch (Exception ex)

@@ -1,16 +1,20 @@
-using ASM1.Service.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using ASM1.Service.Services.Interfaces;
+using ASM1.WebMVC.Hubs;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ASM1.WebMVC.Pages.CustomerService
 {
     public class SubmitFeedbackModel : BasePageModel
     {
         private readonly ICustomerRelationshipService _customerService;
+        private readonly IHubContext<HubServer> _hubContext;
 
-        public SubmitFeedbackModel(ICustomerRelationshipService customerService)
+        public SubmitFeedbackModel(ICustomerRelationshipService customerService, IHubContext<HubServer> hubContext)
         {
             _customerService = customerService;
+            _hubContext = hubContext;
         }
 
         public TestDrive? TestDrive { get; set; }
@@ -61,7 +65,8 @@ namespace ASM1.WebMVC.Pages.CustomerService
                 // Verify this test drive belongs to current customer
                 if (TestDrive.CustomerId != currentCustomer.CustomerId)
                 {
-                    TempData["Error"] = "Bạn chỉ có thể gửi phản hồi cho lịch lái thử của chính mình.";
+                    TempData["Error"] =
+                        "Bạn chỉ có thể gửi phản hồi cho lịch lái thử của chính mình.";
                     return RedirectToPage("./MyTestDrives");
                 }
 
@@ -111,12 +116,20 @@ namespace ASM1.WebMVC.Pages.CustomerService
                 // Verify customer - use Customer.CustomerId instead of UserId
                 if (testDrive.CustomerId != currentCustomer.CustomerId)
                 {
-                    TempData["Error"] = "Bạn chỉ có thể gửi phản hồi cho lịch lái thử của chính mình.";
+                    TempData["Error"] =
+                        "Bạn chỉ có thể gửi phản hồi cho lịch lái thử của chính mình.";
                     return RedirectToPage("./MyTestDrives");
                 }
 
                 // Create feedback with Customer.CustomerId
-                await _customerService.CreateFeedbackAsync(currentCustomer.CustomerId, Content, Rating);
+                await _customerService.CreateFeedbackAsync(
+                    currentCustomer.CustomerId,
+                    Content,
+                    Rating
+                );
+
+
+                await _hubContext.Clients.All.SendAsync("SubmitFeedBack");// Notify admins via SignalR
 
                 TempData["Success"] = "Gửi đánh giá thành công! Cảm ơn bạn đã đánh giá.";
                 return RedirectToPage("./MyFeedbacks");
