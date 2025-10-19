@@ -1,6 +1,8 @@
-using ASM1.Service.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using ASM1.Service.Services.Interfaces;
+using ASM1.WebMVC.Hubs;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ASM1.WebMVC.Pages.DealerOrder
 {
@@ -8,11 +10,17 @@ namespace ASM1.WebMVC.Pages.DealerOrder
     {
         private readonly ISalesService _salesService;
         private readonly IDealerService _dealerService;
+        private readonly IHubContext<HubServer> _hubContext;
 
-        public OrderDetailModel(ISalesService salesService, IDealerService dealerService)
+        public OrderDetailModel(
+            ISalesService salesService,
+            IDealerService dealerService,
+            IHubContext<Hubs.HubServer> hubContext
+        )
         {
             _salesService = salesService;
             _dealerService = dealerService;
+            _hubContext = hubContext;
         }
 
         public Order? Order { get; set; }
@@ -99,6 +107,8 @@ namespace ASM1.WebMVC.Pages.DealerOrder
 
                 await _salesService.ConfirmOrderAsync(orderId, dealerNotes);
 
+                await _hubContext.Clients.All.SendAsync("DealerConfirmOrRejectOrder");
+
                 TempData["Success"] = "Đã xác nhận đơn hàng thành công!";
                 return RedirectToPage("./OrderDetail", new { orderId });
             }
@@ -136,8 +146,10 @@ namespace ASM1.WebMVC.Pages.DealerOrder
 
                 await _salesService.RejectOrderAsync(orderId, rejectionReason);
 
+                await _hubContext.Clients.All.SendAsync("DealerConfirmOrRejectOrder");
+
                 TempData["Success"] = "Đã từ chối đơn hàng.";
-                return RedirectToPage("./PendingOrders");
+                return RedirectToPage("./AllOrders");
             }
             catch (Exception ex)
             {
@@ -188,7 +200,10 @@ namespace ASM1.WebMVC.Pages.DealerOrder
             }
         }
 
-        public async Task<IActionResult> OnPostUpdatePaymentStatusAsync(int paymentId, string status)
+        public async Task<IActionResult> OnPostUpdatePaymentStatusAsync(
+            int paymentId,
+            string status
+        )
         {
             try
             {
@@ -208,9 +223,11 @@ namespace ASM1.WebMVC.Pages.DealerOrder
 
                 await _salesService.UpdatePaymentStatusAsync(paymentId, status);
 
+                await _hubContext.Clients.All.SendAsync("DealerUpdateDeliveryStatus");
+
                 string statusText = status == "Delivering" ? "Đang giao" : "Đã giao";
                 TempData["Success"] = $"Đã cập nhật trạng thái thanh toán thành '{statusText}'!";
-                
+
                 return RedirectToPage();
             }
             catch (Exception ex)

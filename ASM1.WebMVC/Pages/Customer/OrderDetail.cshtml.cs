@@ -1,6 +1,8 @@
 using ASM1.Service.Services.Interfaces;
+using ASM1.WebMVC.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
 namespace ASM1.WebMVC.Pages.Customer
@@ -10,11 +12,13 @@ namespace ASM1.WebMVC.Pages.Customer
     {
         private readonly ISalesService _salesService;
         private readonly ICustomerRelationshipService _customerService;
+        private readonly IHubContext<HubServer> _hubContext;
 
-        public OrderDetailModel(ISalesService salesService, ICustomerRelationshipService customerService)
+        public OrderDetailModel(ISalesService salesService, ICustomerRelationshipService customerService, IHubContext<HubServer> hubContext)
         {
             _salesService = salesService;
             _customerService = customerService;
+            _hubContext = hubContext;
         }
 
         public Order? Order { get; set; }
@@ -104,6 +108,8 @@ namespace ASM1.WebMVC.Pages.Customer
                 {
                     await _salesService.UpdatePaymentStatusAsync(payment.PaymentId, "Received");
                 }
+
+                await _hubContext.Clients.All.SendAsync("CustomerConfirmReceived");
 
                 TempData["Success"] = "Bạn đã xác nhận nhận xe thành công! Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.";
                 return RedirectToPage("./OrderDetail", new { id = orderId });
