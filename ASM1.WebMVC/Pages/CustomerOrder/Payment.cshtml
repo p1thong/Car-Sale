@@ -65,16 +65,16 @@
 								</div>
 								<div class="col-6">
 									<strong>Ngày đặt:</strong> @Model.OrderData?.OrderDate?.ToString("dd/MM/yyyy")<br>
-									<strong>Số lượng:</strong> 1 xe
+									<strong>Số lượng:</strong> @Model.OrderData?.Quantity xe
 								</div>
 							</div>
 						</div>
 					</div>
 					<hr />
 					<div class="d-flex justify-content-between align-items-center">
-						<span class="fs-5 fw-bold">Giá xe:</span>
+						<span class="fs-5 fw-bold">Tổng tiền đơn hàng:</span>
 						<span class="fs-4 text-success fw-bold">
-							@Model.OrderData?.Variant?.Price?.ToString("C0", new System.Globalization.CultureInfo("en-US"))
+							@Model.OrderTotal.ToString("C0", new System.Globalization.CultureInfo("en-US"))
 						</span>
 					</div>
 				</div>
@@ -108,10 +108,10 @@
 							<div class="input-group input-group-lg">
 								<span class="input-group-text bg-success text-white fw-bold">$</span>
 								<input asp-for="Amount" type="number" class="form-control form-control-lg text-end fw-bold"
-									   value="@(Convert.ToInt32(Model.OrderData?.Variant?.Price ?? 0))" readonly
+									   value="@(Convert.ToInt32(Model.RemainingBalance))" readonly
 									   style="background-color: #f8f9fa;" />
 							</div>
-							<small class="text-muted">Bạn cần thanh toán toàn bộ giá trị xe bằng tiền mặt.</small>
+							<small class="text-muted">Bạn cần thanh toán toàn bộ số tiền còn lại bằng tiền mặt.</small>
 						</div>
 
 						<div class="d-grid gap-2 mt-4">

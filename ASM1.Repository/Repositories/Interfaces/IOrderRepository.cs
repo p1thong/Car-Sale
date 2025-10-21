@@ -12,6 +12,7 @@ namespace ASM1.Repository.Repositories.Interfaces
         Task<Order> CreateOrderAsync(Order order);
         Task<Order> UpdateOrderAsync(Order order);
         Task<bool> DeleteOrderAsync(int orderId);
+        Task<bool> CancelOrderAsync(int orderId);
         Task<Order?> GetOrderWithDetailsAsync(int orderId);
     }
 }

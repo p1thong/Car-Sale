@@ -133,6 +133,7 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
                     CustomerId = customer.CustomerId, // ✅ Sử dụng CustomerId từ Customer record
                     DealerId = customer.DealerId,
                     VariantId = VariantId,
+                    Quantity = Quantity, // ✅ Thêm quantity
                     Status = "Pending",
                     OrderDate = DateOnly.FromDateTime(DateTime.Now),
                 };

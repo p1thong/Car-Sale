@@ -13,6 +13,7 @@ namespace ASM1.Service.Services.Interfaces
         Task<Order> CreateOrderAsync(Order order);
         Task<Order?> GetOrderAsync(int orderId);
         Task<Order> UpdateOrderStatusAsync(int orderId, string status);
+        Task<bool> CancelOrderAsync(int orderId);
         Task<IEnumerable<Order>> GetOrdersByDealerAsync(int dealerId);
         Task<IEnumerable<Order>> GetOrdersByCustomerAsync(int customerId);
         Task<IEnumerable<Order>> GetPendingOrdersByDealerAsync(int dealerId);

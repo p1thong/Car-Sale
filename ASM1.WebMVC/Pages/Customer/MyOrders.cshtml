@@ -71,7 +71,8 @@
                                 <th>Mã đơn</th>
                                 <th>Ngày đặt</th>
                                 <th>Xe</th>
-                                <th>Giá</th>
+                                <th>Số lượng</th>
+                                <th>Tổng tiền</th>
                                 <th>Trạng thái</th>
                                 <th>Hành động</th>
                             </tr>
@@ -108,8 +109,12 @@
                                         </div>
                                     </td>
                                     <td>
+                                        <span class="badge bg-primary fs-6">@order.Quantity</span>
+                                    </td>
+                                    <td>
                                         <span class="fw-bold text-success">
-                                            @(order.Variant?.Price?.ToString("C0", new System.Globalization.CultureInfo("en-US")))
+                                            @(order.TotalPrice?.ToString("C0", new System.Globalization.CultureInfo("en-US")) ?? 
+                                              (order.Variant?.Price * order.Quantity)?.ToString("C0", new System.Globalization.CultureInfo("en-US")))
                                         </span>
                                     </td>
                                     <td>
@@ -138,6 +143,14 @@
                                                class="btn btn-outline-primary btn-sm">
                                                 <i class="fas fa-eye"></i> Chi tiết
                                             </a>
+                                            @if (order.Status == "Pending")
+                                            {
+                                                <button type="button" 
+                                                        class="btn btn-outline-danger btn-sm"
+                                                        onclick="cancelOrder(@order.OrderId)">
+                                                    <i class="fas fa-times"></i> Hủy đơn
+                                                </button>
+                                            }
                                             @if (order.Status == "Confirmed")
                                             {
                                                 var totalPaid = order.Payments?.Sum(p => p.Amount ?? 0) ?? 0;
@@ -204,6 +217,21 @@
         </div>
     }
 </div>
+
+<!-- Hidden form for cancel order -->
+<form id="cancelOrderForm" method="post" style="display: none;">
+    <input type="hidden" name="orderId" id="cancelOrderId" />
+    <input type="hidden" name="handler" value="CancelOrder" />
+</form>
+
+<script>
+function cancelOrder(orderId) {
+    if (confirm('Bạn có chắc chắn muốn hủy đơn hàng này? Hành động này không thể hoàn tác.')) {
+        document.getElementById('cancelOrderId').value = orderId;
+        document.getElementById('cancelOrderForm').submit();
+    }
+}
+</script>
 
 @section Scripts {
     <script src="~/js/site.js"></script>

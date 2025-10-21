@@ -52,5 +52,52 @@ namespace ASM1.WebMVC.Pages.Customer
                 return Page();
             }
         }
+
+        public async Task<IActionResult> OnPostCancelOrderAsync(int orderId)
+        {
+            try
+            {
+                // Verify the customer owns this order
+                var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+                if (string.IsNullOrEmpty(email))
+                {
+                    TempData["Error"] = "Vui lòng đăng nhập để thực hiện thao tác.";
+                    return RedirectToPage("/Auth/Login");
+                }
+
+                var customer = await _customerService.GetCustomerByEmailAsync(email);
+                if (customer == null)
+                {
+                    TempData["Error"] = "Không tìm thấy thông tin khách hàng.";
+                    return RedirectToPage();
+                }
+
+                // Get order to verify ownership
+                var order = await _salesService.GetOrderAsync(orderId);
+                if (order == null || order.CustomerId != customer.CustomerId)
+                {
+                    TempData["Error"] = "Không tìm thấy đơn hàng hoặc bạn không có quyền hủy đơn hàng này.";
+                    return RedirectToPage();
+                }
+
+                // Cancel the order
+                var success = await _salesService.CancelOrderAsync(orderId);
+                if (success)
+                {
+                    TempData["SuccessMessage"] = "Đã hủy đơn hàng thành công. Số lượng xe đã được hoàn lại kho.";
+                }
+                else
+                {
+                    TempData["Error"] = "Không thể hủy đơn hàng. Vui lòng thử lại.";
+                }
+
+                return RedirectToPage();
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Lỗi khi hủy đơn hàng: {ex.Message}";
+                return RedirectToPage();
+            }
+        }
     }
 }

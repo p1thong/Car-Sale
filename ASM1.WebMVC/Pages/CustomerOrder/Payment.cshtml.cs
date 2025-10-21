@@ -99,7 +99,7 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
 
             Payments = (await _salesService.GetPaymentsByOrderAsync(OrderId)).ToList();
             TotalPaid = Payments.Sum(p => p.Amount ?? 0);
-            OrderTotal = OrderData.Variant?.Price ?? 0;
+            OrderTotal = OrderData.TotalPrice ?? (OrderData.Variant?.Price * OrderData.Quantity) ?? 0;
             RemainingBalance = OrderTotal - TotalPaid;
             IsFullyPaid = RemainingBalance <= 0;
             Amount = RemainingBalance > 0 ? RemainingBalance : 0;
@@ -140,7 +140,7 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
                 // Calculate remaining balance and use it as payment amount
                 var existingPayments = await _salesService.GetPaymentsByOrderAsync(OrderId);
                 var totalPaid = existingPayments.Sum(p => p.Amount ?? 0);
-                var orderTotal = order.Variant?.Price ?? 0;
+                var orderTotal = order.TotalPrice ?? (order.Variant?.Price * order.Quantity) ?? 0;
                 var remainingBalance = orderTotal - totalPaid;
 
                 if (remainingBalance <= 0)

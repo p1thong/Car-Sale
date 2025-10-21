@@ -97,9 +97,12 @@
                                 <p><strong>Tên Xe:</strong> @Model.Order.Variant?.VehicleModel?.Name</p>
                                 <p><strong>Phiên Bản:</strong> @Model.Order.Variant?.Version</p>
                                 <p><strong>Màu Sắc:</strong> @Model.Order.Variant?.Color</p>
+                                <p><strong>Năm Sản Xuất:</strong> @Model.Order.Variant?.ProductYear</p>
                             </div>
                             <div class="col-md-6">
-                                <p><strong>Giá Niêm Yết:</strong> <strong class="text-success">@Model.Order.Variant?.Price?.ToString("N0") VNĐ</strong></p>
+                                <p><strong>Đơn Giá:</strong> <span class="text-info">@Model.Order.Variant?.Price?.ToString("N0") VNĐ</span></p>
+                                <p><strong>Số Lượng:</strong> <span class="badge bg-primary fs-6">@Model.Order.Quantity</span></p>
+                                <p><strong>Tổng Tiền:</strong> <strong class="text-success fs-5">@Model.Order.TotalPrice?.ToString("N0") VNĐ</strong></p>
                             </div>
                         </div>
                     </div>

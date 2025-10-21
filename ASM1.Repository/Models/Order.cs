@@ -17,6 +17,10 @@ public partial class Order
 
     public DateOnly? OrderDate { get; set; }
 
+    public int Quantity { get; set; } = 1;
+
+    public decimal? TotalPrice { get; set; }
+
     public virtual Customer Customer { get; set; } = null!;
 
     public virtual Dealer Dealer { get; set; } = null!;

@@ -44,7 +44,8 @@
                         <th>Khách Hàng</th>
                         <th>Xe</th>
                         <th>Ngày Đặt</th>
-                        <th>Giá Trị</th>
+                        <th>SL</th>
+                        <th>Tổng Tiền</th>
                         <th>Trạng Thái</th>
                         <th>Thao Tác</th>
                     </tr>
@@ -60,10 +61,11 @@
                             </td>
                             <td>
                                 @order.Variant?.VehicleModel?.Name<br>
-                                <small class="text-muted">@order.Variant?.Version</small>
+                                <small class="text-muted">@order.Variant?.Version - @order.Variant?.Color</small>
                             </td>
                             <td>@order.OrderDate?.ToString("dd/MM/yyyy")</td>
-                            <td><strong>@order.Variant?.Price?.ToString("N0") VNĐ</strong></td>
+                            <td><span class="badge bg-primary">@order.Quantity</span></td>
+                            <td><strong class="text-success">@order.TotalPrice?.ToString("N0") VNĐ</strong></td>
                             <td>
                                 @if (order.Status == "Pending")
                                 {

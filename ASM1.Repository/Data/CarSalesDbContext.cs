@@ -194,6 +194,8 @@ public partial class CarSalesDbContext : DbContext
             entity.Property(e => e.CustomerId).HasColumnName("customerId");
             entity.Property(e => e.DealerId).HasColumnName("dealerId");
             entity.Property(e => e.OrderDate).HasColumnName("orderDate");
+            entity.Property(e => e.Quantity).HasDefaultValue(1).HasColumnName("quantity");
+            entity.Property(e => e.TotalPrice).HasColumnType("decimal(12, 2)").HasColumnName("totalPrice");
             entity
                 .Property(e => e.Status)
                 .HasMaxLength(50)

@@ -74,15 +74,42 @@ namespace ASM1.Repository.Repositories
 
         public async Task<Order> CreateOrderAsync(Order order)
         {
-            // Get the next available OrderId
-            var maxOrderId = await _context.Orders.MaxAsync(o => (int?)o.OrderId) ?? 0;
-            order.OrderId = maxOrderId + 1;
-            
-            order.OrderDate = DateOnly.FromDateTime(DateTime.Now);
-            order.Status = "Pending";
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
-            return order;
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                // Get the next available OrderId
+                var maxOrderId = await _context.Orders.MaxAsync(o => (int?)o.OrderId) ?? 0;
+                order.OrderId = maxOrderId + 1;
+                
+                // Get vehicle variant to check availability and calculate total price
+                var variant = await _context.VehicleVariants.FindAsync(order.VariantId);
+                if (variant == null)
+                    throw new InvalidOperationException("Vehicle variant not found");
+                
+                // Check if enough quantity available
+                if (variant.Quantity < order.Quantity)
+                    throw new InvalidOperationException($"Not enough vehicles available. Only {variant.Quantity} left");
+                
+                // Reduce vehicle quantity
+                variant.Quantity -= order.Quantity;
+                
+                // Calculate total price
+                order.TotalPrice = variant.Price * order.Quantity;
+                
+                order.OrderDate = DateOnly.FromDateTime(DateTime.Now);
+                order.Status = "Pending";
+                
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                
+                return order;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
 
         public async Task<Order> UpdateOrderAsync(Order order)
@@ -94,13 +121,66 @@ namespace ASM1.Repository.Repositories
 
         public async Task<bool> DeleteOrderAsync(int orderId)
         {
-            var order = await _context.Orders.FindAsync(orderId);
-            if (order == null)
-                return false;
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var order = await _context.Orders.FindAsync(orderId);
+                if (order == null)
+                    return false;
 
-            _context.Orders.Remove(order);
-            await _context.SaveChangesAsync();
-            return true;
+                // Restore vehicle quantity when order is deleted/cancelled
+                var variant = await _context.VehicleVariants.FindAsync(order.VariantId);
+                if (variant != null)
+                {
+                    variant.Quantity += order.Quantity;
+                }
+
+                _context.Orders.Remove(order);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                
+                return true;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        public async Task<bool> CancelOrderAsync(int orderId)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var order = await _context.Orders.FindAsync(orderId);
+                if (order == null)
+                    return false;
+
+                // Only allow cancellation if order is still pending
+                if (order.Status != "Pending")
+                    throw new InvalidOperationException("Cannot cancel order that is not pending");
+
+                // Restore vehicle quantity
+                var variant = await _context.VehicleVariants.FindAsync(order.VariantId);
+                if (variant != null)
+                {
+                    variant.Quantity += order.Quantity;
+                }
+
+                // Update order status to cancelled
+                order.Status = "Cancelled";
+                
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                
+                return true;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
 
         public async Task<Order?> GetOrderWithDetailsAsync(int orderId)

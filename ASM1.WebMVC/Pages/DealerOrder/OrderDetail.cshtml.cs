@@ -68,7 +68,8 @@ namespace ASM1.WebMVC.Pages.DealerOrder
                 // Lấy thông tin thanh toán
                 Payments = await _salesService.GetPaymentsByOrderAsync(orderId);
                 TotalPaid = Payments?.Sum(p => p.Amount ?? 0) ?? 0;
-                OrderTotal = Order.Variant?.Price ?? 0;
+                // Sử dụng TotalPrice từ order thay vì Variant.Price
+                OrderTotal = Order.TotalPrice ?? (Order.Variant?.Price * Order.Quantity) ?? 0;
                 RemainingBalance = OrderTotal - TotalPaid;
 
                 return Page();

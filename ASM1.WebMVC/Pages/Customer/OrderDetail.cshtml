@@ -97,7 +97,9 @@
                         <p><strong>Version:</strong> @Model.Order.Variant?.Version</p>
                         <p><strong>Color:</strong> @Model.Order.Variant?.Color</p>
                         <p><strong>Year:</strong> @Model.Order.Variant?.ProductYear</p>
-                        <p><strong>Price:</strong> <span class="text-success fw-bold fs-4">$@Model.Order.Variant?.Price?.ToString("N0") $</span></p>
+                        <p><strong>Unit Price:</strong> <span class="text-info">$@Model.Order.Variant?.Price?.ToString("N0")</span></p>
+                        <p><strong>Quantity:</strong> <span class="badge bg-primary fs-6">@Model.Order.Quantity</span></p>
+                        <p><strong>Total Price:</strong> <span class="text-success fw-bold fs-4">$@Model.Order.TotalPrice?.ToString("N0")</span></p>
                     </div>
                 </div>
             </div>

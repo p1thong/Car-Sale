@@ -67,6 +67,11 @@ namespace ASM1.Service.Services
             return await _orderRepository.UpdateOrderAsync(order);
         }
 
+        public async Task<bool> CancelOrderAsync(int orderId)
+        {
+            return await _orderRepository.CancelOrderAsync(orderId);
+        }
+
         public async Task<IEnumerable<Order>> GetOrdersByDealerAsync(int dealerId)
         {
             return await _orderRepository.GetOrdersByDealerAsync(dealerId);
@@ -173,8 +178,8 @@ namespace ASM1.Service.Services
             if (order == null) return 0;
 
             var totalPaid = await _paymentRepository.GetTotalPaidAmountByOrderAsync(orderId);
-            // Dùng Variant Price thay vì SalesContract TotalAmount
-            var totalAmount = order.Variant?.Price ?? 0;
+            // Dùng TotalPrice hoặc tính toán từ Variant Price * Quantity
+            var totalAmount = order.TotalPrice ?? (order.Variant?.Price * order.Quantity) ?? 0;
 
             return Math.Max(0, totalAmount - totalPaid);
         }
