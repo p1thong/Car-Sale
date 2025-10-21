@@ -44,12 +44,15 @@
                         <p class="mb-2"><strong>Version:</strong> @Model.Variant.Version</p>
                         <p class="mb-2"><strong>Color:</strong> <span class="badge bg-secondary">@Model.Variant.Color</span></p>
                         <p class="mb-2"><strong>Year:</strong> @Model.Variant.ProductYear</p>
+
+                        <!-- ✅ Add data-price with raw numeric value -->
                         <p class="mb-2">
                             <strong>Price:</strong>
-                            <span class="text-success h5">
-                                $@Model.Variant.Price?.ToString("N2")
+                            <span class="text-success h5" id="vehicle-price" data-price="@(Model.Variant?.Price ?? 0)">
+                                $@Model.Variant.Price?.ToString("N0")
                             </span>
                         </p>
+
                         <p class="mb-2">
                             <strong>Available:</strong>
                             <span class="badge bg-success">@Model.Variant.Quantity units</span>
@@ -82,21 +85,21 @@
                             <div class="mb-3">
                                 <label asp-for="Quantity" class="form-label">Số Lượng</label>
                                 <input asp-for="Quantity" type="number" class="form-control"
-                                       min="1" max="@Model.MaxQuantity" />
+                                       min="1" max="@Model.MaxQuantity" value="1" />
                                 <span asp-validation-for="Quantity" class="text-danger"></span>
                                 <small class="text-muted">Tối đa: @Model.MaxQuantity xe</small>
                             </div>
 
                             <div class="mb-3">
-                                <label asp-for="Notes" class="form-label">Ghi Chú (Optional)</label>
+                                <label asp-for="Notes" class="form-label">Ghi Chú (Tùy chọn)</label>
                                 <textarea asp-for="Notes" class="form-control" rows="3"
                                           placeholder="Yêu cầu đặc biệt..."></textarea>
                             </div>
 
                             <div class="alert alert-info">
                                 <strong>Tổng tiền:</strong>
-                                <span class="h5 text-success">
-                                    $@(((Model.Variant.Price ?? 0) * Model.Quantity).ToString("N2"))
+                                <span id="total-price" class="h5 text-success">
+                                    $@((Model.Variant.Price ?? 0).ToString("N0"))
                                 </span>
                             </div>
 
@@ -118,12 +121,37 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        // Auto-update total when quantity changes
-        document.querySelector('input[name="Quantity"]').addEventListener('input', function() {
-            var price = @(Model.Variant?.Price ?? 0);
-            var qty = parseInt(this.value) || 1;
-            var total = (price * qty).toFixed(2);
-            document.querySelector('.alert-info .h5').textContent = '$' + total.toLocaleString();
+        document.addEventListener('DOMContentLoaded', function () {
+            const qtyInput = document.querySelector('input[name="Quantity"]');
+            const totalEl = document.getElementById('total-price');
+            const vehiclePriceEl = document.getElementById('vehicle-price');
+
+            // ✅ Get clean numeric value from data attribute (not formatted text)
+            const numericPrice = parseFloat(vehiclePriceEl.dataset.price) || 0;
+
+            // ✅ Use dot separators like in your Price display ($20.000)
+            function formatPriceDot(value) {
+                return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            }
+
+            function updateTotal() {
+                let qty = parseInt(qtyInput.value) || 1;
+                const min = parseInt(qtyInput.min) || 1;
+                const max = parseInt(qtyInput.max) || 1;
+
+                if (qty < min) qty = min;
+                if (qty > max) qty = max;
+                qtyInput.value = qty;
+
+                const total = numericPrice * qty;
+                totalEl.textContent = formatPriceDot(total);
+            }
+
+            qtyInput.value = 1;
+            updateTotal();
+
+            qtyInput.addEventListener('input', updateTotal);
+            qtyInput.addEventListener('change', updateTotal);
         });
     </script>
 }

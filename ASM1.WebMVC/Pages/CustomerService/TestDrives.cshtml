@@ -1,154 +1,191 @@
 @page
 @model ASM1.WebMVC.Pages.CustomerService.TestDrivesModel
 @{
-    ViewData["Title"] = "Quản Lý Lịch Lái Thử";
+	ViewData["Title"] = "Quản Lý Lịch Lái Thử";
 }
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="fas fa-calendar-check text-primary"></i> Quản Lý Lịch Lái Thử</h2>
-        <div class="btn-group">
-            <a href="/CustomerService/ScheduleTestDrive" class="btn btn-success">
-                <i class="fas fa-plus"></i> Đặt Lịch Mới
-            </a>
-        </div>
-    </div>
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h2><i class="fas fa-calendar-check text-primary"></i> Quản Lý Lịch Lái Thử</h2>
+		<div class="btn-group">
+			<a href="/CustomerService/ScheduleTestDrive" class="btn btn-success">
+				<i class="fas fa-plus"></i> Đặt Lịch Mới
+			</a>
+		</div>
+	</div>
 
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["Success"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
+	@if (TempData["Success"] != null)
+	{
+		<div class="alert alert-success alert-dismissible fade show" role="alert">
+			@TempData["Success"]
+			<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+		</div>
+	}
 
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            @TempData["Error"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
+	@if (TempData["Error"] != null)
+	{
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			@TempData["Error"]
+			<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+		</div>
+	}
 
-    <!-- Date Filter -->
-    <div class="card mb-4">
-        <div class="card-body">
-            <form method="get" class="row g-3">
-                <div class="col-md-4">
-                    <label for="date" class="form-label">Chọn Ngày:</label>
-                    <input type="date" id="date" name="date" class="form-control"
-                        value="@(Model.SelectedDate?.ToString("yyyy-MM-dd"))" />
-                </div>
-                <div class="col-md-2 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="fas fa-search"></i> Lọc
-                    </button>
-                </div>
-                <div class="col-md-2 d-flex align-items-end">
-                    <a href="/CustomerService/TestDrives" class="btn btn-outline-secondary w-100">
-                        <i class="fas fa-redo"></i> Reset
-                    </a>
-                </div>
-            </form>
-        </div>
-    </div>
+	<!-- Date Filter -->
+	<div class="card mb-4">
+		<div class="card-body">
+			<form method="get" class="row g-3">
+				<div class="col-md-4">
+					<label for="date" class="form-label">Chọn Ngày:</label>
+					<input type="date" id="date" name="date" class="form-control"
+						   value="@(Model.SelectedDate?.ToString("yyyy-MM-dd"))" />
+				</div>
+				<div class="col-md-2 d-flex align-items-end">
+					<button type="submit" class="btn btn-primary w-100">
+						<i class="fas fa-search"></i> Lọc
+					</button>
+				</div>
+				<div class="col-md-2 d-flex align-items-end">
+					<a href="/CustomerService/TestDrives" class="btn btn-outline-secondary w-100">
+						<i class="fas fa-redo"></i> Reset
+					</a>
+				</div>
+			</form>
+		</div>
+	</div>
 
-    @if (!Model.TestDrives.Any())
-    {
-        <div class="alert alert-info">
-            <i class="fas fa-info-circle"></i> Không có lịch lái thử nào
-            @if (Model.SelectedDate.HasValue)
-            {
-                <text> cho ngày @Model.SelectedDate.Value.ToString("dd/MM/yyyy")</text>
-            }
-            .
-        </div>
-    }
-    else
-    {
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Mã</th>
-                        <th>Khách Hàng</th>
-                        <th>Xe</th>
-                        <th>Ngày</th>
-                        <th>Giờ</th>
-                        <th>Trạng Thái</th>
-                        <th>Thao Tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var testDrive in Model.TestDrives)
-                    {
-                        <tr>
-                            <td><strong>#@testDrive.TestDriveId</strong></td>
-                            <td>
-                                @testDrive.Customer?.FullName<br>
-                                <small class="text-muted">@testDrive.Customer?.Phone</small>
-                            </td>
-                            <td>
-                                @testDrive.Variant?.VehicleModel?.Name<br>
-                                <small class="text-muted">@testDrive.Variant?.Version</small>
-                            </td>
-                            <td>@testDrive.ScheduledDate?.ToString("dd/MM/yyyy")</td>
-                            <td>@testDrive.ScheduledTime?.ToString("HH:mm")</td>
-                            <td>
-                                @if (testDrive.Status == "Scheduled")
-                                {
-                                    <span class="badge bg-warning">Đã Đặt</span>
-                                }
-                                else if (testDrive.Status == "Confirmed")
-                                {
-                                    <span class="badge bg-info">Đã Xác Nhận</span>
-                                }
-                                else if (testDrive.Status == "Completed")
-                                {
-                                    <span class="badge bg-success">Hoàn Thành</span>
-                                }
-                                else if (testDrive.Status == "Cancelled")
-                                {
-                                    <span class="badge bg-danger">Đã Hủy</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-secondary">@testDrive.Status</span>
-                                }
-                            </td>
-                            <td>
-                                <div class="btn-group btn-group-sm">
-                                    <a href="/CustomerService/TestDriveDetails/@testDrive.TestDriveId" class="btn btn-info">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    @if (testDrive.Status == "Scheduled")
-                                    {
-                                        <form method="post" asp-page-handler="Confirm" class="d-inline">
-                                            <input type="hidden" name="testDriveId" value="@testDrive.TestDriveId" />
-                                            <button type="submit" class="btn btn-success">
-                                                <i class="fas fa-check"></i>
-                                            </button>
-                                        </form>
-                                    }
-                                    @if (testDrive.Status == "Confirmed")
-                                    {
-                                        <form method="post" asp-page-handler="Complete" class="d-inline">
-                                            <input type="hidden" name="testDriveId" value="@testDrive.TestDriveId" />
-                                            <button type="submit" class="btn btn-primary">
-                                                <i class="fas fa-flag-checkered"></i>
-                                            </button>
-                                        </form>
-                                    }
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
+	@if (!Model.TestDrives.Any())
+	{
+		<div class="alert alert-info">
+			<i class="fas fa-info-circle"></i> Không có lịch lái thử nào
+			@if (Model.SelectedDate.HasValue)
+			{
+				<text> cho ngày @Model.SelectedDate.Value.ToString("dd/MM/yyyy")</text>
+			}
+			.
+		</div>
+	}
+	else
+	{
+		<div class="table-responsive">
+			<table class="table table-hover">
+				<thead class="table-dark">
+					<tr>
+						<th>Mã</th>
+						<th>Khách Hàng</th>
+						<th>Xe</th>
+						<th>Ngày</th>
+						<th>Giờ</th>
+						<th>Trạng Thái</th>
+						<th>Thao Tác</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var testDrive in Model.TestDrives)
+					{
+						<tr>
+							<td><strong>#@testDrive.TestDriveId</strong></td>
+							<td>
+								@testDrive.Customer?.FullName<br>
+								<small class="text-muted">@testDrive.Customer?.Phone</small>
+							</td>
+							<td>
+								@testDrive.Variant?.VehicleModel?.Name<br>
+								<small class="text-muted">@testDrive.Variant?.Version</small>
+							</td>
+							<td>@testDrive.ScheduledDate?.ToString("dd/MM/yyyy")</td>
+							<td>@testDrive.ScheduledTime?.ToString("HH:mm")</td>
+							<td>
+								@if (testDrive.Status == "Scheduled")
+								{
+									<span class="badge bg-warning">Đã Đặt</span>
+								}
+								else if (testDrive.Status == "Confirmed")
+								{
+									<span class="badge bg-info">Đã Xác Nhận</span>
+								}
+								else if (testDrive.Status == "Completed")
+								{
+									<span class="badge bg-success">Hoàn Thành</span>
+								}
+								else if (testDrive.Status == "Cancelled")
+								{
+									<span class="badge bg-danger">Đã Hủy</span>
+								}
+								else
+								{
+									<span class="badge bg-secondary">@testDrive.Status</span>
+								}
+							</td>
+							<td>
+								<div class="btn-group btn-group-sm">
+									<a href="/CustomerService/TestDriveDetails/@testDrive.TestDriveId"
+									   class="btn btn-info" title="Xem chi tiết">
+										<i class="fas fa-eye"></i>
+									</a>
+
+									@* Nút Xác Nhận *@
+									@if (testDrive.Status == "Scheduled")
+									{
+										<form method="post" asp-page-handler="Confirm" class="d-inline">
+											<input type="hidden" name="testDriveId" value="@testDrive.TestDriveId" />
+											<button type="submit" class="btn btn-success" title="Xác nhận lịch lái thử">
+												<i class="fas fa-check"></i>
+											</button>
+										</form>
+									}
+
+									@* Nút Hoàn Thành (chỉ hiện nếu đã qua thời gian lái thử) *@
+									@{
+										var scheduledDateTime = testDrive.ScheduledDate.HasValue && testDrive.ScheduledTime.HasValue
+										? testDrive.ScheduledDate.Value.ToDateTime(testDrive.ScheduledTime.Value)
+										: (DateTime?)null;
+									}
+
+									@if (testDrive.Status == "Confirmed" && scheduledDateTime.HasValue)
+									{
+										if (scheduledDateTime.Value < DateTime.Now)
+										{
+											<!-- Đã qua giờ => Cho phép bấm -->
+											<form method="post" asp-page-handler="Complete" class="d-inline">
+												<input type="hidden" name="testDriveId" value="@testDrive.TestDriveId" />
+												<button type="submit" class="btn btn-primary"
+														title="Đánh dấu là đã hoàn thành">
+													<i class="fas fa-flag-checkered"></i>
+												</button>
+											</form>
+										}
+										else
+										{
+											<!-- Chưa tới giờ => Disable & tooltip giải thích -->
+											<span data-bs-toggle="tooltip" title="Chưa thể hoàn thành — lịch lái thử chưa diễn ra">
+												<button type="button" class="btn btn-secondary" disabled>
+													<i class="fas fa-flag-checkered"></i>
+												</button>
+											</span>
+										}
+									}
+								</div>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	}
 </div>
+
 @section Scripts {
-    <script src="~/js/site.js"></script>
-    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+	<script src="~/js/site.js"></script>
+	<script src="~/js/signalr/dist/browser/signalr.js"></script>
+
+	<!-- Kích hoạt Bootstrap tooltip -->
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+			tooltipTriggerList.forEach(function (el) {
+				new bootstrap.Tooltip(el);
+			});
+		});
+	</script>
 }
+
