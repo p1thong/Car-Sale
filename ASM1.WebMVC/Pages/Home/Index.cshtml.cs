@@ -1,3 +1,4 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +16,7 @@ namespace ASM1.WebMVC.Pages.Home
         }
 
         // Property để bind data từ code-behind sang view
-        public IEnumerable<VehicleVariant> Vehicles { get; set; } = new List<VehicleVariant>();
+        public IEnumerable<VehicleVariantDto> Vehicles { get; set; } = new List<VehicleVariantDto>();
 
         // GET handler - tương đương với action Index() trong controller
         public async Task<IActionResult> OnGetAsync()
@@ -31,7 +32,7 @@ namespace ASM1.WebMVC.Pages.Home
                 _logger.LogError(ex, "Error loading vehicles for homepage");
                 TempData["ErrorMessage"] =
                     "Có lỗi xảy ra khi tải danh sách xe. Vui lòng thử lại sau.";
-                Vehicles = new List<VehicleVariant>();
+                Vehicles = new List<VehicleVariantDto>();
                 return Page();
             }
         }

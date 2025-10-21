@@ -74,6 +74,8 @@
                                 <th>Số lượng</th>
                                 <th>Tổng tiền</th>
                                 <th>Trạng thái</th>
+                                <th>Thanh toán</th>
+                                <th>Giao hàng</th>
                                 <th>Hành động</th>
                             </tr>
                         </thead>
@@ -85,10 +87,10 @@
                                     <td>@order.OrderDate?.ToString("dd/MM/yyyy")</td>
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            @if (!string.IsNullOrEmpty(order.Variant?.VehicleModel?.ImageUrl))
+                                            @if (!string.IsNullOrEmpty(order.ImageUrl))
                                             {
-                                                <img src="@order.Variant.VehicleModel.ImageUrl" 
-                                                     alt="@order.Variant.VehicleModel.ModelName" 
+                                                <img src="@order.ImageUrl" 
+                                                     alt="@order.ModelName" 
                                                      class="me-3 rounded" 
                                                      style="width: 60px; height: 40px; object-fit: cover;">
                                             }
@@ -100,10 +102,10 @@
                                                 </div>
                                             }
                                             <div>
-                                                <div class="fw-bold">@order.Variant?.VehicleModel?.ModelName</div>
+                                                <div class="fw-bold">@order.ModelName</div>
                                                 <small class="text-muted">
-                                                    @order.Variant?.VehicleModel?.Manufacturer?.Name - 
-                                                    @order.Variant?.Version (@order.Variant?.Color)
+                                                    @order.ManufacturerName - 
+                                                    @order.VariantVersion (@order.VariantColor)
                                                 </small>
                                             </div>
                                         </div>
@@ -114,7 +116,7 @@
                                     <td>
                                         <span class="fw-bold text-success">
                                             @(order.TotalPrice?.ToString("C0", new System.Globalization.CultureInfo("en-US")) ?? 
-                                              (order.Variant?.Price * order.Quantity)?.ToString("C0", new System.Globalization.CultureInfo("en-US")))
+                                              (order.Price * order.Quantity)?.ToString("C0", new System.Globalization.CultureInfo("en-US")))
                                         </span>
                                     </td>
                                     <td>
@@ -139,58 +141,62 @@
 									}
                                     </td>
                                     <td>
-                                        <div class="btn-group" role="group">
-                                            <a asp-page="/Customer/OrderDetail" asp-route-id="@order.OrderId"
-                                               class="btn btn-outline-primary btn-sm">
-                                                <i class="fas fa-eye"></i> Chi tiết
+                                        @if (order.IsFullyPaid)
+                                        {
+                                            <span class="badge bg-success">Đã thanh toán</span>
+                                        }
+                                        else if (order.TotalPaid > 0)
+                                        {
+                                            <span class="badge bg-warning text-dark">Đã cọc</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Chưa thanh toán</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (order.Status == "Completed" || order.Status == "Paid")
+                                        {
+                                            var deliveryStatus = order.Payments?.FirstOrDefault(p => p.Status != "Completed")?.Status;
+                                            @switch (deliveryStatus)
+                                            {
+                                                case "Delivering":
+                                                    <span class="badge bg-warning text-dark">Đang giao</span>
+                                                    break;
+                                                case "Delivered":
+                                                    <span class="badge bg-info">Đã giao</span>
+                                                    break;
+                                                case "Received":
+                                                    <span class="badge bg-success">Đã nhận</span>
+                                                    break;
+                                                default:
+                                                    <span class="badge bg-secondary">Chờ giao</span>
+                                                    break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-light text-dark">N/A</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-end">
+                                            <a href="/Customer/OrderDetail/@order.OrderId" class="btn btn-sm btn-outline-primary me-2">
+                                                <i class="fas fa-eye me-1"></i> Xem
                                             </a>
+                                            @if (!order.IsFullyPaid && order.Status == "Confirmed")
+                                            {
+                                                <a href="/CustomerOrder/Payment/@order.OrderId" class="btn btn-sm btn-success">
+                                                    <i class="fas fa-credit-card me-1"></i> Thanh toán
+                                                </a>
+                                            }
                                             @if (order.Status == "Pending")
                                             {
-                                                <button type="button" 
+                                                <button type="button"
                                                         class="btn btn-outline-danger btn-sm"
                                                         onclick="cancelOrder(@order.OrderId)">
                                                     <i class="fas fa-times"></i> Hủy đơn
                                                 </button>
-                                            }
-                                            @if (order.Status == "Confirmed")
-                                            {
-                                                var totalPaid = order.Payments?.Sum(p => p.Amount ?? 0) ?? 0;
-                                                var orderTotal = order.Variant?.Price ?? 0;
-                                                var isFullyPaid = totalPaid >= orderTotal;
-                                                
-                                                if (!isFullyPaid)
-                                                {
-                                                    <a asp-page="/CustomerOrder/Payment" asp-route-orderId="@order.OrderId"
-                                                       class="btn btn-success btn-sm">
-                                                        <i class="fas fa-credit-card"></i> Thanh toán
-                                                    </a>
-                                                }
-                                            }
-                                            @if (order.Status == "Completed" && order.Payments?.Any() == true)
-                                            {
-                                                var hasDelivering = order.Payments.Any(p => p.Status == "Delivering");
-                                                var hasDelivered = order.Payments.Any(p => p.Status == "Delivered");
-                                                var hasReceived = order.Payments.Any(p => p.Status == "Received");
-                                                var allReceived = order.Payments.All(p => p.Status == "Received");
-                                                
-                                                if (allReceived)
-                                                {
-                                                    <span class="badge bg-primary">
-                                                        <i class="fas fa-handshake me-1"></i>Đã nhận
-                                                    </span>
-                                                }
-                                                else if (hasDelivered)
-                                                {
-                                                    <span class="badge bg-info">
-                                                        <i class="fas fa-check-circle me-1"></i>Đã giao
-                                                    </span>
-                                                }
-                                                else if (hasDelivering)
-                                                {
-                                                    <span class="badge bg-warning">
-                                                        <i class="fas fa-truck me-1"></i>Đang giao
-                                                    </span>
-                                                }
                                             }
                                         </div>
                                     </td>

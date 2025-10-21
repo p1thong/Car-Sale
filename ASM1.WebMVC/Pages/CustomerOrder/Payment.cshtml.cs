@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using ASM1.WebMVC.Hubs;
 using Microsoft.AspNetCore.Mvc;
@@ -21,8 +22,8 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
             _hubContext = hubContext;
         }
 
-        public Order? OrderData { get; set; }
-        public List<Payment> Payments { get; set; } = new();
+        public OrderDto? OrderData { get; set; }
+        public List<PaymentDto> Payments { get; set; } = new();
         public decimal TotalPaid { get; set; }
         public decimal OrderTotal { get; set; }
         public decimal RemainingBalance { get; set; }
@@ -55,7 +56,7 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
                         if (cust != null)
                         {
                             customerId = cust.CustomerId;
-                            try { HttpContext.Session.SetString("UserId", customerId.ToString()); } catch { }
+                            try { HttpContext.Session.SetString("UserId", customerId.ToString() ?? ""); } catch { }
                             _logger.LogInformation("Resolved customerId from email fallback: {customerId}", customerId);
                         }
                     }
@@ -99,7 +100,7 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
 
             Payments = (await _salesService.GetPaymentsByOrderAsync(OrderId)).ToList();
             TotalPaid = Payments.Sum(p => p.Amount ?? 0);
-            OrderTotal = OrderData.TotalPrice ?? (OrderData.Variant?.Price * OrderData.Quantity) ?? 0;
+            OrderTotal = OrderData.TotalPrice ?? 0;
             RemainingBalance = OrderTotal - TotalPaid;
             IsFullyPaid = RemainingBalance <= 0;
             Amount = RemainingBalance > 0 ? RemainingBalance : 0;
@@ -140,7 +141,7 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
                 // Calculate remaining balance and use it as payment amount
                 var existingPayments = await _salesService.GetPaymentsByOrderAsync(OrderId);
                 var totalPaid = existingPayments.Sum(p => p.Amount ?? 0);
-                var orderTotal = order.TotalPrice ?? (order.Variant?.Price * order.Quantity) ?? 0;
+                var orderTotal = order.TotalPrice ?? 0;
                 var remainingBalance = orderTotal - totalPaid;
 
                 if (remainingBalance <= 0)

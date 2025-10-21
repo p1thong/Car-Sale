@@ -1,6 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace ASM1.WebMVC.Pages.Product
 {
@@ -38,7 +41,7 @@ namespace ASM1.WebMVC.Pages.Product
 
             try
             {
-                var manufacturer = new Manufacturer
+                var manufacturer = new ManufacturerDto
                 {
                     ManufacturerId = 0,
                     Name = Name,

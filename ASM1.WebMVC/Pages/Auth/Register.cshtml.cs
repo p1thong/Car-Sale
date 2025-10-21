@@ -1,6 +1,9 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ASM1.WebMVC.Pages.Auth
 {
@@ -82,7 +85,7 @@ namespace ASM1.WebMVC.Pages.Auth
             }
 
             // Tạo user mới với vai trò mặc định là customer
-            var newUser = new User
+            var newUser = new UserDto
             {
                 FullName = FullName,
                 Email = Email,

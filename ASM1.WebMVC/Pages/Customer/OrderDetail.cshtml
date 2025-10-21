@@ -66,7 +66,7 @@
                                 <span class="badge bg-secondary">@Model.Order.Status</span>
                             }
                         </p>
-                        <p><strong>Dealer:</strong> @Model.Order.Dealer?.FullName</p>
+                        <p><strong>Dealer:</strong> @Model.Order.DealerName</p>
                     </div>
                 </div>
             </div>
@@ -79,10 +79,10 @@
                     </div>
                     <div class="card-body">
                         <div class="text-center mb-3">
-                            @if (!string.IsNullOrEmpty(Model.Order.Variant?.VehicleModel?.ImageUrl))
+                            @if (!string.IsNullOrEmpty(Model.Order.ImageUrl))
                             {
-                                <img src="@Model.Order.Variant.VehicleModel.ImageUrl" 
-                                     alt="@Model.Order.Variant.VehicleModel.Name" 
+                                <img src="@Model.Order.ImageUrl" 
+                                     alt="@Model.Order.ModelName" 
                                      class="img-fluid rounded" style="max-height: 200px;">
                             }
                             else
@@ -93,11 +93,11 @@
                                 </div>
                             }
                         </div>
-                        <p><strong>Vehicle:</strong> @Model.Order.Variant?.VehicleModel?.Name</p>
-                        <p><strong>Version:</strong> @Model.Order.Variant?.Version</p>
-                        <p><strong>Color:</strong> @Model.Order.Variant?.Color</p>
-                        <p><strong>Year:</strong> @Model.Order.Variant?.ProductYear</p>
-                        <p><strong>Unit Price:</strong> <span class="text-info">@Model.Order.Variant?.Price?.ToString("N0")$</span></p>
+                        <p><strong>Vehicle:</strong> @Model.Order.ModelName</p>
+                        <p><strong>Version:</strong> @Model.Order.VariantVersion</p>
+                        <p><strong>Color:</strong> @Model.Order.VariantColor</p>
+                        <p><strong>Year:</strong> @Model.Order.ProductYear</p>
+                        <p><strong>Unit Price:</strong> <span class="text-info">@Model.Order.Price?.ToString("N0")$</span></p>
                         <p><strong>Quantity:</strong> <span class="badge bg-primary fs-6">@Model.Order.Quantity</span></p>
                         <p><strong>Total Price:</strong> <span class="text-success fw-bold fs-4">@Model.Order.TotalPrice?.ToString("N0")$</span></p>
                     </div>
@@ -260,7 +260,7 @@
                                         {
                                             <tr>
                                                 <td>#@payment.PaymentId</td>
-                                                <td>@payment.PaymentDate?.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
+                                                <td>@(payment.PaymentDate.HasValue ? payment.PaymentDate.Value.ToString("dd/MM/yyyy") : "N/A")</td>
                                                 <td>$@payment.Amount?.ToString("N0") $</td>
                                                 <td>@payment.PaymentMethod</td>
                                                 <td>

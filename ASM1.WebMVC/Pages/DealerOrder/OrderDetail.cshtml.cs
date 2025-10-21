@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using ASM1.WebMVC.Hubs;
 using Microsoft.AspNetCore.Mvc;
@@ -23,8 +24,8 @@ namespace ASM1.WebMVC.Pages.DealerOrder
             _hubContext = hubContext;
         }
 
-        public Order? Order { get; set; }
-        public IEnumerable<Payment> Payments { get; set; } = new List<Payment>();
+        public OrderDto? Order { get; set; }
+        public IEnumerable<PaymentDto> Payments { get; set; } = new List<PaymentDto>();
         public decimal TotalPaid { get; set; }
         public decimal OrderTotal { get; set; }
         public decimal RemainingBalance { get; set; }
@@ -69,7 +70,7 @@ namespace ASM1.WebMVC.Pages.DealerOrder
                 Payments = await _salesService.GetPaymentsByOrderAsync(orderId);
                 TotalPaid = Payments?.Sum(p => p.Amount ?? 0) ?? 0;
                 // Sử dụng TotalPrice từ order thay vì Variant.Price
-                OrderTotal = Order.TotalPrice ?? (Order.Variant?.Price * Order.Quantity) ?? 0;
+                OrderTotal = Order.TotalPrice ?? 0;
                 RemainingBalance = OrderTotal - TotalPaid;
 
                 return Page();
@@ -181,7 +182,7 @@ namespace ASM1.WebMVC.Pages.DealerOrder
                 // Kiểm tra đã thanh toán đủ chưa
                 var payments = await _salesService.GetPaymentsByOrderAsync(orderId);
                 var totalPaid = payments?.Sum(p => p.Amount ?? 0) ?? 0;
-                var orderTotal = order.Variant?.Price ?? 0;
+                var orderTotal = order.TotalPrice ?? 0;
 
                 if (totalPaid < orderTotal)
                 {

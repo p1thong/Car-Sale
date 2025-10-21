@@ -1,3 +1,4 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,7 @@ namespace ASM1.WebMVC.Pages.DealerOrder
             _dealerService = dealerService;
         }
 
-        public IEnumerable<Order> Orders { get; set; } = new List<Order>();
+        public IEnumerable<OrderDto> Orders { get; set; } = new List<OrderDto>();
 
         public async Task<IActionResult> OnGetAsync()
         {

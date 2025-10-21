@@ -39,7 +39,7 @@
                         {
                             <p><i class="fas fa-birthday-cake text-primary"></i> <strong>Ngày Sinh:</strong> @Model.Customer.Birthday.Value.ToString("dd/MM/yyyy")</p>
                         }
-                        <p><i class="fas fa-building text-primary"></i> <strong>Dealer:</strong> @Model.Customer.Dealer?.FullName</p>
+                        <p><i class="fas fa-building text-primary"></i> <strong>Dealer:</strong> @Model.Customer.DealerName</p>
                     </div>
                 </div>
             </div>
@@ -106,14 +106,14 @@
                                         {
                                             <tr>
                                                 <td><strong>#@order.OrderId</strong></td>
-                                                <td>@order.Variant?.VehicleModel?.Name</td>
+                                                <td>@order.ModelName</td>
                                                 <td>@order.OrderDate?.ToString("dd/MM/yyyy")</td>
                                                 <td>
                                                     <span class="badge bg-@(order.Status == "Completed" ? "success" : order.Status == "Confirmed" ? "info" : "warning")">
                                                         @order.Status
                                                     </span>
                                                 </td>
-                                                <td>@order.Variant?.Price?.ToString("N0") $</td>
+                                                <td>@order.Price?.ToString("N0") $</td>
                                             </tr>
                                         }
                                     </tbody>
@@ -149,7 +149,7 @@
                                         {
                                             <tr>
                                                 <td><strong>#@testDrive.TestDriveId</strong></td>
-                                                <td>@testDrive.Variant?.VehicleModel?.Name</td>
+                                                <td>@testDrive.ModelName</td>
                                                 <td>@testDrive.ScheduledDate?.ToString("dd/MM/yyyy")</td>
                                                 <td>@testDrive.ScheduledTime?.ToString("HH:mm")</td>
                                                 <td>

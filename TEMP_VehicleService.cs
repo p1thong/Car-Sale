@@ -59,34 +59,23 @@ namespace ASM1.Service.Services
             return _mapper.Map<Manufacturer, ManufacturerDto>(result);
         }
 
-        private VehicleModelDto MapVehicleModelToDto(VehicleModel model)
-        {
-            var modelDto = _mapper.Map<VehicleModel, VehicleModelDto>(model);
-            if (model.Manufacturer != null)
-            {
-                modelDto.ManufacturerName = model.Manufacturer.Name;
-                modelDto.ManufacturerCountry = model.Manufacturer.Country;
-            }
-            return modelDto;
-        }
-
         // Vehicle Model Management
         public async Task<IEnumerable<VehicleModelDto>> GetAllVehicleModelsAsync()
         {
             var models = await _vehicleRepository.GetAllVehicleModelsAsync();
-            return models.Select(MapVehicleModelToDto);
+            return _mapper.MapList<VehicleModel, VehicleModelDto>(models);
         }
 
         public async Task<VehicleModelDto?> GetVehicleModelByIdAsync(int modelId)
         {
             var model = await _vehicleRepository.GetVehicleModelByIdAsync(modelId);
-            return model != null ? MapVehicleModelToDto(model) : null;
+            return model != null ? _mapper.Map<VehicleModel, VehicleModelDto>(model) : null;
         }
 
         public async Task<IEnumerable<VehicleModelDto>> GetVehicleModelsByManufacturerAsync(int manufacturerId)
         {
             var models = await _vehicleRepository.GetVehicleModelsByManufacturerAsync(manufacturerId);
-            return models.Select(MapVehicleModelToDto);
+            return _mapper.MapList<VehicleModel, VehicleModelDto>(models);
         }
 
         public async Task<VehicleModelDto> CreateVehicleModelAsync(VehicleModelDto modelDto)
@@ -100,8 +89,7 @@ namespace ASM1.Service.Services
             }
 
             var result = await _vehicleRepository.CreateVehicleModelAsync(model);
-            var newModel = await _vehicleRepository.GetVehicleModelByIdAsync(result.VehicleModelId);
-            return MapVehicleModelToDto(newModel!);
+            return _mapper.Map<VehicleModel, VehicleModelDto>(result);
         }
 
         public async Task<VehicleModelDto> UpdateVehicleModelAsync(VehicleModelDto modelDto)
@@ -114,62 +102,41 @@ namespace ASM1.Service.Services
                 throw new InvalidOperationException($"Vehicle model with name '{model.Name}' already exists for this manufacturer");
             }
 
-            await _vehicleRepository.UpdateVehicleModelAsync(model);
-            var updatedModel = await _vehicleRepository.GetVehicleModelByIdAsync(model.VehicleModelId);
-            return MapVehicleModelToDto(updatedModel!);
-        }
-
-        private VehicleVariantDto MapVehicleVariantToDto(VehicleVariant variant)
-        {
-            var variantDto = _mapper.Map<VehicleVariant, VehicleVariantDto>(variant);
-            if (variant.VehicleModel != null)
-            {
-                variantDto.ModelName = variant.VehicleModel.Name;
-                variantDto.ImageUrl = variant.VehicleModel.ImageUrl;
-                variantDto.Category = variant.VehicleModel.Category;
-                if (variant.VehicleModel.Manufacturer != null)
-                {
-                    variantDto.ManufacturerName = variant.VehicleModel.Manufacturer.Name;
-                    variantDto.ManufacturerCountry = variant.VehicleModel.Manufacturer.Country;
-                    variantDto.ManufacturerAddress = variant.VehicleModel.Manufacturer.Address;
-                }
-            }
-            return variantDto;
+            var result = await _vehicleRepository.UpdateVehicleModelAsync(model);
+            return _mapper.Map<VehicleModel, VehicleModelDto>(result);
         }
 
         // Vehicle Variant Management
         public async Task<IEnumerable<VehicleVariantDto>> GetAllVehicleVariantsAsync()
         {
             var variants = await _vehicleRepository.GetAllVehicleVariantsAsync();
-            return variants.Select(MapVehicleVariantToDto);
+            return _mapper.MapList<VehicleVariant, VehicleVariantDto>(variants);
         }
 
         public async Task<VehicleVariantDto?> GetVehicleVariantByIdAsync(int variantId)
         {
             var variant = await _vehicleRepository.GetVehicleVariantByIdAsync(variantId);
-            return variant != null ? MapVehicleVariantToDto(variant) : null;
+            return variant != null ? _mapper.Map<VehicleVariant, VehicleVariantDto>(variant) : null;
         }
 
         public async Task<IEnumerable<VehicleVariantDto>> GetVehicleVariantsByModelAsync(int modelId)
         {
             var variants = await _vehicleRepository.GetVehicleVariantsByModelAsync(modelId);
-            return variants.Select(MapVehicleVariantToDto);
+            return _mapper.MapList<VehicleVariant, VehicleVariantDto>(variants);
         }
 
         public async Task<VehicleVariantDto> CreateVehicleVariantAsync(VehicleVariantDto variantDto)
         {
             var variant = _mapper.Map<VehicleVariantDto, VehicleVariant>(variantDto);
             var result = await _vehicleRepository.CreateVehicleVariantAsync(variant);
-            var newVariant = await _vehicleRepository.GetVehicleVariantByIdAsync(result.VariantId);
-            return MapVehicleVariantToDto(newVariant!);
+            return _mapper.Map<VehicleVariant, VehicleVariantDto>(result);
         }
 
         public async Task<VehicleVariantDto> UpdateVehicleVariantAsync(VehicleVariantDto variantDto)
         {
             var variant = _mapper.Map<VehicleVariantDto, VehicleVariant>(variantDto);
-            await _vehicleRepository.UpdateVehicleVariantAsync(variant);
-            var updatedVariant = await _vehicleRepository.GetVehicleVariantByIdAsync(variant.VariantId);
-            return MapVehicleVariantToDto(updatedVariant!);
+            var result = await _vehicleRepository.UpdateVehicleVariantAsync(variant);
+            return _mapper.Map<VehicleVariant, VehicleVariantDto>(result);
         }
 
         public async Task DeleteVehicleVariantAsync(int variantId)
@@ -180,27 +147,23 @@ namespace ASM1.Service.Services
         public async Task<IEnumerable<VehicleVariantDto>> GetAvailableVariantsAsync()
         {
             var variants = await _vehicleRepository.GetAvailableVariantsAsync();
-            return variants.Select(MapVehicleVariantToDto);
+            return _mapper.MapList<VehicleVariant, VehicleVariantDto>(variants);
         }
 
         // Business Logic Methods
         public async Task<bool> IsManufacturerNameExistsAsync(string name, int? excludeId = null)
         {
-            // Simplified implementation - get all manufacturers and check name
-            var manufacturers = await _vehicleRepository.GetAllManufacturersAsync();
-            return manufacturers.Any(m => m.Name == name && (excludeId == null || m.ManufacturerId != excludeId));
+            return await _vehicleRepository.IsManufacturerNameExistsAsync(name, excludeId);
         }
 
         public async Task<bool> IsVehicleModelNameExistsAsync(string name, int manufacturerId, int? excludeId = null)
         {
-            return await _vehicleRepository.VehicleModelNameExistsAsync(name, manufacturerId, excludeId);
+            return await _vehicleRepository.IsVehicleModelNameExistsAsync(name, manufacturerId, excludeId);
         }
 
         public async Task<bool> CanDeleteManufacturerAsync(int manufacturerId)
         {
-            // Check if manufacturer has associated models
-            var models = await _vehicleRepository.GetVehicleModelsByManufacturerAsync(manufacturerId);
-            return !models.Any();
+            return await _vehicleRepository.CanDeleteManufacturerAsync(manufacturerId);
         }
 
         public async Task DeleteManufacturerAsync(int manufacturerId)
@@ -215,9 +178,7 @@ namespace ASM1.Service.Services
 
         public async Task<bool> CanDeleteVehicleModelAsync(int modelId)
         {
-            // Check if model has associated variants
-            var variants = await _vehicleRepository.GetVehicleVariantsByModelAsync(modelId);
-            return !variants.Any();
+            return await _vehicleRepository.CanDeleteVehicleModelAsync(modelId);
         }
 
         public async Task DeleteVehicleModelAsync(int modelId)
@@ -232,20 +193,14 @@ namespace ASM1.Service.Services
 
         public async Task<IEnumerable<VehicleModelDto>> SearchVehicleModelsAsync(string searchTerm)
         {
-            // Simplified search - get all models and filter by name
-            var allModels = await _vehicleRepository.GetAllVehicleModelsAsync();
-            var filteredModels = allModels.Where(m => m.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
-            return _mapper.MapList<VehicleModel, VehicleModelDto>(filteredModels);
+            var models = await _vehicleRepository.SearchVehicleModelsAsync(searchTerm);
+            return _mapper.MapList<VehicleModel, VehicleModelDto>(models);
         }
 
         public async Task<IEnumerable<VehicleVariantDto>> SearchVehicleVariantsAsync(string searchTerm)
         {
-            // Simplified search - get all variants and filter by version or color
-            var allVariants = await _vehicleRepository.GetAllVehicleVariantsAsync();
-            var filteredVariants = allVariants.Where(v => 
-                (v.Version?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) == true) ||
-                (v.Color?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) == true));
-            return filteredVariants.Select(MapVehicleVariantToDto);
+            var variants = await _vehicleRepository.SearchVehicleVariantsAsync(searchTerm);
+            return _mapper.MapList<VehicleVariant, VehicleVariantDto>(variants);
         }
     }
 }

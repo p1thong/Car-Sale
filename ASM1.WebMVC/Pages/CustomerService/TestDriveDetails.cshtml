@@ -116,7 +116,7 @@
                                 </div>
 
                                 <!-- Customer Information -->
-                                @if (Model.TestDrive.Customer != null)
+                                @if (Model.TestDrive.CustomerId > 0)
                                 {
                                     <div class="card mb-4">
                                         <div class="card-header">
@@ -127,33 +127,26 @@
                                         <div class="card-body">
                                             <div class="row mb-3">
                                                 <div class="col-sm-4"><strong>Họ tên:</strong></div>
-                                                <div class="col-sm-8">@Model.TestDrive.Customer.FullName</div>
+                                                <div class="col-sm-8">@Model.TestDrive.CustomerName</div>
                                             </div>
                                             
                                             <div class="row mb-3">
                                                 <div class="col-sm-4"><strong>Email:</strong></div>
                                                 <div class="col-sm-8">
-                                                    <a href="mailto:@Model.TestDrive.Customer.Email">@Model.TestDrive.Customer.Email</a>
+                                                    <a href="mailto:@Model.TestDrive.CustomerEmail">@Model.TestDrive.CustomerEmail</a>
                                                 </div>
                                             </div>
 
-                                            @if (!string.IsNullOrEmpty(Model.TestDrive.Customer.Phone))
+                                            @if (!string.IsNullOrEmpty(Model.TestDrive.CustomerPhone))
                                             {
                                                 <div class="row mb-3">
                                                     <div class="col-sm-4"><strong>Số điện thoại:</strong></div>
                                                     <div class="col-sm-8">
-                                                        <a href="tel:@Model.TestDrive.Customer.Phone">@Model.TestDrive.Customer.Phone</a>
+                                                        <a href="tel:@Model.TestDrive.CustomerPhone">@Model.TestDrive.CustomerPhone</a>
                                                     </div>
                                                 </div>
                                             }
 
-                                            @if (Model.TestDrive.Customer.Birthday.HasValue)
-                                            {
-                                                <div class="row mb-3">
-                                                    <div class="col-sm-4"><strong>Ngày sinh:</strong></div>
-                                                    <div class="col-sm-8">@Model.TestDrive.Customer.Birthday.Value.ToString("dd/MM/yyyy")</div>
-                                                </div>
-                                            }
                                         </div>
                                     </div>
                                 }
@@ -161,69 +154,57 @@
 
                             <!-- Vehicle Information -->
                             <div class="col-lg-6">
-                                @if (Model.TestDrive.Variant != null)
+                                @if (Model.TestDrive.VariantId > 0)
                                 {
                                     <div class="card mb-4">
                                         <div class="card-header">
                                             <h5 class="mb-0">
-                                                <i class="fas fa-car"></i> Thông tin xe lái thử
+                                                <i class="fas fa-car"></i> Thông tin xe
                                             </h5>
                                         </div>
                                         <div class="card-body">
-                                            <!-- Vehicle Image -->
-                                            @if (!string.IsNullOrEmpty(Model.TestDrive.Variant.VehicleModel?.ImageUrl))
+                                            @if (!string.IsNullOrEmpty(Model.TestDrive.ImageUrl))
                                             {
-                                                <div class="text-center mb-3">
-                                                    <img src="@Model.TestDrive.Variant.VehicleModel.ImageUrl" 
-                                                         alt="@Model.TestDrive.Variant.VehicleModel?.Name" 
-                                                         class="img-fluid rounded" 
-                                                         style="max-height: 200px; object-fit: cover;">
+                                                <div class="text-center mb-4">
+                                                    <img src="@Model.TestDrive.ImageUrl"
+                                                         alt="@Model.TestDrive.ModelName"
+                                                         class="img-fluid rounded"
+                                                         style="max-height: 300px;" />
                                                 </div>
                                             }
 
                                             <div class="row mb-3">
                                                 <div class="col-sm-4"><strong>Tên xe:</strong></div>
-                                                <div class="col-sm-8">@Model.TestDrive.Variant.VehicleModel?.Name</div>
+                                                <div class="col-sm-8">@Model.TestDrive.ModelName</div>
                                             </div>
-
                                             <div class="row mb-3">
                                                 <div class="col-sm-4"><strong>Phiên bản:</strong></div>
-                                                <div class="col-sm-8">@Model.TestDrive.Variant.Version</div>
+                                                <div class="col-sm-8">@Model.TestDrive.VariantVersion</div>
                                             </div>
-
                                             <div class="row mb-3">
                                                 <div class="col-sm-4"><strong>Màu sắc:</strong></div>
                                                 <div class="col-sm-8">
-                                                    <span class="badge bg-success">@Model.TestDrive.Variant.Color</span>
+                                                    <span class="badge bg-success">@Model.TestDrive.VariantColor</span>
                                                 </div>
                                             </div>
-
                                             <div class="row mb-3">
                                                 <div class="col-sm-4"><strong>Năm sản xuất:</strong></div>
-                                                <div class="col-sm-8">@Model.TestDrive.Variant.ProductYear</div>
+                                                <div class="col-sm-8">@Model.TestDrive.ProductYear</div>
                                             </div>
-
-                                            @if (Model.TestDrive.Variant.VehicleModel?.Manufacturer != null)
-                                            {
-                                                <div class="row mb-3">
-                                                    <div class="col-sm-4"><strong>Hãng sản xuất:</strong></div>
-                                                    <div class="col-sm-8">
-                                                        <span class="badge bg-info">@Model.TestDrive.Variant.VehicleModel.Manufacturer.Name</span>
-                                                    </div>
+                                            <div class="row mb-3">
+                                                <div class="col-sm-4"><strong>Hãng xe:</strong></div>
+                                                <div class="col-sm-8">
+                                                    <span class="badge bg-info">@Model.TestDrive.ManufacturerName</span>
                                                 </div>
-                                            }
-
-                                            @if (Model.TestDrive.Variant.Price.HasValue)
-                                            {
-                                                <div class="row mb-3">
-                                                    <div class="col-sm-4"><strong>Giá bán:</strong></div>
-                                                    <div class="col-sm-8">
-                                                        <span class="text-success fw-bold">
-                                                            @string.Format("{0:N0}", Model.TestDrive.Variant.Price) $
-                                                        </span>
-                                                    </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-sm-4"><strong>Giá niêm yết:</strong></div>
+                                                <div class="col-sm-8">
+                                                    <strong class="text-danger">
+                                                        @string.Format("{0:N0}", Model.TestDrive.Price) $
+                                                    </strong>
                                                 </div>
-                                            }
+                                            </div>
                                         </div>
                                     </div>
                                 }

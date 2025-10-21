@@ -1,5 +1,8 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+
 namespace ASM1.WebMVC.Pages.Sales
 {
     public class OrdersModel : BasePageModel
@@ -11,7 +14,7 @@ namespace ASM1.WebMVC.Pages.Sales
             _salesService = salesService;
         }
 
-        public List<Order> Orders { get; set; } = new();
+        public List<OrderDto> Orders { get; set; } = new();
 
         public async Task<IActionResult> OnGetAsync()
         {

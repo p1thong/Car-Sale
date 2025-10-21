@@ -1,5 +1,9 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace ASM1.WebMVC.Pages.Home
 {
@@ -15,7 +19,7 @@ namespace ASM1.WebMVC.Pages.Home
         }
 
         // Property để bind data từ code-behind sang view
-        public VehicleVariant Vehicle { get; set; } = null!;
+        public VehicleVariantDto Vehicle { get; set; } = null!;
 
         // GET handler với route parameter id
         // Tương đương: public async Task<IActionResult> VehicleDetail(int id)
@@ -23,12 +27,13 @@ namespace ASM1.WebMVC.Pages.Home
         {
             try
             {
-                Vehicle = await _vehicleService.GetVehicleVariantByIdAsync(id);
-                if (Vehicle == null)
+                var vehicle = await _vehicleService.GetVehicleVariantByIdAsync(id);
+                if (vehicle == null)
                 {
                     TempData["ErrorMessage"] = "Không tìm thấy thông tin xe.";
                     return RedirectToPage("/Home/Index");
                 }
+                Vehicle = vehicle;
                 return Page();
             }
             catch (Exception ex)

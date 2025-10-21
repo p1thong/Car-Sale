@@ -1,7 +1,12 @@
 using System.ComponentModel.DataAnnotations;
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ASM1.WebMVC.Pages.Product
 {
@@ -47,7 +52,7 @@ namespace ASM1.WebMVC.Pages.Product
 
             try
             {
-                var vehicleModel = new VehicleModel
+                var vehicleModel = new VehicleModelDto
                 {
                     VehicleModelId = 0,
                     Name = Name,
@@ -74,13 +79,13 @@ namespace ASM1.WebMVC.Pages.Product
 
             if (!manufacturers.Any())
             {
-                var toyota = new Manufacturer
+                var toyota = new ManufacturerDto
                 {
                     ManufacturerId = 0,
                     Name = "Toyota",
                     Country = "Japan",
                 };
-                var bmw = new Manufacturer
+                var bmw = new ManufacturerDto
                 {
                     ManufacturerId = 0,
                     Name = "BMW",

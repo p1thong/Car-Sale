@@ -1,5 +1,7 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace ASM1.WebMVC.Pages.Product
 {
@@ -12,7 +14,7 @@ namespace ASM1.WebMVC.Pages.Product
             _vehicleService = vehicleService;
         }
 
-        public VehicleVariant? Variant { get; set; }
+        public VehicleVariantDto? Variant { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {

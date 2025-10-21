@@ -13,7 +13,7 @@
         <div class="card shadow">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">
-                    @Model.Variant.VehicleModel?.Manufacturer?.Name @Model.Variant.VehicleModel?.Name
+                    @Model.Variant.ManufacturerName @Model.Variant.ModelName
                 </h4>
             </div>
             <div class="card-body">
@@ -49,22 +49,19 @@
                     </div>
                 </div>
 
-                @if (Model.Variant.VehicleModel != null)
-                {
-                    <hr />
-                    <h5>Model Information</h5>
-                    <div class="row">
-                        <div class="col-md-6 mb-2">
-                            <strong>Model Name:</strong> @Model.Variant.VehicleModel.Name
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <strong>Category:</strong> @Model.Variant.VehicleModel.Category
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <strong>Manufacturer:</strong> @Model.Variant.VehicleModel.Manufacturer?.Name
-                        </div>
+                <hr />
+                <h5>Model Information</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <strong>Model Name:</strong> @Model.Variant.ModelName
                     </div>
-                }
+                    <div class="col-md-6 mb-2">
+                        <strong>Category:</strong> @Model.Variant.Category
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <strong>Manufacturer:</strong> @Model.Variant.ManufacturerName
+                    </div>
+                </div>
             </div>
             <div class="card-footer bg-white">
                 <div class="d-flex gap-2">

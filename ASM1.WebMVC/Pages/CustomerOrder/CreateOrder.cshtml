@@ -1,14 +1,14 @@
 @page
 @model ASM1.WebMVC.Pages.CustomerOrder.CreateOrderModel
 @{
-    ViewData["Title"] = "Create Order";
+    ViewData["Title"] = "Create New Order";
 }
 
 <div class="container py-4">
     <h1><i class="fas fa-shopping-cart"></i> Đặt Hàng</h1>
     <hr />
 
-    @if (Model.Variant != null && Model.CustomerData != null)
+    @if (Model.VariantData != null && Model.CustomerData != null)
     {
         <div class="row">
             <!-- Vehicle Info -->
@@ -18,12 +18,11 @@
                         <h5 class="mb-0">Thông Tin Xe</h5>
                     </div>
                     <div class="card-body">
-                        <!-- Vehicle Image -->
                         <div class="text-center mb-3">
-                            @if (!string.IsNullOrEmpty(Model.Variant.VehicleModel?.ImageUrl))
+                            @if (!string.IsNullOrEmpty(Model.VariantData.ImageUrl))
                             {
-                                <img src="@Model.Variant.VehicleModel.ImageUrl"
-                                     alt="@Model.Variant.VehicleModel?.Name"
+                                <img src="@Model.VariantData.ImageUrl"
+                                     alt="@Model.VariantData.ModelName"
                                      class="img-fluid rounded shadow-sm"
                                      style="max-height: 250px; object-fit: cover;">
                             }
@@ -37,25 +36,21 @@
                         </div>
 
                         <h4 class="text-primary">
-                            @Model.Variant.VehicleModel?.Manufacturer?.Name
-                            @Model.Variant.VehicleModel?.Name
+                            @Model.VariantData.ManufacturerName @Model.VariantData.ModelName
                         </h4>
 
-                        <p class="mb-2"><strong>Version:</strong> @Model.Variant.Version</p>
-                        <p class="mb-2"><strong>Color:</strong> <span class="badge bg-secondary">@Model.Variant.Color</span></p>
-                        <p class="mb-2"><strong>Year:</strong> @Model.Variant.ProductYear</p>
-
-                        <!-- ✅ Add data-price with raw numeric value -->
+                        <p class="mb-2"><strong>Version:</strong> @Model.VariantData.Version</p>
+                        <p class="mb-2"><strong>Color:</strong> <span class="badge bg-secondary">@Model.VariantData.Color</span></p>
+                        <p class="mb-2"><strong>Year:</strong> @Model.VariantData.ProductYear</p>
                         <p class="mb-2">
                             <strong>Price:</strong>
-                            <span class="text-success h5" id="vehicle-price" data-price="@(Model.Variant?.Price ?? 0)">
-                                $@Model.Variant.Price?.ToString("N0")
+                            <span class="text-success h5" id="vehicle-price" data-price="@(Model.VariantData.Price ?? 0)">
+                                $@Model.VariantData.Price?.ToString("N0")
                             </span>
                         </p>
-
                         <p class="mb-2">
                             <strong>Available:</strong>
-                            <span class="badge bg-success">@Model.Variant.Quantity units</span>
+                            <span class="badge bg-success">@Model.VariantData.Quantity units</span>
                         </p>
                     </div>
                 </div>
@@ -72,34 +67,38 @@
                             <h6>Thông Tin Khách Hàng</h6>
                             <p class="mb-1"><strong>Tên:</strong> @Model.CustomerData.FullName</p>
                             <p class="mb-1"><strong>Email:</strong> @Model.CustomerData.Email</p>
-                            <p class="mb-1"><strong>Phone:</strong> @Model.CustomerData.Phone</p>
-                            <p class="mb-1"><strong>Dealer:</strong> @Model.CustomerData.Dealer?.FullName</p>
+                            <p class="mb-1"><strong>Phone:</strong> @Model.CustomerData.PhoneNumber</p>
+                            <p class="mb-1"><strong>Địa chỉ:</strong> @Model.CustomerData.Address</p>
+                            <p class="mb-1"><strong>Dealer:</strong> @Model.CustomerData.DealerName</p>
                         </div>
 
                         <hr />
 
                         <form method="post">
-                            <input type="hidden" asp-for="VariantId" />
+                            <input type="hidden" asp-for="Order.VariantId" value="@Model.VariantData.VariantId" />
+                            <input type="hidden" asp-for="Order.CustomerId" value="@Model.CustomerData.CustomerId" />
+                            <input type="hidden" asp-for="Order.DealerId" value="@Model.CustomerData.DealerId" />
+
                             <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
                             <div class="mb-3">
-                                <label asp-for="Quantity" class="form-label">Số Lượng</label>
-                                <input asp-for="Quantity" type="number" class="form-control"
-                                       min="1" max="@Model.MaxQuantity" value="1" />
-                                <span asp-validation-for="Quantity" class="text-danger"></span>
-                                <small class="text-muted">Tối đa: @Model.MaxQuantity xe</small>
+                                <label asp-for="Order.Quantity" class="form-label">Số Lượng</label>
+                                <input asp-for="Order.Quantity" type="number" class="form-control"
+                                       min="1" max="@Model.VariantData.Quantity" value="1" />
+                                <span asp-validation-for="Order.Quantity" class="text-danger"></span>
+                                <small class="text-muted">Tối đa: @Model.VariantData.Quantity xe</small>
                             </div>
 
                             <div class="mb-3">
-                                <label asp-for="Notes" class="form-label">Ghi Chú (Tùy chọn)</label>
-                                <textarea asp-for="Notes" class="form-control" rows="3"
+                                <label asp-for="Order.Notes" class="form-label">Ghi Chú (Tùy chọn)</label>
+                                <textarea asp-for="Order.Notes" class="form-control" rows="3"
                                           placeholder="Yêu cầu đặc biệt..."></textarea>
                             </div>
 
                             <div class="alert alert-info">
                                 <strong>Tổng tiền:</strong>
                                 <span id="total-price" class="h5 text-success">
-                                    $@((Model.Variant.Price ?? 0).ToString("N0"))
+                                    $@((Model.VariantData.Price ?? 0).ToString("N0"))
                                 </span>
                             </div>
 
@@ -116,20 +115,26 @@
             <i class="fas fa-arrow-left"></i> Quay Lại
         </a>
     }
+    else
+    {
+        <div class="alert alert-warning" role="alert">
+            Vehicle variant data is not available. Please select a vehicle first.
+        </div>
+        <a asp-page="/Home/Index" class="btn btn-primary">
+            <i class="fas fa-arrow-left"></i> Back to Vehicle Selection
+        </a>
+    }
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const qtyInput = document.querySelector('input[name="Quantity"]');
+            const qtyInput = document.querySelector('input[name="Order.Quantity"]');
             const totalEl = document.getElementById('total-price');
             const vehiclePriceEl = document.getElementById('vehicle-price');
-
-            // ✅ Get clean numeric value from data attribute (not formatted text)
             const numericPrice = parseFloat(vehiclePriceEl.dataset.price) || 0;
 
-            // ✅ Use dot separators like in your Price display ($20.000)
             function formatPriceDot(value) {
                 return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
             }

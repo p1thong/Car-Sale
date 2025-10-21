@@ -1,3 +1,4 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using ASM1.WebMVC.Hubs;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace ASM1.WebMVC.Pages.CustomerService
             _hubContext = hubContext;
         }
 
-        public IEnumerable<TestDrive> TestDrives { get; set; } = new List<TestDrive>();
+        public IEnumerable<TestDriveDto> TestDrives { get; set; } = new List<TestDriveDto>();
         public DateOnly? SelectedDate { get; set; }
 
         public async Task<IActionResult> OnGetAsync(DateTime? date = null)

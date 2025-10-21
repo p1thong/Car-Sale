@@ -1,7 +1,12 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ASM1.WebMVC.Pages.Product
 {
@@ -63,7 +68,7 @@ namespace ASM1.WebMVC.Pages.Product
 
             try
             {
-                var variant = new VehicleVariant
+                var variant = new VehicleVariantDto
                 {
                     VariantId = 0,
                     VehicleModelId = VehicleModelId,
@@ -92,7 +97,7 @@ namespace ASM1.WebMVC.Pages.Product
             VehicleModels = models.Select(m => new SelectListItem
             {
                 Value = m.VehicleModelId.ToString(),
-                Text = $"{m.Manufacturer?.Name} {m.Name}"
+                Text = $"{m.ManufacturerName} {m.Name}"
             }).ToList();
         }
     }

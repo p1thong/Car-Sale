@@ -31,12 +31,12 @@
                     {
                         <tr>
                             <td><strong>#@order.OrderId</strong></td>
-                            <td>@order.Customer?.FullName</td>
+                            <td>@order.CustomerName</td>
                             <td>
-                                @order.Variant?.VehicleModel?.Manufacturer?.Name 
-                                @order.Variant?.VehicleModel?.Name
+                                @order.ManufacturerName 
+                                @order.ModelName
                                 <br />
-                                <small class="text-muted">@order.Variant?.Version - @order.Variant?.Color</small>
+                                <small class="text-muted">@order.VariantVersion - @order.VariantColor</small>
                             </td>
                             <td>@(order.OrderDate.HasValue ? order.OrderDate.Value.ToString("dd'/'MM'/'yyyy") : "N/A")</td>
                             <td>

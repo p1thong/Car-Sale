@@ -1,37 +1,37 @@
-using ASM1.Repository.Models;
+using ASM1.Service.Dtos;
 
 namespace ASM1.Service.Services.Interfaces
 {
     public interface ISalesService
     {
         // Customer Management
-        Task<Customer> CreateOrUpdateCustomerAsync(Customer customer);
-        Task<Customer?> GetCustomerAsync(int customerId);
-        Task<IEnumerable<Customer>> GetCustomersByDealerAsync(int dealerId);
+        Task<CustomerDto> CreateOrUpdateCustomerAsync(CustomerDto customer);
+        Task<CustomerDto?> GetCustomerAsync(int customerId);
+        Task<IEnumerable<CustomerDto>> GetCustomersByDealerAsync(int dealerId);
 
         // Order Management
-        Task<Order> CreateOrderAsync(Order order);
-        Task<Order?> GetOrderAsync(int orderId);
-        Task<Order> UpdateOrderStatusAsync(int orderId, string status);
+        Task<OrderDto> CreateOrderAsync(OrderDto order);
+        Task<OrderDto?> GetOrderAsync(int orderId);
+        Task<OrderDto> UpdateOrderStatusAsync(int orderId, string status);
         Task<bool> CancelOrderAsync(int orderId);
-        Task<IEnumerable<Order>> GetOrdersByDealerAsync(int dealerId);
-        Task<IEnumerable<Order>> GetOrdersByCustomerAsync(int customerId);
-        Task<IEnumerable<Order>> GetPendingOrdersByDealerAsync(int dealerId);
-        Task<Order> ConfirmOrderAsync(int orderId, string dealerNotes = "");
-        Task<Order> RejectOrderAsync(int orderId, string rejectionReason);
+        Task<IEnumerable<OrderDto>> GetOrdersByDealerAsync(int dealerId);
+        Task<IEnumerable<OrderDto>> GetOrdersByCustomerAsync(int customerId);
+        Task<IEnumerable<OrderDto>> GetPendingOrdersByDealerAsync(int dealerId);
+        Task<OrderDto> ConfirmOrderAsync(int orderId, string dealerNotes = "");
+        Task<OrderDto> RejectOrderAsync(int orderId, string rejectionReason);
 
         // Sales Contract Management
-        Task<SalesContract> CreateSalesContractAsync(int orderId, decimal totalAmount, string terms);
-        Task<SalesContract?> GetSalesContractByOrderAsync(int orderId);
+        Task<SalesContractDto> CreateSalesContractAsync(int orderId, decimal totalAmount, string terms);
+        Task<SalesContractDto?> GetSalesContractByOrderAsync(int orderId);
 
         // Payment Management
-        Task<Payment> ProcessPaymentAsync(int orderId, decimal amount, string paymentMethod);
-        Task<IEnumerable<Payment>> GetPaymentsByOrderAsync(int orderId);
+        Task<PaymentDto> ProcessPaymentAsync(int orderId, decimal amount, string paymentMethod);
+        Task<IEnumerable<PaymentDto>> GetPaymentsByOrderAsync(int orderId);
         Task<decimal> GetRemainingBalanceAsync(int orderId);
-        Task<Payment> UpdatePaymentStatusAsync(int paymentId, string status);
+        Task<PaymentDto> UpdatePaymentStatusAsync(int paymentId, string status);
 
         // Vehicle Delivery
-        Task<Order> CompleteOrderAsync(int orderId);
+        Task<OrderDto> CompleteOrderAsync(int orderId);
         Task<bool> IsOrderReadyForDeliveryAsync(int orderId);
     }
 }

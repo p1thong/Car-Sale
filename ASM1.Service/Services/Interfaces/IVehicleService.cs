@@ -1,30 +1,30 @@
-using ASM1.Repository.Models;
+using ASM1.Service.Dtos;
 
 namespace ASM1.Service.Services.Interfaces
 {
     public interface IVehicleService
     {
         // Manufacturer Management
-        Task<IEnumerable<Manufacturer>> GetAllManufacturersAsync();
-        Task<Manufacturer?> GetManufacturerByIdAsync(int manufacturerId);
-        Task<Manufacturer> CreateManufacturerAsync(Manufacturer manufacturer);
-        Task<Manufacturer> UpdateManufacturerAsync(Manufacturer manufacturer);
+        Task<IEnumerable<ManufacturerDto>> GetAllManufacturersAsync();
+        Task<ManufacturerDto?> GetManufacturerByIdAsync(int manufacturerId);
+        Task<ManufacturerDto> CreateManufacturerAsync(ManufacturerDto manufacturer);
+        Task<ManufacturerDto> UpdateManufacturerAsync(ManufacturerDto manufacturer);
 
         // Vehicle Model Management
-        Task<IEnumerable<VehicleModel>> GetAllVehicleModelsAsync();
-        Task<VehicleModel?> GetVehicleModelByIdAsync(int modelId);
-        Task<IEnumerable<VehicleModel>> GetVehicleModelsByManufacturerAsync(int manufacturerId);
-        Task<VehicleModel> CreateVehicleModelAsync(VehicleModel model);
-        Task<VehicleModel> UpdateVehicleModelAsync(VehicleModel model);
+        Task<IEnumerable<VehicleModelDto>> GetAllVehicleModelsAsync();
+        Task<VehicleModelDto?> GetVehicleModelByIdAsync(int modelId);
+        Task<IEnumerable<VehicleModelDto>> GetVehicleModelsByManufacturerAsync(int manufacturerId);
+        Task<VehicleModelDto> CreateVehicleModelAsync(VehicleModelDto model);
+        Task<VehicleModelDto> UpdateVehicleModelAsync(VehicleModelDto model);
 
         // Vehicle Variant Management
-        Task<IEnumerable<VehicleVariant>> GetAllVehicleVariantsAsync();
-        Task<VehicleVariant?> GetVehicleVariantByIdAsync(int variantId);
-        Task<IEnumerable<VehicleVariant>> GetVehicleVariantsByModelAsync(int modelId);
-        Task<VehicleVariant> CreateVehicleVariantAsync(VehicleVariant variant);
-        Task<VehicleVariant> UpdateVehicleVariantAsync(VehicleVariant variant);
+        Task<IEnumerable<VehicleVariantDto>> GetAllVehicleVariantsAsync();
+        Task<VehicleVariantDto?> GetVehicleVariantByIdAsync(int variantId);
+        Task<IEnumerable<VehicleVariantDto>> GetVehicleVariantsByModelAsync(int modelId);
+        Task<VehicleVariantDto> CreateVehicleVariantAsync(VehicleVariantDto variant);
+        Task<VehicleVariantDto> UpdateVehicleVariantAsync(VehicleVariantDto variant);
         Task DeleteVehicleVariantAsync(int variantId);
-        Task<IEnumerable<VehicleVariant>> GetAvailableVariantsAsync();
+        Task<IEnumerable<VehicleVariantDto>> GetAvailableVariantsAsync();
 
         // Business Logic Methods
         Task<bool> IsManufacturerNameExistsAsync(string name, int? excludeId = null);
@@ -37,7 +37,7 @@ namespace ASM1.Service.Services.Interfaces
         Task DeleteManufacturerAsync(int manufacturerId);
         Task<bool> CanDeleteVehicleModelAsync(int modelId);
         Task DeleteVehicleModelAsync(int modelId);
-        Task<IEnumerable<VehicleModel>> SearchVehicleModelsAsync(string searchTerm);
-        Task<IEnumerable<VehicleVariant>> SearchVehicleVariantsAsync(string searchTerm);
+        Task<IEnumerable<VehicleModelDto>> SearchVehicleModelsAsync(string searchTerm);
+        Task<IEnumerable<VehicleVariantDto>> SearchVehicleVariantsAsync(string searchTerm);
     }
 }

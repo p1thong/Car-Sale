@@ -1,5 +1,7 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace ASM1.WebMVC.Pages.Sales
 {
@@ -13,7 +15,7 @@ namespace ASM1.WebMVC.Pages.Sales
         }
 
         [BindProperty]
-        public ASM1.Repository.Models.Customer? Customer { get; set; }
+        public CustomerDto? Customer { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {

@@ -1,4 +1,7 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ASM1.WebMVC.Pages.Product
 {
@@ -11,7 +14,7 @@ namespace ASM1.WebMVC.Pages.Product
             _vehicleService = vehicleService;
         }
 
-        public IEnumerable<VehicleModel> Models { get; set; } = new List<VehicleModel>();
+        public IEnumerable<VehicleModelDto> Models { get; set; } = new List<VehicleModelDto>();
 
         public async Task OnGetAsync()
         {

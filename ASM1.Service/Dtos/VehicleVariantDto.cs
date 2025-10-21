@@ -9,5 +9,11 @@ namespace ASM1.Service.Dtos
         public int? ProductYear { get; set; }
         public decimal? Price { get; set; }
         public int Quantity { get; set; }
+        public string? ModelName { get; set; }
+        public string? ManufacturerName { get; set; }
+        public string? ImageUrl { get; set; }
+        public string? ManufacturerCountry { get; set; }
+        public string? Category { get; set; }
+        public string? ManufacturerAddress { get; set; }
     }
 }

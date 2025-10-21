@@ -21,6 +21,8 @@ public partial class User
 
     public int? ManufacturerId { get; set; }
 
+    public string? Address { get; set; }
+
     public virtual Dealer? Dealer { get; set; }
 
     public virtual Manufacturer? Manufacturer { get; set; }

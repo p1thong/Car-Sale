@@ -61,6 +61,9 @@ builder.Services.AddScoped<IDealerRepository, DealerRepository>();
 builder.Services.AddScoped<ITestDriveRepository, TestDriveRepository>();
 builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 
+//add mapper
+builder.Services.AddScoped<ASM1.Service.Mappers.IMapper, ASM1.Service.Mappers.Mapper>();
+
 //add services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ISalesService, SalesService>();

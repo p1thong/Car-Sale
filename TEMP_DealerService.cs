@@ -59,9 +59,7 @@ namespace ASM1.Service.Services
 
         public async Task<DealerContractDto?> GetDealerContractByIdAsync(int contractId)
         {
-            // Since the repository doesn't have this method, we'll get all contracts and filter
-            var allContracts = await _dealerRepository.GetDealerContractsAsync(0); // This might need adjustment
-            var contract = allContracts.FirstOrDefault(c => c.DealerContractId == contractId);
+            var contract = await _dealerRepository.GetDealerContractByIdAsync(contractId);
             return contract != null ? _mapper.Map<DealerContract, DealerContractDto>(contract) : null;
         }
 
@@ -82,29 +80,23 @@ namespace ASM1.Service.Services
         // Business Logic Methods
         public async Task<bool> IsDealerActiveAsync(int dealerId)
         {
-            var dealer = await _dealerRepository.GetDealerByIdAsync(dealerId);
-            return dealer != null; // Simplified logic - in real implementation would check active status
+            return await _dealerRepository.IsDealerActiveAsync(dealerId);
         }
 
         public async Task<IEnumerable<DealerDto>> GetDealersByRegionAsync(string region)
         {
-            // Since repository doesn't have this method and Dealer doesn't have Address, 
-            // return all dealers for now - needs proper implementation
-            var allDealers = await _dealerRepository.GetAllDealersAsync();
-            return _mapper.MapList<Dealer, DealerDto>(allDealers);
+            var dealers = await _dealerRepository.GetDealersByRegionAsync(region);
+            return _mapper.MapList<Dealer, DealerDto>(dealers);
         }
 
         public async Task<bool> CanDeleteDealerAsync(int dealerId)
         {
-            // Simplified check - in real implementation would check for dependencies
-            var dealer = await _dealerRepository.GetDealerByIdAsync(dealerId);
-            return dealer != null;
+            return await _dealerRepository.CanDeleteDealerAsync(dealerId);
         }
 
         public async Task<decimal> GetDealerTotalSalesAsync(int dealerId, DateTime? fromDate = null, DateTime? toDate = null)
         {
-            // Simplified implementation - in real scenario would calculate from orders/sales data
-            return 0; // Placeholder implementation
+            return await _dealerRepository.GetDealerTotalSalesAsync(dealerId, fromDate, toDate);
         }
     }
 }

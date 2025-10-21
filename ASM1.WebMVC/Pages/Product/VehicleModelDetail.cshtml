@@ -21,9 +21,9 @@
                     <div class="card-body">
                         <h4 class="card-title">@Model.VehicleModelData.Name</h4>
                         <p class="card-text">
-                            <strong>Manufacturer:</strong> @Model.VehicleModelData.Manufacturer?.Name<br />
+                            <strong>Manufacturer:</strong> @Model.VehicleModelData.ManufacturerName<br />
                             <strong>Category:</strong> @Model.VehicleModelData.Category<br />
-                            <strong>Country:</strong> @Model.VehicleModelData.Manufacturer?.Country
+                            <strong>Country:</strong> @Model.VehicleModelData.ManufacturerCountry
                         </p>
                         <div class="d-flex gap-2">
                             <a asp-page="/Product/EditVehicleModel" asp-route-id="@Model.VehicleModelData.VehicleModelId" 

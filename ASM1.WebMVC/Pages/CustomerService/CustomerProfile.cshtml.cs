@@ -1,3 +1,4 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,9 +15,9 @@ namespace ASM1.WebMVC.Pages.CustomerService
             _salesService = salesService;
         }
 
-        public ASM1.Repository.Models.Customer? Customer { get; set; }
-        public IEnumerable<Order> Orders { get; set; } = new List<Order>();
-        public IEnumerable<TestDrive> TestDrives { get; set; } = new List<TestDrive>();
+        public CustomerDto? Customer { get; set; }
+        public IEnumerable<OrderDto> Orders { get; set; } = new List<OrderDto>();
+        public IEnumerable<TestDriveDto> TestDrives { get; set; } = new List<TestDriveDto>();
         public int OrderCount { get; set; }
         public int TestDriveCount { get; set; }
         public int FeedbackCount { get; set; }
@@ -38,7 +39,7 @@ namespace ASM1.WebMVC.Pages.CustomerService
                 Orders = await _salesService.GetOrdersByCustomerAsync(customerId);
                 OrderCount = Orders.Count();
                 TotalSpent = Orders.Where(o => o.Status == "Completed")
-                                  .Sum(o => o.Variant?.Price ?? 0);
+                                  .Sum(o => o.Price ?? 0);
 
                 // Get test drives
                 TestDrives = await _customerService.GetCustomerTestDrivesAsync(customerId);
@@ -49,8 +50,15 @@ namespace ASM1.WebMVC.Pages.CustomerService
                 try
                 {
                     var dealerId = Customer.DealerId;
-                    var allFeedbacks = await _customerService.GetFeedbacksByDealerAsync(dealerId);
-                    FeedbackCount = allFeedbacks.Count(f => f.CustomerId == customerId);
+                    if (dealerId > 0)
+                    {
+                        var allFeedbacks = await _customerService.GetFeedbacksByDealerAsync(dealerId);
+                        FeedbackCount = allFeedbacks.Count(f => f.CustomerId == customerId);
+                    }
+                    else
+                    {
+                        FeedbackCount = 0;
+                    }
                 }
                 catch
                 {

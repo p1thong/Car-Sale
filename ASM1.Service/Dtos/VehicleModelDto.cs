@@ -7,5 +7,7 @@ namespace ASM1.Service.Dtos
         public string Name { get; set; } = string.Empty;
         public string? Category { get; set; }
         public string? ImageUrl { get; set; }
+        public string ManufacturerName { get; set; } = string.Empty;
+        public string? ManufacturerCountry { get; set; }
     }
 }

@@ -1,7 +1,11 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ASM1.WebMVC.Pages.Product
 {
@@ -49,7 +53,7 @@ namespace ASM1.WebMVC.Pages.Product
             VehicleModelId = model.VehicleModelId;
             Name = model.Name;
             ManufacturerId = model.ManufacturerId;
-            Category = model.Category;
+            Category = model.Category ?? string.Empty;
             ImageUrl = model.ImageUrl;
 
             await LoadManufacturersAsync();
@@ -66,7 +70,7 @@ namespace ASM1.WebMVC.Pages.Product
 
             try
             {
-                var model = new VehicleModel
+                var model = new VehicleModelDto
                 {
                     VehicleModelId = VehicleModelId,
                     Name = Name,

@@ -1,3 +1,4 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,19 +13,43 @@ namespace ASM1.WebMVC.Pages.CustomerService
             _customerService = customerService;
         }
 
-        public IEnumerable<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+        public IEnumerable<FeedbackDto> Feedbacks { get; set; } = new List<FeedbackDto>();
 
         public async Task<IActionResult> OnGetAsync()
         {
             try
             {
-                // Lấy dealerId giống logic trong Controller cũ
-                var currentDealerId = GetCurrentDealerId() ?? 1; // Fallback về 1 như trong Controller
+                // Check user role
+                var userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+                Console.WriteLine($"Feedbacks page - User role: {userRole}");
                 
-                Feedbacks = await _customerService.GetFeedbacksByDealerAsync(currentDealerId);
-                
-                // Debug logging
-                Console.WriteLine($"Feedbacks loaded: {Feedbacks?.Count() ?? 0} feedbacks for dealer {currentDealerId}");
+                if (userRole?.Equals("Customer", StringComparison.OrdinalIgnoreCase) == true)
+                {
+                    // Customer: Show only their own feedbacks
+                    var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+                    if (string.IsNullOrEmpty(email))
+                    {
+                        TempData["Error"] = "Vui lòng đăng nhập.";
+                        return RedirectToPage("/Auth/Login");
+                    }
+                    
+                    var customer = await _customerService.GetCustomerByEmailAsync(email);
+                    if (customer == null)
+                    {
+                        TempData["Error"] = "Không tìm thấy thông tin khách hàng.";
+                        return RedirectToPage("/Home/Index");
+                    }
+                    
+                    Feedbacks = await _customerService.GetCustomerFeedbacksAsync(customer.CustomerId);
+                    Console.WriteLine($"Feedbacks loaded: {Feedbacks?.Count() ?? 0} feedbacks for customer {customer.CustomerId}");
+                }
+                else
+                {
+                    // Dealer: Show all feedbacks for their dealership
+                    var currentDealerId = GetCurrentDealerId() ?? 1;
+                    Feedbacks = await _customerService.GetFeedbacksByDealerAsync(currentDealerId);
+                    Console.WriteLine($"Feedbacks loaded: {Feedbacks?.Count() ?? 0} feedbacks for dealer {currentDealerId}");
+                }
                 
                 return Page();
             }
@@ -32,7 +57,7 @@ namespace ASM1.WebMVC.Pages.CustomerService
             {
                 TempData["Error"] = $"Lỗi khi tải danh sách phản hồi: {ex.Message}";
                 Console.WriteLine($"Error loading feedbacks: {ex.Message}");
-                Feedbacks = new List<Feedback>(); // Khởi tạo empty list để tránh null reference
+                Feedbacks = new List<FeedbackDto>();
                 return Page();
             }
         }

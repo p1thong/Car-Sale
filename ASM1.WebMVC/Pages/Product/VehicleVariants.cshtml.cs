@@ -1,6 +1,10 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ASM1.WebMVC.Pages.Product
 {
@@ -13,7 +17,7 @@ namespace ASM1.WebMVC.Pages.Product
             _vehicleService = vehicleService;
         }
 
-        public List<VehicleVariant> Variants { get; set; } = new();
+        public List<VehicleVariantDto> Variants { get; set; } = new();
         public List<SelectListItem> VehicleModels { get; set; } = new();
         public int? SelectedModelId { get; set; }
 
@@ -27,7 +31,7 @@ namespace ASM1.WebMVC.Pages.Product
                 .Select(m => new SelectListItem
                 {
                     Value = m.VehicleModelId.ToString(),
-                    Text = $"{m.Manufacturer?.Name} {m.Name}",
+                    Text = $"{m.ManufacturerName} {m.Name}",
                     Selected = m.VehicleModelId == modelId,
                 })
                 .ToList();

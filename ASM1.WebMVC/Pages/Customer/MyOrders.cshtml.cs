@@ -1,4 +1,5 @@
 using ASM1.Service.Services.Interfaces;
+using ASM1.Service.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +19,7 @@ namespace ASM1.WebMVC.Pages.Customer
         }
 
         // Property để bind data từ code-behind sang view
-        public IEnumerable<Order> Orders { get; set; } = new List<Order>();
+        public IEnumerable<OrderDto> Orders { get; set; } = new List<OrderDto>();
 
         // GET handler - tương đương public async Task<IActionResult> MyOrders()
         public async Task<IActionResult> OnGetAsync()
@@ -48,7 +49,7 @@ namespace ASM1.WebMVC.Pages.Customer
             catch (Exception ex)
             {
                 TempData["Error"] = $"Lỗi khi tải danh sách đơn hàng: {ex.Message}";
-                Orders = Enumerable.Empty<Order>();
+                Orders = Enumerable.Empty<OrderDto>();
                 return Page();
             }
         }

@@ -9,6 +9,8 @@ public partial class Feedback
 
     public int CustomerId { get; set; }
 
+    public int? VehicleModelId { get; set; }
+
     public string? Content { get; set; }
 
     public DateTime? CreatedAt { get; set; }
@@ -18,4 +20,6 @@ public partial class Feedback
     public int? Rating { get; set; }
 
     public virtual Customer Customer { get; set; } = null!;
+
+    public virtual VehicleModel? VehicleModel { get; set; }
 }

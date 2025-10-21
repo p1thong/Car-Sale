@@ -1,3 +1,4 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +13,7 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
             _salesService = salesService;
         }
 
-        public Order? OrderData { get; set; }
+        public OrderDto? OrderData { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int orderId)
         {

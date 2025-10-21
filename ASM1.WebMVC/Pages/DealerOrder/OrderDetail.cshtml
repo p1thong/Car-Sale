@@ -44,7 +44,7 @@
                     </div>
                     <div class="card-body">
                         <p><strong>Mã Đơn Hàng:</strong> #@Model.Order.OrderId</p>
-                        <p><strong>Ngày Đặt:</strong> @Model.Order.OrderDate?.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</p>
+                        <p><strong>Ngày Đặt:</strong> @Model.Order.OrderDate?.ToString("dd/MM/yyyy")</p>
                         <p><strong>Trạng Thái:</strong> 
                             @if (Model.Order.Status == "Pending")
                             {
@@ -78,9 +78,9 @@
                         <h5 class="mb-0"><i class="fas fa-user"></i> Thông Tin Khách Hàng</h5>
                     </div>
                     <div class="card-body">
-                        <p><strong>Họ Tên:</strong> @Model.Order.Customer?.FullName</p>
-                        <p><strong>Email:</strong> @Model.Order.Customer?.Email</p>
-                        <p><strong>Số Điện Thoại:</strong> @Model.Order.Customer?.Phone</p>
+                        <p><strong>Họ Tên:</strong> @Model.Order.CustomerName</p>
+                        <p><strong>Email:</strong> @Model.Order.CustomerEmail</p>
+                        <p><strong>Số Điện Thoại:</strong> @Model.Order.CustomerPhone</p>
                     </div>
                 </div>
             </div>
@@ -94,13 +94,13 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <p><strong>Tên Xe:</strong> @Model.Order.Variant?.VehicleModel?.Name</p>
-                                <p><strong>Phiên Bản:</strong> @Model.Order.Variant?.Version</p>
-                                <p><strong>Màu Sắc:</strong> @Model.Order.Variant?.Color</p>
-                                <p><strong>Năm Sản Xuất:</strong> @Model.Order.Variant?.ProductYear</p>
+                                <p><strong>Tên Xe:</strong> @Model.Order.ModelName</p>
+                                <p><strong>Phiên Bản:</strong> @Model.Order.VariantVersion</p>
+                                <p><strong>Màu Sắc:</strong> @Model.Order.VariantColor</p>
+                                <p><strong>Năm Sản Xuất:</strong> @Model.Order.ProductYear</p>
                             </div>
                             <div class="col-md-6">
-                                <p><strong>Đơn Giá:</strong> <span class="text-info">@Model.Order.Variant?.Price?.ToString("N0") $</span></p>
+                                <p><strong>Đơn Giá:</strong> <span class="text-info">@Model.Order.Price?.ToString("N0") $</span></p>
                                 <p><strong>Số Lượng:</strong> <span class="badge bg-primary fs-6">@Model.Order.Quantity</span></p>
                                 <p><strong>Tổng Tiền:</strong> <strong class="text-success fs-5">@Model.Order.TotalPrice?.ToString("N0") $</strong></p>
                             </div>
@@ -132,7 +132,7 @@
                             {
                                 <div class="alert alert-success">
                                     <i class="fas fa-check-circle"></i> 
-                                    <strong>Giao dịch hoàn tất!</strong> Khách hàng đã xác nhận nhận xe vào ngày @receivedPayment.PaymentDate?.ToString("dd/MM/yyyy").
+                                    <strong>Giao dịch hoàn tất!</strong> Khách hàng đã xác nhận nhận xe vào ngày @(receivedPayment.PaymentDate.HasValue ? receivedPayment.PaymentDate.Value.ToString("dd/MM/yyyy") : "N/A").
                                 </div>
                             }
 
@@ -152,7 +152,7 @@
                                     @foreach (var payment in Model.Payments)
                                     {
                                         <tr>
-                                            <td>@payment.PaymentDate?.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
+                                            <td>@(payment.PaymentDate.HasValue ? payment.PaymentDate.Value.ToString("dd/MM/yyyy") : "N/A")</td>
                                             <td>@payment.Amount?.ToString("N0") $</td>
                                             <td>@payment.PaymentMethod</td>
                                             <td>

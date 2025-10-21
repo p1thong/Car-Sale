@@ -25,26 +25,25 @@
                         </p>
                     </div>
                     <div class="col-md-6">
-                        <p><strong>Dealer:</strong> @Model.OrderData.Dealer?.FullName</p>
-                        <p><strong>Phone:</strong> @Model.OrderData.Dealer?.Phone</p>
+                        <p><strong>Dealer:</strong> @Model.OrderData.DealerName</p>
+                        <p><strong>Phone:</strong> @* @Model.OrderData.Dealer?.Phone *@</p>
                     </div>
                 </div>
 
-                @if (Model.OrderData.Variant != null)
-                {
+                
                     <hr />
                     <h5>Thông Tin Xe</h5>
                     <div class="row">
                         <div class="col-md-6">
-                            <p><strong>Model:</strong> @Model.OrderData.Variant.VehicleModel?.Manufacturer?.Name @Model.OrderData.Variant.VehicleModel?.Name</p>
-                            <p><strong>Version:</strong> @Model.OrderData.Variant.Version</p>
+                            <p><strong>Model:</strong> @Model.OrderData.ModelName</p>
+                            <p><strong>Version:</strong> @Model.OrderData.VariantVersion</p>
                         </div>
                         <div class="col-md-6">
-                            <p><strong>Color:</strong> <span class="badge bg-secondary">@Model.OrderData.Variant.Color</span></p>
-                            <p><strong>Price:</strong> <span class="text-success h5">$@Model.OrderData.Variant.Price?.ToString("N2")</span></p>
+                            <p><strong>Color:</strong> <span class="badge bg-secondary">@Model.OrderData.VariantColor</span></p>
+                            <p><strong>Price:</strong> <span class="text-success h5">$@Model.OrderData.Price?.ToString("N2")</span></p>
                         </div>
                     </div>
-                }
+                
 
                 <div class="mt-4">
                     @if (Model.OrderData.Status == "Confirmed")

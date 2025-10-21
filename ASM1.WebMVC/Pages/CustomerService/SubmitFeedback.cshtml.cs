@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using ASM1.WebMVC.Hubs;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,7 @@ namespace ASM1.WebMVC.Pages.CustomerService
             _hubContext = hubContext;
         }
 
-        public TestDrive? TestDrive { get; set; }
+        public TestDriveDto? TestDrive { get; set; }
 
         [BindProperty]
         [Required(ErrorMessage = "Vui lòng nhập nội dung đánh giá")]
@@ -122,17 +123,26 @@ namespace ASM1.WebMVC.Pages.CustomerService
                 }
 
                 // Create feedback with Customer.CustomerId
-                await _customerService.CreateFeedbackAsync(
-                    currentCustomer.CustomerId,
-                    Content,
-                    Rating
-                );
+                var feedbackDto = new FeedbackDto
+                {
+                    CustomerId = currentCustomer.CustomerId,
+                    Content = Content,
+                    Rating = Rating,
+                    VehicleModelId = testDrive.VehicleModelId,
+                    FeedbackDate = DateTime.Now
+                };
+                await _customerService.CreateFeedbackAsync(feedbackDto);
 
 
                 await _hubContext.Clients.All.SendAsync("SubmitFeedBack");// Notify admins via SignalR
 
                 TempData["Success"] = "Gửi đánh giá thành công! Cảm ơn bạn đã đánh giá.";
-                return RedirectToPage("./MyFeedbacks");
+                
+                Console.WriteLine("===== Redirecting to Feedbacks =====");
+                Console.WriteLine($"User role from claims: {User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value}");
+                
+                // Redirect to Feedbacks page (will show different view based on role)
+                return RedirectToPage("/CustomerService/Feedbacks");
             }
             catch (Exception ex)
             {

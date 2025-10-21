@@ -177,7 +177,7 @@ namespace ASM1.WebMVC.Pages.CustomerService
                 {
                     Value = v.VariantId.ToString(),
                     Text =
-                        $"{v.VehicleModel?.Manufacturer?.Name} {v.VehicleModel?.Name} - {v.Version} ({v.Color})",
+                        $"{v.ManufacturerName} {v.ModelName} - {v.Version} ({v.Color})",
                 })
                 .ToList();
         }

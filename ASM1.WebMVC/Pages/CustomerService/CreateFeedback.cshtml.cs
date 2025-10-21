@@ -1,3 +1,4 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -30,9 +31,12 @@ namespace ASM1.WebMVC.Pages.CustomerService
         [BindProperty]
         public int? TestDriveId { get; set; }
 
+        [BindProperty]
+        public int? VehicleModelId { get; set; }
+
         public string? CustomerName { get; set; }
         public string? TestDriveInfo { get; set; }
-        public IEnumerable<ASM1.Repository.Models.Customer>? Customers { get; set; }
+        public IEnumerable<CustomerDto>? Customers { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? customerId = null, int? testDriveId = null)
         {
@@ -65,7 +69,8 @@ namespace ASM1.WebMVC.Pages.CustomerService
                         var testDrive = await _customerService.GetTestDriveByIdAsync(testDriveId.Value);
                         if (testDrive != null)
                         {
-                            TestDriveInfo = $"Lái thử {testDrive.Variant?.VehicleModel?.Name} vào {testDrive.ScheduledDate?.ToString("dd/MM/yyyy")}";
+                            TestDriveInfo = $"Lái thử {testDrive.ModelName} vào {testDrive.ScheduledDate?.ToString("dd/MM/yyyy")}";
+                            VehicleModelId = testDrive.VehicleModelId;
                         }
                     }
                     catch { }
@@ -98,7 +103,15 @@ namespace ASM1.WebMVC.Pages.CustomerService
 
             try
             {
-                await _customerService.CreateFeedbackAsync(CustomerId, Content, Rating);
+                var feedback = new FeedbackDto
+                {
+                    CustomerId = CustomerId,
+                    Content = Content,
+                    Rating = Rating,
+                    FeedbackDate = DateTime.Now,
+                    VehicleModelId = VehicleModelId
+                };
+                await _customerService.CreateFeedbackAsync(feedback);
                 TempData["Success"] = "Tạo phản hồi thành công!";
                 return RedirectToPage("./Feedbacks");
             }

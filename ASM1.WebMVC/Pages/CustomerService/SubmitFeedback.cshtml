@@ -40,16 +40,16 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3">
-                                @if (!string.IsNullOrEmpty(Model.TestDrive.Variant?.VehicleModel?.ImageUrl))
+                                @if (!string.IsNullOrEmpty(Model.TestDrive.ImageUrl))
                                 {
-                                    <img src="@Model.TestDrive.Variant.VehicleModel.ImageUrl" 
-                                         alt="@Model.TestDrive.Variant.VehicleModel.Name" 
+                                    <img src="@Model.TestDrive.ImageUrl" 
+                                         alt="@Model.TestDrive.ModelName" 
                                          class="img-fluid rounded" />
                                 }
                             </div>
                             <div class="col-md-9">
-                                <h5>@Model.TestDrive.Variant?.VehicleModel?.Name</h5>
-                                <p><strong>Phiên Bản:</strong> @Model.TestDrive.Variant?.Version</p>
+                                <h5>@Model.TestDrive.ModelName</h5>
+                                <p><strong>Phiên Bản:</strong> @Model.TestDrive.VariantVersion</p>
                                 <p><strong>Ngày Lái Thử:</strong> @Model.TestDrive.ScheduledDate?.ToString("dd/MM/yyyy") - @Model.TestDrive.ScheduledTime?.ToString("HH:mm")</p>
                             </div>
                         </div>

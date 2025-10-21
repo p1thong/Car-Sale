@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using ASM1.WebMVC.Hubs;
 using Microsoft.AspNetCore.Mvc;
@@ -26,20 +27,14 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
             _hubContext = hubContext;
         }
 
-        public VehicleVariant? Variant { get; set; }
-        public ASM1.Repository.Models.Customer? CustomerData { get; set; }
+        [BindProperty]
+        public OrderDto Order { get; set; } = new();
+        public VehicleVariantDto? VariantData { get; set; }
+        public CustomerDto? CustomerData { get; set; }
         public int MaxQuantity { get; set; }
 
         [BindProperty]
         public int VariantId { get; set; }
-
-        [BindProperty]
-        [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1")]
-        public int Quantity { get; set; } = 1;
-
-        [BindProperty]
-        public string? Notes { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int variantId)
         {
@@ -48,8 +43,8 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
             try
             {
                 // Get vehicle info
-                Variant = await _vehicleService.GetVehicleVariantByIdAsync(variantId);
-                if (Variant == null)
+                VariantData = await _vehicleService.GetVehicleVariantByIdAsync(variantId);
+                if (VariantData == null)
                 {
                     TempData["ErrorMessage"] = "Không tìm thấy xe được chọn.";
                     return RedirectToPage("/Home/Index");
@@ -72,7 +67,7 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
                     return RedirectToPage("/Auth/Login");
                 }
 
-                MaxQuantity = Variant.Quantity;
+                MaxQuantity = VariantData.Quantity;
                 return Page();
             }
             catch (Exception ex)
@@ -86,7 +81,7 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
         {
             if (!ModelState.IsValid)
             {
-                await OnGetAsync(VariantId);
+                await OnGetAsync(Order.VariantId);
                 return Page();
             }
 
@@ -110,32 +105,33 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
                 }
 
                 // Validate quantity
-                var variant = await _vehicleService.GetVehicleVariantByIdAsync(VariantId);
+                var variant = await _vehicleService.GetVehicleVariantByIdAsync(Order.VariantId);
                 if (variant == null)
                 {
                     TempData["ErrorMessage"] = "Không tìm thấy xe được chọn.";
                     return RedirectToPage();
                 }
 
-                if (Quantity <= 0 || Quantity > variant.Quantity)
+                if (Order.Quantity <= 0 || Order.Quantity > variant.Quantity)
                 {
                     ModelState.AddModelError(
-                        nameof(Quantity),
+                        nameof(Order.Quantity),
                         $"Số lượng không hợp lệ. Chỉ có {variant.Quantity} xe có sẵn."
                     );
-                    await OnGetAsync(VariantId);
+                    await OnGetAsync(Order.VariantId);
                     return Page();
                 }
 
                 // Create order với customer.CustomerId (ĐÚNG, không phải UserId)
-                var order = new Order
+                var order = new OrderDto
                 {
                     CustomerId = customer.CustomerId, // ✅ Sử dụng CustomerId từ Customer record
                     DealerId = customer.DealerId,
-                    VariantId = VariantId,
-                    Quantity = Quantity, // ✅ Thêm quantity
+                    VariantId = Order.VariantId,
+                    Quantity = Order.Quantity, // ✅ Thêm quantity
                     Status = "Pending",
                     OrderDate = DateOnly.FromDateTime(DateTime.Now),
+                    Notes = Order.Notes
                 };
 
                 var createdOrder = await _salesService.CreateOrderAsync(order);
@@ -150,7 +146,7 @@ namespace ASM1.WebMVC.Pages.CustomerOrder
             catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, $"Lỗi khi đặt hàng: {ex.Message}");
-                await OnGetAsync(VariantId);
+                await OnGetAsync(Order.VariantId);
                 return Page();
             }
         }

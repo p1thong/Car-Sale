@@ -85,12 +85,12 @@
 						<tr>
 							<td><strong>#@testDrive.TestDriveId</strong></td>
 							<td>
-								@testDrive.Customer?.FullName<br>
-								<small class="text-muted">@testDrive.Customer?.Phone</small>
+								@testDrive.CustomerName<br>
+								<small class="text-muted">@testDrive.CustomerPhone</small>
 							</td>
 							<td>
-								@testDrive.Variant?.VehicleModel?.Name<br>
-								<small class="text-muted">@testDrive.Variant?.Version</small>
+								@testDrive.ModelName<br>
+								<small class="text-muted">@testDrive.VariantVersion</small>
 							</td>
 							<td>@testDrive.ScheduledDate?.ToString("dd/MM/yyyy")</td>
 							<td>@testDrive.ScheduledTime?.ToString("HH:mm")</td>

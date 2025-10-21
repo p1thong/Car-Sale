@@ -39,10 +39,10 @@
 				<div class="card-body">
 					<div class="row">
 						<div class="col-md-4">
-							@if (!string.IsNullOrEmpty(Model.OrderData?.Variant?.VehicleModel?.ImageUrl))
+							@if (!string.IsNullOrEmpty(Model.OrderData?.ImageUrl))
 							{
-								<img src="@Model.OrderData.Variant.VehicleModel.ImageUrl"
-									 alt="@Model.OrderData.Variant.VehicleModel.ModelName"
+								<img src="@Model.OrderData.ImageUrl"
+									 alt="@Model.OrderData.ModelName"
 									 class="img-fluid rounded shadow-sm"
 									 style="height: 150px; object-fit: cover;">
 							}
@@ -54,14 +54,14 @@
 							}
 						</div>
 						<div class="col-md-8">
-							<h4 class="text-primary fw-bold">@Model.OrderData?.Variant?.VehicleModel?.ModelName</h4>
+							<h4 class="text-primary fw-bold">@Model.OrderData?.ModelName</h4>
 							<p class="text-muted mb-2">
-								@Model.OrderData?.Variant?.VehicleModel?.Manufacturer?.Name
+								@Model.OrderData?.ManufacturerName
 							</p>
 							<div class="row">
 								<div class="col-6">
-									<strong>Phiên bản:</strong> @Model.OrderData?.Variant?.Version<br>
-									<strong>Màu sắc:</strong> @Model.OrderData?.Variant?.Color
+									<strong>Phiên bản:</strong> @Model.OrderData?.VariantVersion<br>
+									<strong>Màu sắc:</strong> @Model.OrderData?.VariantColor
 								</div>
 								<div class="col-6">
 									<strong>Ngày đặt:</strong> @Model.OrderData?.OrderDate?.ToString("dd/MM/yyyy")<br>

@@ -7,7 +7,7 @@
 @page "{id:int}"
 @model ASM1.WebMVC.Pages.Home.VehicleDetailModel
 @{
-    ViewData["Title"] = "Chi tiết xe - " + Model.Vehicle?.VehicleModel?.Name;
+    ViewData["Title"] = "Chi tiết xe - " + Model.Vehicle?.ModelName;
 }
 
 <div class="container-fluid py-5">
@@ -15,10 +15,10 @@
         <!-- Vehicle Image -->
         <div class="col-lg-6 text-center">
             <div class="vehicle-photo-box mb-4">
-                @if (!string.IsNullOrEmpty(Model.Vehicle?.VehicleModel?.ImageUrl))
+                @if (!string.IsNullOrEmpty(Model.Vehicle?.ImageUrl))
                 {
-                    <img src="@Model.Vehicle.VehicleModel.ImageUrl"
-                         alt="@Model.Vehicle.VehicleModel?.Name"
+                    <img src="@Model.Vehicle.ImageUrl"
+                         alt="@Model.Vehicle.ModelName"
                          class="img-fluid vehicle-photo" />
                 }
                 else
@@ -32,7 +32,7 @@
 
         <!-- Vehicle Info -->
         <div class="col-lg-6">
-            <h1 class="fw-bold mb-3">@Model.Vehicle?.VehicleModel?.Name <small class="text-muted">@Model.Vehicle?.Version</small></h1>
+            <h1 class="fw-bold mb-3">@Model.Vehicle?.ModelName <small class="text-muted">@Model.Vehicle?.Version</small></h1>
 
             <!-- Price -->
             <div class="price-box mb-4">
@@ -46,7 +46,7 @@
                         <i class="fas fa-industry spec-icon"></i>
                         <div>
                             <strong>Hãng</strong>
-                            <p class="mb-0">@Model.Vehicle?.VehicleModel?.Manufacturer?.Name</p>
+                            <p class="mb-0">@Model.Vehicle?.ManufacturerName</p>
                         </div>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                         <i class="fas fa-flag spec-icon"></i>
                         <div>
                             <strong>Quốc gia</strong>
-                            <p class="mb-0">@Model.Vehicle?.VehicleModel?.Manufacturer?.Country</p>
+                            <p class="mb-0">@Model.Vehicle?.ManufacturerCountry</p>
                         </div>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                         <i class="fas fa-car-side spec-icon"></i>
                         <div>
                             <strong>Loại xe</strong>
-                            <p class="mb-0">@Model.Vehicle?.VehicleModel?.Category</p>
+                            <p class="mb-0">@Model.Vehicle?.Category</p>
                         </div>
                     </div>
                 </div>
@@ -120,7 +120,7 @@
     </div>
 
     <!-- Manufacturer Info -->
-    @if (Model.Vehicle?.VehicleModel?.Manufacturer != null)
+    @if (Model.Vehicle?.ManufacturerName != null)
     {
         <div class="row mt-5">
             <div class="col-12">
@@ -130,9 +130,9 @@
                             <i class="fas fa-industry fa-2x"></i>
                         </div>
                         <div>
-                            <h4 class="fw-bold mb-2">@Model.Vehicle.VehicleModel.Manufacturer.Name</h4>
-                            <p class="mb-1"><i class="fas fa-flag"></i> @Model.Vehicle.VehicleModel.Manufacturer.Country</p>
-                            <p class="mb-0"><i class="fas fa-map-marker-alt"></i> @Model.Vehicle.VehicleModel.Manufacturer.Address</p>
+                            <h4 class="fw-bold mb-2">@Model.Vehicle.ManufacturerName</h4>
+                            <p class="mb-1"><i class="fas fa-flag"></i> @Model.Vehicle.ManufacturerCountry</p>
+                            <p class="mb-0"><i class="fas fa-map-marker-alt"></i> @Model.Vehicle.ManufacturerAddress</p>
                         </div>
                     </div>
                 </div>

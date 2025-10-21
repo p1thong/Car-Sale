@@ -1,3 +1,4 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,12 +13,16 @@ namespace ASM1.WebMVC.Pages.CustomerService
             _customerService = customerService;
         }
 
-        public List<Feedback> Feedbacks { get; set; } = new();
+        public List<FeedbackDto> Feedbacks { get; set; } = new();
 
         public async Task<IActionResult> OnGetAsync()
         {
+            Console.WriteLine("===== MyFeedbacks.OnGetAsync CALLED =====");
+            
             // Get current customer by email
             var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+            Console.WriteLine($"MyFeedbacks - Email: {email}");
+            
             if (string.IsNullOrEmpty(email))
             {
                 TempData["ErrorMessage"] = "Vui lòng đăng nhập.";
@@ -27,6 +32,8 @@ namespace ASM1.WebMVC.Pages.CustomerService
             try
             {
                 var customer = await _customerService.GetCustomerByEmailAsync(email);
+                Console.WriteLine($"MyFeedbacks - Customer ID: {customer?.CustomerId}");
+                
                 if (customer == null)
                 {
                     TempData["ErrorMessage"] = "Không tìm thấy thông tin khách hàng.";
@@ -36,10 +43,13 @@ namespace ASM1.WebMVC.Pages.CustomerService
                 Feedbacks = (
                     await _customerService.GetCustomerFeedbacksAsync(customer.CustomerId)
                 ).ToList();
+                
+                Console.WriteLine($"MyFeedbacks loaded: {Feedbacks.Count} feedbacks for customer {customer.CustomerId}");
                 return Page();
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"MyFeedbacks ERROR: {ex.Message}");
                 TempData["ErrorMessage"] = $"Lỗi: {ex.Message}";
                 return Page();
             }

@@ -1,3 +1,4 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using ASM1.WebMVC.Hubs;
 using Microsoft.AspNetCore.Authorization;
@@ -21,8 +22,8 @@ namespace ASM1.WebMVC.Pages.Customer
             _hubContext = hubContext;
         }
 
-        public Order? Order { get; set; }
-        public IEnumerable<Payment> Payments { get; set; } = new List<Payment>();
+        public OrderDto? Order { get; set; }
+        public IEnumerable<PaymentDto> Payments { get; set; } = new List<PaymentDto>();
         public decimal TotalPaid { get; set; }
         public decimal OrderTotal { get; set; }
         public decimal RemainingBalance { get; set; }
@@ -57,7 +58,7 @@ namespace ASM1.WebMVC.Pages.Customer
                 Payments = await _salesService.GetPaymentsByOrderAsync(id);
                 TotalPaid = Payments?.Sum(p => p.Amount ?? 0) ?? 0;
                 // Sử dụng TotalPrice từ order thay vì Variant.Price
-                OrderTotal = Order.TotalPrice ?? (Order.Variant?.Price * Order.Quantity) ?? 0;
+                OrderTotal = Order.TotalPrice ?? 0;
                 RemainingBalance = Math.Max(0, OrderTotal - TotalPaid);
 
                 return Page();

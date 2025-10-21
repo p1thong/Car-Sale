@@ -1,3 +1,4 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +13,7 @@ namespace ASM1.WebMVC.Pages.CustomerService
             _customerService = customerService;
         }
 
-        public List<TestDrive> TestDrives { get; set; } = new();
+        public List<TestDriveDto> TestDrives { get; set; } = new();
         public string? CustomerName { get; set; }
 
         public async Task<IActionResult> OnGetAsync()

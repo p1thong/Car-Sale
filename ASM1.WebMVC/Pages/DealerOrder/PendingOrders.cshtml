@@ -55,15 +55,15 @@
                         <tr>
                             <td><strong>#@order.OrderId</strong></td>
                             <td>
-                                @order.Customer?.FullName<br>
-                                <small class="text-muted">@order.Customer?.Email</small>
+                                @order.CustomerName<br>
+                                <small class="text-muted">@order.CustomerEmail</small>
                             </td>
                             <td>
-                                @order.Variant?.VehicleModel?.Name<br>
-                                <small class="text-muted">@order.Variant?.Version</small>
+                                @order.ModelName<br>
+                                <small class="text-muted">@order.VariantVersion</small>
                             </td>
                             <td>@order.OrderDate?.ToString("dd/MM/yyyy")</td>
-                            <td><strong>@order.Variant?.Price?.ToString("N0") $</strong></td>
+                            <td><strong>@order.Price?.ToString("N0") $</strong></td>
                             <td>
                                 <span class="badge bg-warning">@order.Status</span>
                             </td>

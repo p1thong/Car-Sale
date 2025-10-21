@@ -1,3 +1,4 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +13,7 @@ namespace ASM1.WebMVC.Pages.Customer
             _salesService = salesService;
         }
 
-        public ASM1.Repository.Models.Customer? CustomerData { get; set; }
+        public CustomerDto? CustomerData { get; set; }
         public int OrdersCount { get; set; }
         public int PendingOrdersCount { get; set; }
         public int ConfirmedOrdersCount { get; set; }

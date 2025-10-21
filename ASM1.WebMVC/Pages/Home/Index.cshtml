@@ -61,10 +61,10 @@
                             </svg>
 
                             <div class="car-img">
-                                @if (!string.IsNullOrEmpty(vehicle.VehicleModel?.ImageUrl))
+                                @if (!string.IsNullOrEmpty(vehicle.ImageUrl))
                                 {
-                                    <img src="@vehicle.VehicleModel.ImageUrl"
-                                         alt="@vehicle.VehicleModel?.Name"
+                                    <img src="@vehicle.ImageUrl"
+                                         alt="@vehicle.ModelName"
                                          class="img-fluid car-photo" loading="lazy" />
                                 }
                                 else
@@ -78,12 +78,12 @@
 
                             <div class="car-body d-flex flex-column">
                                 <h5 class="car-title mb-2">
-                                    @vehicle.VehicleModel?.Name
+                                    @vehicle.ModelName
                                     <small class="text-muted">@vehicle.Version</small>
                                 </h5>
                                 <div class="car-meta text-muted mb-3">
-                                    <div><strong>Hãng:</strong> @vehicle.VehicleModel?.Manufacturer?.Name</div>
-                                    <div><strong>Loại:</strong> @vehicle.VehicleModel?.Category</div>
+                                    <div><strong>Hãng:</strong> @vehicle.ManufacturerName</div>
+                                    <div><strong>Loại:</strong> @vehicle.Category</div>
                                     <div><strong>Màu:</strong> <span class="badge bg-secondary">@vehicle.Color</span></div>
                                     <div><strong>Năm sản xuất:</strong> @vehicle.ProductYear</div>
                                 </div>

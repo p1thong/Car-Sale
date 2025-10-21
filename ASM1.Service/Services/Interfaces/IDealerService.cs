@@ -1,25 +1,25 @@
-using ASM1.Repository.Models;
+using ASM1.Service.Dtos;
 
 namespace ASM1.Service.Services.Interfaces
 {
     public interface IDealerService
     {
         // Dealer Management
-        Task<IEnumerable<Dealer>> GetAllDealersAsync();
-        Task<Dealer?> GetDealerByIdAsync(int dealerId);
-        Task<Dealer?> GetDealerByEmailAsync(string email);
-        Task<Dealer> CreateDealerAsync(Dealer dealer);
-        Task<Dealer> UpdateDealerAsync(Dealer dealer);
+        Task<IEnumerable<DealerDto>> GetAllDealersAsync();
+        Task<DealerDto?> GetDealerByIdAsync(int dealerId);
+        Task<DealerDto?> GetDealerByEmailAsync(string email);
+        Task<DealerDto> CreateDealerAsync(DealerDto dealer);
+        Task<DealerDto> UpdateDealerAsync(DealerDto dealer);
 
         // Dealer Contract Management
-        Task<IEnumerable<DealerContract>> GetDealerContractsAsync(int dealerId);
-        Task<DealerContract?> GetDealerContractByIdAsync(int contractId);
-        Task<DealerContract> CreateDealerContractAsync(DealerContract contract);
-        Task<DealerContract> UpdateDealerContractAsync(DealerContract contract);
+        Task<IEnumerable<DealerContractDto>> GetDealerContractsAsync(int dealerId);
+        Task<DealerContractDto?> GetDealerContractByIdAsync(int contractId);
+        Task<DealerContractDto> CreateDealerContractAsync(DealerContractDto contract);
+        Task<DealerContractDto> UpdateDealerContractAsync(DealerContractDto contract);
 
         // Business Logic Methods
         Task<bool> IsDealerActiveAsync(int dealerId);
-        Task<IEnumerable<Dealer>> GetDealersByRegionAsync(string region);
+        Task<IEnumerable<DealerDto>> GetDealersByRegionAsync(string region);
         Task<bool> CanDeleteDealerAsync(int dealerId);
         Task<decimal> GetDealerTotalSalesAsync(int dealerId, DateTime? fromDate = null, DateTime? toDate = null);
     }

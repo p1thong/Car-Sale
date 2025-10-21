@@ -13,7 +13,6 @@ namespace ASM1.Service.Services
         private readonly ICustomerRepository _customerRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IPaymentRepository _paymentRepository;
-        private readonly IAuthRepository _authRepository;
         private readonly IMapper _mapper;
 
         public CustomerRelationshipService(
@@ -22,7 +21,6 @@ namespace ASM1.Service.Services
             ICustomerRepository customerRepository,
             IOrderRepository orderRepository,
             IPaymentRepository paymentRepository,
-            IAuthRepository authRepository,
             IMapper mapper)
         {
             _testDriveRepository = testDriveRepository;
@@ -30,52 +28,7 @@ namespace ASM1.Service.Services
             _customerRepository = customerRepository;
             _orderRepository = orderRepository;
             _paymentRepository = paymentRepository;
-            _authRepository = authRepository;
             _mapper = mapper;
-        }
-
-        private TestDriveDto MapTestDriveToDto(TestDrive testDrive)
-        {
-            var testDriveDto = _mapper.Map<TestDrive, TestDriveDto>(testDrive);
-
-            if (testDrive.Customer != null)
-            {
-                testDriveDto.CustomerName = testDrive.Customer.FullName;
-                testDriveDto.CustomerEmail = testDrive.Customer.Email;
-                testDriveDto.CustomerPhone = testDrive.Customer.Phone;
-            }
-
-            if (testDrive.Variant != null)
-            {
-                testDriveDto.VariantVersion = testDrive.Variant.Version;
-                testDriveDto.VariantColor = testDrive.Variant.Color;
-                testDriveDto.Price = testDrive.Variant.Price;
-                testDriveDto.ProductYear = testDrive.Variant.ProductYear;
-                if (testDrive.Variant.VehicleModel != null)
-                {
-                    testDriveDto.ModelName = testDrive.Variant.VehicleModel.Name;
-                    testDriveDto.ImageUrl = testDrive.Variant.VehicleModel.ImageUrl;
-                    testDriveDto.ManufacturerName = testDrive.Variant.VehicleModel.Manufacturer?.Name;
-                    testDriveDto.VehicleModelId = testDrive.Variant.VehicleModel.VehicleModelId;
-                }
-            }
-
-            return testDriveDto;
-        }
-
-        private FeedbackDto MapFeedbackToDto(Feedback feedback)
-        {
-            var feedbackDto = _mapper.Map<Feedback, FeedbackDto>(feedback);
-            feedbackDto.CustomerName = feedback.Customer?.FullName;
-            feedbackDto.CustomerEmail = feedback.Customer?.Email;
-
-            if (feedback.VehicleModel != null)
-            {
-                feedbackDto.ModelName = feedback.VehicleModel.Name;
-                feedbackDto.VehicleModelId = feedback.VehicleModel.VehicleModelId;
-            }
-
-            return feedbackDto;
         }
 
         // Customer Management
@@ -88,31 +41,13 @@ namespace ASM1.Service.Services
         public async Task<CustomerDto?> GetCustomerByIdAsync(int customerId)
         {
             var customer = await _customerRepository.GetCustomerByIdAsync(customerId);
-            if (customer == null) return null;
-
-            var user = await _authRepository.GetUserByEmail(customer.Email);
-
-            var customerDto = _mapper.Map<Customer, CustomerDto>(customer);
-            customerDto.DealerName = customer.Dealer?.FullName;
-            customerDto.Address = user?.Address;
-            customerDto.PhoneNumber = user?.Phone;
-
-            return customerDto;
+            return customer != null ? _mapper.Map<Customer, CustomerDto>(customer) : null;
         }
 
         public async Task<CustomerDto?> GetCustomerByEmailAsync(string email)
         {
             var customer = await _customerRepository.GetCustomerByEmailAsync(email);
-            if (customer == null) return null;
-
-            var user = await _authRepository.GetUserByEmail(email);
-
-            var customerDto = _mapper.Map<Customer, CustomerDto>(customer);
-            customerDto.DealerName = customer.Dealer?.FullName;
-            customerDto.Address = user?.Address;
-            customerDto.PhoneNumber = user?.Phone;
-
-            return customerDto;
+            return customer != null ? _mapper.Map<Customer, CustomerDto>(customer) : null;
         }
 
         public async Task<CustomerDto> CreateCustomerAsync(CustomerDto customerDto)
@@ -174,31 +109,31 @@ namespace ASM1.Service.Services
         public async Task<TestDriveDto?> GetTestDriveByIdAsync(int testDriveId)
         {
             var testDrive = await _testDriveRepository.GetTestDriveByIdAsync(testDriveId);
-            return testDrive != null ? MapTestDriveToDto(testDrive) : null;
+            return testDrive != null ? _mapper.Map<TestDrive, TestDriveDto>(testDrive) : null;
         }
 
         public async Task<IEnumerable<TestDriveDto>> GetTestDriveScheduleAsync(DateOnly date)
         {
             var testDrives = await _testDriveRepository.GetScheduledTestDrivesAsync(date);
-            return testDrives.Select(MapTestDriveToDto);
+            return _mapper.MapList<TestDrive, TestDriveDto>(testDrives);
         }
 
         public async Task<IEnumerable<TestDriveDto>> GetAllTestDrivesAsync()
         {
             var testDrives = await _testDriveRepository.GetAllTestDrivesAsync();
-            return testDrives.Select(MapTestDriveToDto);
+            return _mapper.MapList<TestDrive, TestDriveDto>(testDrives);
         }
 
         public async Task<IEnumerable<TestDriveDto>> GetCustomerTestDrivesAsync(int customerId)
         {
             var testDrives = await _testDriveRepository.GetTestDrivesByCustomerAsync(customerId);
-            return testDrives.Select(MapTestDriveToDto);
+            return _mapper.MapList<TestDrive, TestDriveDto>(testDrives);
         }
 
         public async Task<IEnumerable<TestDriveDto>> GetTestDrivesByDealerAsync(int dealerId)
         {
             var testDrives = await _testDriveRepository.GetTestDrivesByDealerAsync(dealerId);
-            return testDrives.Select(MapTestDriveToDto);
+            return _mapper.MapList<TestDrive, TestDriveDto>(testDrives);
         }
 
         public async Task<TestDriveDto> CreateTestDriveAsync(TestDriveDto testDriveDto)
@@ -219,13 +154,6 @@ namespace ASM1.Service.Services
         }
 
         // Feedback Management
-        public async Task<FeedbackDto> CreateFeedbackAsync(FeedbackDto feedbackDto)
-        {
-            var feedback = _mapper.Map<FeedbackDto, Feedback>(feedbackDto);
-            var result = await _feedbackRepository.CreateFeedbackAsync(feedback);
-            return _mapper.Map<Feedback, FeedbackDto>(result);
-        }
-
         public async Task<FeedbackDto> CreateFeedbackAsync(int customerId, string content, int rating)
         {
             var feedback = new Feedback
@@ -243,19 +171,19 @@ namespace ASM1.Service.Services
         public async Task<IEnumerable<FeedbackDto>> GetCustomerFeedbacksAsync(int customerId)
         {
             var feedbacks = await _feedbackRepository.GetFeedbacksByCustomerAsync(customerId);
-            return feedbacks.Select(MapFeedbackToDto);
+            return _mapper.MapList<Feedback, FeedbackDto>(feedbacks);
         }
 
         public async Task<IEnumerable<FeedbackDto>> GetAllFeedbacksAsync()
         {
             var feedbacks = await _feedbackRepository.GetAllFeedbacksAsync();
-            return feedbacks.Select(MapFeedbackToDto);
+            return _mapper.MapList<Feedback, FeedbackDto>(feedbacks);
         }
 
         public async Task<IEnumerable<FeedbackDto>> GetFeedbacksByDealerAsync(int dealerId)
         {
             var feedbacks = await _feedbackRepository.GetFeedbacksByDealerAsync(dealerId);
-            return feedbacks.Select(MapFeedbackToDto);
+            return _mapper.MapList<Feedback, FeedbackDto>(feedbacks);
         }
 
         // Customer Profile & History
@@ -273,18 +201,12 @@ namespace ASM1.Service.Services
             var outstandingBalance = orders.Where(o => o.Status != "Completed" && o.Status != "Cancelled")
                 .Sum(o => (o.TotalPrice ?? (o.Variant?.Price * o.Quantity) ?? 0) - 
                          (o.Payments?.Sum(p => p.Amount) ?? 0));
-            
-            var user = await _authRepository.GetUserByEmail(customer.Email);
-            var customerDto = _mapper.Map<Customer, CustomerDto>(customer);
-            customerDto.DealerName = customer.Dealer?.FullName;
-            customerDto.Address = user?.Address;
-            customerDto.PhoneNumber = user?.Phone;
 
             return new CustomerProfileDto
             {
-                Customer = customerDto,
+                Customer = _mapper.Map<Customer, CustomerDto>(customer),
                 Orders = _mapper.MapList<Order, OrderDto>(orders),
-                TestDrives = testDrives.Select(MapTestDriveToDto),
+                TestDrives = _mapper.MapList<TestDrive, TestDriveDto>(testDrives),
                 Feedbacks = _mapper.MapList<Feedback, FeedbackDto>(feedbacks),
                 TotalPurchaseAmount = totalPurchaseAmount,
                 OutstandingBalance = outstandingBalance
@@ -335,15 +257,12 @@ namespace ASM1.Service.Services
 
             var newCustomers = allCustomers.Where(c => c.DealerId == dealerId); // Add date filtering in real implementation
 
-            var ratings = allFeedbacks.Select(f => f.Rating).OfType<int>();
-            var averageRating = ratings.Any() ? ratings.Average() : 0;
-
             return new CustomerCareReportDto
             {
                 TotalCustomers = allCustomers.Count(),
                 TotalTestDrives = allTestDrives.Count(),
                 TotalFeedbacks = allFeedbacks.Count(),
-                AverageRating = averageRating,
+                AverageRating = allFeedbacks.Any() ? allFeedbacks.Average(f => f.Rating) : 0,
                 TotalSales = 0, // Calculate from orders
                 NewCustomers = _mapper.MapList<Customer, CustomerDto>(newCustomers),
                 RecentFeedbacks = _mapper.MapList<Feedback, FeedbackDto>(allFeedbacks.OrderByDescending(f => f.FeedbackDate).Take(10))

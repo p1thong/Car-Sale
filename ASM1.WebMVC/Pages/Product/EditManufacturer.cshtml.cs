@@ -1,6 +1,8 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace ASM1.WebMVC.Pages.Product
 {
@@ -41,7 +43,7 @@ namespace ASM1.WebMVC.Pages.Product
 
             ManufacturerId = manufacturer.ManufacturerId;
             Name = manufacturer.Name;
-            Country = manufacturer.Country;
+            Country = manufacturer.Country ?? string.Empty;
             Address = manufacturer.Address;
 
             return Page();
@@ -56,7 +58,7 @@ namespace ASM1.WebMVC.Pages.Product
 
             try
             {
-                var manufacturer = new Manufacturer
+                var manufacturer = new ManufacturerDto
                 {
                     ManufacturerId = ManufacturerId,
                     Name = Name,

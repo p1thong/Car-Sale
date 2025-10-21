@@ -1,3 +1,4 @@
+using ASM1.Service.Dtos;
 using ASM1.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +13,7 @@ namespace ASM1.WebMVC.Pages.CustomerService
             _customerService = customerService;
         }
 
-        public TestDrive? TestDrive { get; set; }
+        public TestDriveDto? TestDrive { get; set; }
         public bool CanConfirm { get; set; }
         public bool CanComplete { get; set; }
         public bool CanCancel { get; set; }
