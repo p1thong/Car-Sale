@@ -111,7 +111,7 @@
                                 <p><strong>Phiên Bản:</strong> @Model.Order.Variant?.Version</p>
                                 <p><strong>Màu Sắc:</strong> @Model.Order.Variant?.Color</p>
                                 <p><strong>Hãng:</strong> @Model.Order.Variant?.VehicleModel?.Manufacturer?.Name</p>
-                                <p><strong>Giá:</strong> <span class="text-success fw-bold fs-4">@Model.Order.Variant?.Price?.ToString("N0") VNĐ</span></p>
+                                <p><strong>Giá:</strong> <span class="text-success fw-bold fs-4">@Model.Order.Variant?.Price?.ToString("N0") $</span></p>
                             </div>
                         </div>
                     </div>
@@ -128,15 +128,15 @@
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <p class="mb-1"><strong>Tổng Giá Trị:</strong></p>
-                                <h4 class="text-primary">@((Model.Order.Variant?.Price ?? 0).ToString("N0")) VNĐ</h4>
+                                <h4 class="text-primary">@((Model.Order.Variant?.Price ?? 0).ToString("N0")) $</h4>
                             </div>
                             <div class="col-md-4">
                                 <p class="mb-1"><strong>Đã Thanh Toán:</strong></p>
-                                <h4 class="text-success">@Model.TotalPaid.ToString("N0") VNĐ</h4>
+                                <h4 class="text-success">@Model.TotalPaid.ToString("N0") $</h4>
                             </div>
                             <div class="col-md-4">
                                 <p class="mb-1"><strong>Còn Lại:</strong></p>
-                                <h4 class="text-danger">@Model.RemainingBalance.ToString("N0") VNĐ</h4>
+                                <h4 class="text-danger">@Model.RemainingBalance.ToString("N0") $</h4>
                             </div>
                         </div>
 
@@ -161,7 +161,7 @@
                                             <tr>
                                                 <td>#@payment.PaymentId</td>
                                                 <td>@payment.PaymentDate?.ToString("dd/MM/yyyy")</td>
-                                                <td><strong>@payment.Amount?.ToString("N0") VNĐ</strong></td>
+                                                <td><strong>@payment.Amount?.ToString("N0") $</strong></td>
                                                 <td>@payment.PaymentMethod</td>
                                                 <td>
                                                     @if (payment.Status == "Completed")

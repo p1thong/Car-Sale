@@ -65,7 +65,7 @@
                             </td>
                             <td>@order.OrderDate?.ToString("dd/MM/yyyy")</td>
                             <td><span class="badge bg-primary">@order.Quantity</span></td>
-                            <td><strong class="text-success">@order.TotalPrice?.ToString("N0") VNĐ</strong></td>
+                            <td><strong class="text-success">@order.TotalPrice?.ToString("N0") $</strong></td>
                             <td>
                                 @if (order.Status == "Pending")
                                 {

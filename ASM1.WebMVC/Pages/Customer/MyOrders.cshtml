@@ -45,15 +45,15 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card bg-danger text-white">
-                    <div class="card-body text-center">
-                        <h5><i class="fas fa-times me-2"></i>Đã từ chối</h5>
-                        <h3>@Model.Orders.Count(o => o.Status == "Rejected")</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
+				<div class="col-md-3">
+					<div class="card bg-secondary text-white">
+						<div class="card-body text-center">
+							<h5><i class="fas fa-ban me-2"></i>Đã hủy</h5>
+							<h3>@Model.Orders.Count(o => o.Status == "Cancelled" || o.Status == "Rejected")</h3>
+						</div>
+					</div>
+				</div>
+		  </div>
 
         <!-- Danh sách đơn hàng -->
         <div class="card shadow-sm">
@@ -118,24 +118,25 @@
                                         </span>
                                     </td>
                                     <td>
-                                        @switch (order.Status)
-                                        {
-                                            case "Pending":
-                                                <span class="badge bg-warning"><i class="fas fa-clock me-1"></i>Chờ xác nhận</span>
-                                                break;
-                                            case "Confirmed":
-                                                <span class="badge bg-success"><i class="fas fa-check me-1"></i>Đã xác nhận</span>
-                                                break;
-                                            case "Rejected":
-                                                <span class="badge bg-danger"><i class="fas fa-times me-1"></i>Đã từ chối</span>
-                                                break;
-                                            case "Completed":
-                                                <span class="badge bg-info"><i class="fas fa-flag-checkered me-1"></i>Hoàn thành</span>
-                                                break;
-                                            default:
-                                                <span class="badge bg-secondary">@order.Status</span>
-                                                break;
-                                        }
+									@switch (order.Status)
+									{
+										case "Pending":
+											<span class="badge bg-warning"><i class="fas fa-clock me-1"></i>Chờ xác nhận</span>
+											break;
+										case "Confirmed":
+											<span class="badge bg-success"><i class="fas fa-check me-1"></i>Đã xác nhận</span>
+											break;
+										case "Rejected":
+										case "Cancelled":
+											<span class="badge bg-secondary"><i class="fas fa-ban me-1"></i>Đã hủy</span>
+											break;
+										case "Completed":
+											<span class="badge bg-info"><i class="fas fa-flag-checkered me-1"></i>Hoàn thành</span>
+											break;
+										default:
+											<span class="badge bg-secondary">@order.Status</span>
+											break;
+									}
                                     </td>
                                     <td>
                                         <div class="btn-group" role="group">
@@ -219,10 +220,10 @@
 </div>
 
 <!-- Hidden form for cancel order -->
-<form id="cancelOrderForm" method="post" style="display: none;">
+<form id="cancelOrderForm" method="post" asp-page-handler="CancelOrder" style="display: none;">
     <input type="hidden" name="orderId" id="cancelOrderId" />
-    <input type="hidden" name="handler" value="CancelOrder" />
 </form>
+
 
 <script>
 function cancelOrder(orderId) {

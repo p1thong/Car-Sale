@@ -97,9 +97,9 @@
                         <p><strong>Version:</strong> @Model.Order.Variant?.Version</p>
                         <p><strong>Color:</strong> @Model.Order.Variant?.Color</p>
                         <p><strong>Year:</strong> @Model.Order.Variant?.ProductYear</p>
-                        <p><strong>Unit Price:</strong> <span class="text-info">$@Model.Order.Variant?.Price?.ToString("N0")</span></p>
+                        <p><strong>Unit Price:</strong> <span class="text-info">@Model.Order.Variant?.Price?.ToString("N0")$</span></p>
                         <p><strong>Quantity:</strong> <span class="badge bg-primary fs-6">@Model.Order.Quantity</span></p>
-                        <p><strong>Total Price:</strong> <span class="text-success fw-bold fs-4">$@Model.Order.TotalPrice?.ToString("N0")</span></p>
+                        <p><strong>Total Price:</strong> <span class="text-success fw-bold fs-4">@Model.Order.TotalPrice?.ToString("N0")$</span></p>
                     </div>
                 </div>
             </div>
@@ -116,15 +116,15 @@
                         <div class="row text-center">
                             <div class="col-md-4">
                                 <h6>Order Total</h6>
-                                <h4 class="text-primary">$@Model.OrderTotal.ToString("N0") $</h4>
+                                <h4 class="text-primary">@Model.OrderTotal.ToString("N0") $</h4>
                             </div>
                             <div class="col-md-4">
                                 <h6>Amount Paid</h6>
-                                <h4 class="text-success">$@Model.TotalPaid.ToString("N0") $</h4>
+                                <h4 class="text-success">@Model.TotalPaid.ToString("N0") $</h4>
                             </div>
                             <div class="col-md-4">
                                 <h6>Remaining Balance</h6>
-                                <h4 class="text-danger">$@Model.RemainingBalance.ToString("N0") $</h4>
+                                <h4 class="text-danger">@Model.RemainingBalance.ToString("N0") $</h4>
                             </div>
                         </div>
                         

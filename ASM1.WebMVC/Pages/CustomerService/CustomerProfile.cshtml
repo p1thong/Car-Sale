@@ -73,7 +73,7 @@
                             <div class="col-6 mb-3">
                                 <div class="stat-box border rounded p-3">
                                     <h2 class="text-danger mb-0">@Model.TotalSpent.ToString("N0")</h2>
-                                    <small class="text-muted">VNĐ</small>
+                                    <small class="text-muted">$</small>
                                 </div>
                             </div>
                         </div>
@@ -113,7 +113,7 @@
                                                         @order.Status
                                                     </span>
                                                 </td>
-                                                <td>@order.Variant?.Price?.ToString("N0") VNĐ</td>
+                                                <td>@order.Variant?.Price?.ToString("N0") $</td>
                                             </tr>
                                         }
                                     </tbody>
