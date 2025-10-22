@@ -261,7 +261,7 @@
                                             <tr>
                                                 <td>#@payment.PaymentId</td>
                                                 <td>@(payment.PaymentDate.HasValue ? payment.PaymentDate.Value.ToString("dd/MM/yyyy") : "N/A")</td>
-                                                <td>$@payment.Amount?.ToString("N0") $</td>
+                                                <td>@payment.Amount?.ToString("N0") $</td>
                                                 <td>@payment.PaymentMethod</td>
                                                 <td>
                                                     @{
