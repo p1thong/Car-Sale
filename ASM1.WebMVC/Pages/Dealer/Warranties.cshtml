@@ -1,0 +1,370 @@
+@page
+@model ASM1.WebMVC.Pages.Dealer.WarrantiesModel
+@{
+    ViewData["Title"] = "Quản lý bảo hành";
+}
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0"><i class="fas fa-tools"></i> Quản lý yêu cầu bảo hành</h4>
+                    <span class="badge bg-light text-dark">Tổng: @Model.Warranties.Count yêu cầu</span>
+                </div>
+                <div class="card-body">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <!-- Filter -->
+                    <div class="mb-3">
+                        <div class="btn-group" role="group">
+                            <a asp-page="./Warranties" asp-route-statusFilter="All" 
+                               class="btn btn-outline-primary @(Model.StatusFilter == "All" ? "active" : "")">
+                                Tất cả (@Model.Warranties.Count(w => true))
+                            </a>
+                            <a asp-page="./Warranties" asp-route-statusFilter="Pending" 
+                               class="btn btn-outline-warning @(Model.StatusFilter == "Pending" ? "active" : "")">
+                                Chờ xác nhận (@Model.Warranties.Count(w => w.Status == "Pending"))
+                            </a>
+                            <a asp-page="./Warranties" asp-route-statusFilter="DealerConfirmed" 
+                               class="btn btn-outline-info @(Model.StatusFilter == "DealerConfirmed" ? "active" : "")">
+                                Đang sửa chữa (@Model.Warranties.Count(w => w.Status == "DealerConfirmed"))
+                            </a>
+                            <a asp-page="./Warranties" asp-route-statusFilter="RepairCompleted" 
+                               class="btn btn-outline-success @(Model.StatusFilter == "RepairCompleted" ? "active" : "")">
+                                Đã hoàn thành (@Model.Warranties.Count(w => w.Status == "RepairCompleted"))
+                            </a>
+                            <a asp-page="./Warranties" asp-route-statusFilter="CustomerReceived" 
+                               class="btn btn-outline-secondary @(Model.StatusFilter == "CustomerReceived" ? "active" : "")">
+                                Đã giao xe (@Model.Warranties.Count(w => w.Status == "CustomerReceived"))
+                            </a>
+                        </div>
+                    </div>
+
+                    @if (!Model.Warranties.Any())
+                    {
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            @if (Model.StatusFilter == "All")
+                            {
+                                <text>Chưa có yêu cầu bảo hành nào.</text>
+                            }
+                            else
+                            {
+                                <text>Không có yêu cầu bảo hành nào với trạng thái này.</text>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Mã BH</th>
+                                        <th>Khách hàng</th>
+                                        <th>Xe</th>
+                                        <th>Loại bảo hành</th>
+                                        <th>Ngày gửi</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var warranty in Model.Warranties)
+                                    {
+                                        <tr>
+                                            <td><strong>#@warranty.WarrantyId</strong></td>
+                                            <td>
+                                                @warranty.CustomerName<br />
+                                                <small class="text-muted">@warranty.CustomerEmail</small>
+                                            </td>
+                                            <td>
+                                                <strong>@warranty.VehicleModelName</strong><br />
+                                                <small>@warranty.VariantVersion</small>
+                                            </td>
+                                            <td>
+                                                @if (warranty.WarrantyType == "ManufacturerDefect")
+                                                {
+                                                    <span class="badge bg-danger">Lỗi do hãng</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-info">Bảo hành định kỳ</span>
+                                                }
+                                            </td>
+                                            <td>@warranty.RequestDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>
+                                                @switch (warranty.Status)
+                                                {
+                                                    case "Pending":
+                                                        <span class="badge bg-warning">Chờ xác nhận</span>
+                                                        break;
+                                                    case "DealerConfirmed":
+                                                        <span class="badge bg-info">Đang sửa chữa</span>
+                                                        break;
+                                                    case "RepairCompleted":
+                                                        <span class="badge bg-success">Đã hoàn thành</span>
+                                                        break;
+                                                    case "CustomerReceived":
+                                                        <span class="badge bg-secondary">Đã giao xe</span>
+                                                        break;
+                                                }
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-info" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#detailModal@(warranty.WarrantyId)">
+                                                    <i class="fas fa-eye"></i> Chi tiết
+                                                </button>
+
+                                                @if (warranty.Status == "Pending")
+                                                {
+                                                    <button type="button" class="btn btn-sm btn-success" 
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#confirmModal@(warranty.WarrantyId)">
+                                                        <i class="fas fa-check"></i> Xác nhận
+                                                    </button>
+                                                }
+
+                                                @if (warranty.Status == "DealerConfirmed")
+                                                {
+                                                    <button type="button" class="btn btn-sm btn-primary" 
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#completeModal@(warranty.WarrantyId)">
+                                                        <i class="fas fa-check-double"></i> Hoàn thành
+                                                    </button>
+                                                }
+                                            </td>
+                                        </tr>
+
+                                        <!-- Detail Modal -->
+                                        <div class="modal fade" id="detailModal@(warranty.WarrantyId)" tabindex="-1">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header bg-info text-white">
+                                                        <h5 class="modal-title">Chi tiết yêu cầu bảo hành #@warranty.WarrantyId</h5>
+                                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-6">
+                                                                <strong>Khách hàng:</strong><br />
+                                                                @warranty.CustomerName<br />
+                                                                <small class="text-muted">@warranty.CustomerEmail</small>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <strong>Xe:</strong><br />
+                                                                @warranty.VehicleModelName @warranty.VariantVersion
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-6">
+                                                                <strong>Loại bảo hành:</strong><br />
+                                                                @if (warranty.WarrantyType == "ManufacturerDefect")
+                                                                {
+                                                                    <span class="badge bg-danger">Lỗi do hãng</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="badge bg-info">Bảo hành định kỳ</span>
+                                                                }
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <strong>Ngày mua xe:</strong><br />
+                                                                @warranty.OrderDate?.ToString("dd/MM/yyyy")
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <strong>Mô tả vấn đề:</strong>
+                                                            <div class="border rounded p-3 bg-light mt-2">
+                                                                @warranty.Reason
+                                                            </div>
+                                                        </div>
+                                                        @if (!string.IsNullOrEmpty(warranty.Notes))
+                                                        {
+                                                            <div class="mb-3">
+                                                                <strong>Ghi chú của đại lý:</strong>
+                                                                <div class="border rounded p-3 bg-light mt-2">
+                                                                    @warranty.Notes
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        <div class="timeline">
+                                                            <div class="timeline-item completed">
+                                                                <i class="fas fa-check-circle"></i>
+                                                                <span>Yêu cầu gửi: @warranty.RequestDate.ToString("dd/MM/yyyy HH:mm")</span>
+                                                            </div>
+                                                            <div class="timeline-item @(warranty.DealerConfirmedDate != null ? "completed" : "")">
+                                                                <i class="fas fa-@(warranty.DealerConfirmedDate != null ? "check-circle" : "circle")"></i>
+                                                                <span>Xác nhận: @(warranty.DealerConfirmedDate?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa xác nhận")</span>
+                                                            </div>
+                                                            <div class="timeline-item @(warranty.RepairCompletedDate != null ? "completed" : "")">
+                                                                <i class="fas fa-@(warranty.RepairCompletedDate != null ? "check-circle" : "circle")"></i>
+                                                                <span>Hoàn thành: @(warranty.RepairCompletedDate?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa hoàn thành")</span>
+                                                            </div>
+                                                            <div class="timeline-item @(warranty.CustomerReceivedDate != null ? "completed" : "")">
+                                                                <i class="fas fa-@(warranty.CustomerReceivedDate != null ? "check-circle" : "circle")"></i>
+                                                                <span>Giao xe: @(warranty.CustomerReceivedDate?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa giao")</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Confirm Modal -->
+                                        @if (warranty.Status == "Pending")
+                                        {
+                                            <div class="modal fade" id="confirmModal@(warranty.WarrantyId)" tabindex="-1">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header bg-success text-white">
+                                                            <h5 class="modal-title">Xác nhận yêu cầu bảo hành</h5>
+                                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <form method="post" asp-page-handler="Confirm">
+                                                            <div class="modal-body">
+                                                                <input type="hidden" name="warrantyId" value="@warranty.WarrantyId" />
+                                                                <p>Xác nhận tiếp nhận yêu cầu bảo hành #@warranty.WarrantyId?</p>
+                                                                <div class="mb-3">
+                                                                    <label class="form-label">Ghi chú (tùy chọn):</label>
+                                                                    <textarea name="notes" class="form-control" rows="3" 
+                                                                              placeholder="Ghi chú về thời gian, địa điểm tiếp nhận xe..."></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                                <button type="submit" class="btn btn-success">Xác nhận</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <!-- Complete Modal -->
+                                        @if (warranty.Status == "DealerConfirmed")
+                                        {
+                                            <div class="modal fade" id="completeModal@(warranty.WarrantyId)" tabindex="-1">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header bg-primary text-white">
+                                                            <h5 class="modal-title">Hoàn thành sửa chữa</h5>
+                                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <form method="post" asp-page-handler="CompleteRepair">
+                                                            <div class="modal-body">
+                                                                <input type="hidden" name="warrantyId" value="@warranty.WarrantyId" />
+                                                                <p>Đánh dấu đã hoàn thành sửa chữa cho yêu cầu #@warranty.WarrantyId?</p>
+                                                                <div class="mb-3">
+                                                                    <label class="form-label">Ghi chú công việc đã làm (tùy chọn):</label>
+                                                                    <textarea name="notes" class="form-control" rows="3" 
+                                                                              placeholder="Chi tiết công việc sửa chữa đã thực hiện..."></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                                <button type="submit" class="btn btn-primary">Hoàn thành</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .timeline {
+        margin-top: 20px;
+        padding-left: 20px;
+    }
+    
+    .timeline-item {
+        position: relative;
+        padding-left: 40px;
+        padding-bottom: 20px;
+        color: #999;
+    }
+    
+    .timeline-item:before {
+        content: "";
+        position: absolute;
+        left: 8px;
+        top: 20px;
+        bottom: -10px;
+        width: 2px;
+        background: #ddd;
+    }
+    
+    .timeline-item:last-child:before {
+        display: none;
+    }
+    
+    .timeline-item i {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 18px;
+    }
+    
+    .timeline-item.completed {
+        color: #28a745;
+    }
+    
+    .timeline-item.completed i {
+        color: #28a745;
+    }
+    
+    .card {
+        border: none;
+        border-radius: 15px;
+    }
+    
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+        padding: 1.5rem;
+    }
+    
+    .table {
+        font-size: 0.95rem;
+    }
+    
+    .btn-group .btn {
+        border-radius: 0;
+    }
+    
+    .btn-group .btn:first-child {
+        border-radius: 0.25rem 0 0 0.25rem;
+    }
+    
+    .btn-group .btn:last-child {
+        border-radius: 0 0.25rem 0.25rem 0;
+    }
+</style>

@@ -55,6 +55,7 @@ builder.Services.AddDbContext<CarSalesDbContext>(options =>
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IWarrantyRepository, WarrantyRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 builder.Services.AddScoped<IDealerRepository, DealerRepository>();
@@ -70,6 +71,7 @@ builder.Services.AddScoped<ISalesService, SalesService>();
 builder.Services.AddScoped<ICustomerRelationshipService, CustomerRelationshipService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 builder.Services.AddScoped<IDealerService, DealerService>();
+builder.Services.AddScoped<IWarrantyService, WarrantyService>();
 
 //add signalR
 builder.Services.AddSignalR();

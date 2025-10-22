@@ -1,0 +1,188 @@
+@page
+@model ASM1.WebMVC.Pages.Customer.MyWarrantiesModel
+@{
+    ViewData["Title"] = "Yêu Cầu Bảo Hành Của Tôi";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-tools"></i> Yêu Cầu Bảo Hành Của Tôi</h1>
+        <a asp-page="/Customer/RequestWarranty" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Yêu Cầu Bảo Hành Mới
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model.Warranties.Any())
+    {
+        <div class="row">
+            @foreach (var warranty in Model.Warranties)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-@(GetStatusColor(warranty.Status)) text-white">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-car"></i> @warranty.VehicleModelName @warranty.VariantVersion
+                                </h5>
+                                <span class="badge bg-light text-dark">@GetStatusText(warranty.Status)</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <strong>Loại bảo hành:</strong><br>
+                                    <span class="badge bg-info">@GetWarrantyTypeText(warranty.WarrantyType)</span>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Ngày yêu cầu:</strong><br>
+                                    @warranty.RequestDate.ToString("dd/MM/yyyy")
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <strong>Lý do:</strong><br>
+                                <p class="text-muted">@warranty.Reason</p>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(warranty.Notes))
+                            {
+                                <div class="mb-3">
+                                    <strong>Ghi chú:</strong><br>
+                                    <p class="text-muted">@warranty.Notes</p>
+                                </div>
+                            }
+
+                            <!-- Timeline -->
+                            <div class="timeline">
+                                <div class="timeline-item @(warranty.RequestDate != null ? "completed" : "")">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Yêu cầu gửi: @warranty.RequestDate.ToString("dd/MM/yyyy HH:mm")</span>
+                                </div>
+                                <div class="timeline-item @(warranty.DealerConfirmedDate != null ? "completed" : "")">
+                                    <i class="fas fa-@(warranty.DealerConfirmedDate != null ? "check-circle" : "circle")"></i>
+                                    <span>Đại lý xác nhận: @(warranty.DealerConfirmedDate?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa xác nhận")</span>
+                                </div>
+                                <div class="timeline-item @(warranty.RepairCompletedDate != null ? "completed" : "")">
+                                    <i class="fas fa-@(warranty.RepairCompletedDate != null ? "check-circle" : "circle")"></i>
+                                    <span>Sửa chữa hoàn thành: @(warranty.RepairCompletedDate?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa hoàn thành")</span>
+                                </div>
+                                <div class="timeline-item @(warranty.CustomerReceivedDate != null ? "completed" : "")">
+                                    <i class="fas fa-@(warranty.CustomerReceivedDate != null ? "check-circle" : "circle")"></i>
+                                    <span>Nhận xe: @(warranty.CustomerReceivedDate?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa nhận")</span>
+                                </div>
+                            </div>
+
+                            @if (warranty.Status == "RepairCompleted")
+                            {
+                                <form method="post" class="mt-3">
+                                    <input type="hidden" name="warrantyId" value="@warranty.WarrantyId" />
+                                    <button type="submit" asp-page-handler="ConfirmReceipt" class="btn btn-success btn-sm w-100"
+                                            onclick="return confirm('Xác nhận đã nhận xe sau bảo hành?')">
+                                        <i class="fas fa-check"></i> Xác Nhận Đã Nhận Xe
+                                    </button>
+                                </form>
+                            }
+
+                            @if (!string.IsNullOrEmpty(warranty.Notes))
+                            {
+                                <div class="mt-3">
+                                    <strong>Ghi chú:</strong>
+                                    <p class="text-muted">@warranty.Notes</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> Bạn chưa có yêu cầu bảo hành nào.
+        </div>
+    }
+</div>
+
+@functions {
+    string GetStatusColor(string status)
+    {
+        return status switch
+        {
+            "Pending" => "warning",
+            "DealerConfirmed" => "info",
+            "ManufacturerReceived" => "primary",
+            "RepairCompleted" => "success",
+            "CustomerReceived" => "secondary",
+            _ => "secondary"
+        };
+    }
+
+    string GetStatusText(string status)
+    {
+        return status switch
+        {
+            "Pending" => "Chờ xác nhận",
+            "DealerConfirmed" => "Đại lý đã xác nhận",
+            "ManufacturerReceived" => "Hãng đang sửa",
+            "RepairCompleted" => "Đã sửa xong",
+            "CustomerReceived" => "Đã nhận xe",
+            _ => status
+        };
+    }
+
+    string GetWarrantyTypeText(string type)
+    {
+        return type switch
+        {
+            "ManufacturerDefect" => "Lỗi do hãng",
+            "PeriodicMaintenance" => "Bảo hành định kỳ",
+            _ => type
+        };
+    }
+}
+
+<style>
+    .timeline {
+        border-left: 2px solid #dee2e6;
+        padding-left: 20px;
+        margin-left: 10px;
+    }
+
+    .timeline-item {
+        position: relative;
+        padding: 10px 0;
+        color: #6c757d;
+    }
+
+    .timeline-item.completed {
+        color: #28a745;
+    }
+
+    .timeline-item i {
+        position: absolute;
+        left: -30px;
+        font-size: 20px;
+        background: white;
+    }
+
+    .timeline-item.completed i {
+        color: #28a745;
+    }
+</style>
