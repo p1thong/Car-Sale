@@ -52,7 +52,7 @@ GO
 
 USE [CarSalesDB];
 GO
-/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 10/22/2025 5:59:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -66,7 +66,7 @@ CREATE TABLE [dbo].[__EFMigrationsHistory](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Customer]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Table [dbo].[Customer]    Script Date: 10/22/2025 5:59:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -84,7 +84,7 @@ CREATE TABLE [dbo].[Customer](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Customer_Temp]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Table [dbo].[Customer_Temp]    Script Date: 10/22/2025 5:59:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -98,7 +98,7 @@ CREATE TABLE [dbo].[Customer_Temp](
 	[birthday] [date] NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Dealer]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Table [dbo].[Dealer]    Script Date: 10/22/2025 5:59:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -116,7 +116,7 @@ CREATE TABLE [dbo].[Dealer](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[DealerContract]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Table [dbo].[DealerContract]    Script Date: 10/22/2025 5:59:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -134,7 +134,7 @@ CREATE TABLE [dbo].[DealerContract](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Feedback]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Table [dbo].[Feedback]    Script Date: 10/22/2025 5:59:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -146,13 +146,14 @@ CREATE TABLE [dbo].[Feedback](
 	[createdAt] [datetime] NULL,
 	[FeedbackDate] [datetime2](7) NULL,
 	[Rating] [int] NULL,
+	[VehicleModelId] [int] NULL,
  CONSTRAINT [PK__Feedback__2613FD24ACBA58F5] PRIMARY KEY CLUSTERED 
 (
 	[feedbackId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Manufacturer]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Table [dbo].[Manufacturer]    Script Date: 10/22/2025 5:59:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -168,7 +169,7 @@ CREATE TABLE [dbo].[Manufacturer](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Order]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Table [dbo].[Order]    Script Date: 10/22/2025 5:59:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -180,13 +181,15 @@ CREATE TABLE [dbo].[Order](
 	[variantId] [int] NOT NULL,
 	[status] [varchar](50) NOT NULL,
 	[orderDate] [date] NULL,
+	[quantity] [int] NOT NULL,
+	[totalPrice] [decimal](12, 2) NULL,
  CONSTRAINT [PK__Order__0809335DA5E72A85] PRIMARY KEY CLUSTERED 
 (
 	[orderId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Payment]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Table [dbo].[Payment]    Script Date: 10/22/2025 5:59:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -205,7 +208,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Promotion]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Table [dbo].[Promotion]    Script Date: 10/22/2025 5:59:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -222,7 +225,7 @@ CREATE TABLE [dbo].[Promotion](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Quotation]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Table [dbo].[Quotation]    Script Date: 10/22/2025 5:59:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -241,7 +244,7 @@ CREATE TABLE [dbo].[Quotation](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[SalesContract]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Table [dbo].[SalesContract]    Script Date: 10/22/2025 5:59:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -260,7 +263,7 @@ CREATE TABLE [dbo].[SalesContract](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[TestDrive]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Table [dbo].[TestDrive]    Script Date: 10/22/2025 5:59:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -278,7 +281,7 @@ CREATE TABLE [dbo].[TestDrive](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[User]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Table [dbo].[User]    Script Date: 10/22/2025 5:59:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -292,13 +295,14 @@ CREATE TABLE [dbo].[User](
 	[role] [varchar](50) NOT NULL,
 	[dealerId] [int] NULL,
 	[manufacturerId] [int] NULL,
+	[Address] [nvarchar](max) NULL,
  CONSTRAINT [PK__User__CB9A1CFF85902E89] PRIMARY KEY CLUSTERED 
 (
 	[userId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[VehicleModel]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Table [dbo].[VehicleModel]    Script Date: 10/22/2025 5:59:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -315,7 +319,7 @@ CREATE TABLE [dbo].[VehicleModel](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[VehicleVariant]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Table [dbo].[VehicleVariant]    Script Date: 10/22/2025 5:59:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -334,6 +338,32 @@ CREATE TABLE [dbo].[VehicleVariant](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+/****** Object:  Table [dbo].[Warranty]    Script Date: 10/22/2025 5:59:53 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Warranty](
+	[WarrantyId] [int] IDENTITY(1,1) NOT NULL,
+	[OrderId] [int] NOT NULL,
+	[CustomerId] [int] NOT NULL,
+	[DealerId] [int] NOT NULL,
+	[ManufacturerId] [int] NULL,
+	[WarrantyType] [nvarchar](50) NOT NULL,
+	[Reason] [nvarchar](500) NOT NULL,
+	[RequestDate] [datetime2](7) NOT NULL,
+	[DealerConfirmedDate] [datetime2](7) NULL,
+	[ManufacturerReceivedDate] [datetime2](7) NULL,
+	[RepairCompletedDate] [datetime2](7) NULL,
+	[CustomerReceivedDate] [datetime2](7) NULL,
+	[Status] [nvarchar](50) NOT NULL,
+	[Notes] [nvarchar](1000) NULL,
+ CONSTRAINT [PK_Warranty] PRIMARY KEY CLUSTERED 
+(
+	[WarrantyId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
 INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20250930130419_InitialCreate', N'8.0.0')
 INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20250930130940_AddImageUrlToVehicleModel', N'8.0.0')
 INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20251002112215_AddQuantityToVehicleVariant', N'8.0.8')
@@ -342,6 +372,9 @@ INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N
 INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20251002180815_UpdateIdentityColumns', N'8.0.0')
 INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20251002184613_EnsureIdentityColumns', N'8.0.0')
 INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20251019040059_FixPaymentIdIdentity', N'8.0.5')
+INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20251021070111_AddQuantityAndTotalPriceToOrder', N'8.0.5')
+INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20251021154300_AddVehicleModelToFeedback', N'8.0.5')
+INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20251022091405_AddWarrantyTable', N'8.0.5')
 GO
 INSERT [dbo].[Customer] ([customerId], [dealerId], [fullName], [email], [phone], [birthday]) VALUES (1, 1, N'Nguyen Van A', N'a@gmail.com', N'0911111111', CAST(N'1990-01-01' AS Date))
 INSERT [dbo].[Customer] ([customerId], [dealerId], [fullName], [email], [phone], [birthday]) VALUES (2, 1, N'Tran Thi B', N'b@gmail.com', N'0911111112', CAST(N'1991-02-02' AS Date))
@@ -395,22 +428,40 @@ INSERT [dbo].[DealerContract] ([dealerContractId], [dealerId], [manufacturerId],
 INSERT [dbo].[DealerContract] ([dealerContractId], [dealerId], [manufacturerId], [targetSales], [creditLimit], [signedDate]) VALUES (9, 9, 9, CAST(90.00 AS Decimal(12, 2)), CAST(900000.00 AS Decimal(12, 2)), CAST(N'2024-01-09' AS Date))
 INSERT [dbo].[DealerContract] ([dealerContractId], [dealerId], [manufacturerId], [targetSales], [creditLimit], [signedDate]) VALUES (10, 10, 10, CAST(130.00 AS Decimal(12, 2)), CAST(1300000.00 AS Decimal(12, 2)), CAST(N'2024-01-10' AS Date))
 GO
-INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating]) VALUES (1, 1, N'Great service!', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-01T00:00:00.0000000' AS DateTime2), 5)
-INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating]) VALUES (2, 2, N'Good experience.', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-02T00:00:00.0000000' AS DateTime2), 4)
-INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating]) VALUES (3, 3, N'Average service.', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-03T00:00:00.0000000' AS DateTime2), 3)
-INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating]) VALUES (4, 4, N'Not satisfied.', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-04T00:00:00.0000000' AS DateTime2), 2)
-INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating]) VALUES (5, 5, N'Excellent staff!', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-05T00:00:00.0000000' AS DateTime2), 5)
-INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating]) VALUES (6, 6, N'Fast delivery.', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-06T00:00:00.0000000' AS DateTime2), 4)
-INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating]) VALUES (7, 7, N'Car was clean.', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-07T00:00:00.0000000' AS DateTime2), 4)
-INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating]) VALUES (8, 8, N'Helpful dealer.', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-08T00:00:00.0000000' AS DateTime2), 5)
-INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating]) VALUES (9, 9, N'Paperwork slow.', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-09T00:00:00.0000000' AS DateTime2), 3)
-INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating]) VALUES (10, 10, N'Great car!', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-10T00:00:00.0000000' AS DateTime2), 5)
-INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating]) VALUES (11, 14, N'ok', CAST(N'2025-10-03T00:33:05.727' AS DateTime), CAST(N'2025-10-03T00:33:05.7266667' AS DateTime2), 3)
-INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating]) VALUES (12, 14, N'ok', CAST(N'2025-10-03T13:13:01.637' AS DateTime), CAST(N'2025-10-03T13:13:01.6366667' AS DateTime2), 5)
-INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating]) VALUES (13, 14, N'xe ok', CAST(N'2025-10-03T14:28:18.123' AS DateTime), CAST(N'2025-10-03T14:28:18.1233333' AS DateTime2), 5)
-INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating]) VALUES (14, 14, N'ok', CAST(N'2025-10-08T14:30:33.880' AS DateTime), CAST(N'2025-10-08T14:30:33.8800000' AS DateTime2), 5)
-INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating]) VALUES (15, 14, N'ok', CAST(N'2025-10-08T14:34:17.837' AS DateTime), CAST(N'2025-10-08T14:34:17.8366667' AS DateTime2), 5)
-INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating]) VALUES (16, 14, N'x?n', CAST(N'2025-10-19T14:36:34.433' AS DateTime), CAST(N'2025-10-19T14:36:34.4333333' AS DateTime2), 5)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (1, 1, N'Great service!', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-01T00:00:00.0000000' AS DateTime2), 5, NULL)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (2, 2, N'Good experience.', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-02T00:00:00.0000000' AS DateTime2), 4, NULL)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (3, 3, N'Average service.', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-03T00:00:00.0000000' AS DateTime2), 3, NULL)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (4, 4, N'Not satisfied.', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-04T00:00:00.0000000' AS DateTime2), 2, NULL)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (5, 5, N'Excellent staff!', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-05T00:00:00.0000000' AS DateTime2), 5, NULL)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (6, 6, N'Fast delivery.', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-06T00:00:00.0000000' AS DateTime2), 4, NULL)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (7, 7, N'Car was clean.', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-07T00:00:00.0000000' AS DateTime2), 4, NULL)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (8, 8, N'Helpful dealer.', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-08T00:00:00.0000000' AS DateTime2), 5, NULL)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (9, 9, N'Paperwork slow.', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-09T00:00:00.0000000' AS DateTime2), 3, NULL)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (10, 10, N'Great car!', CAST(N'2025-10-01T11:05:14.267' AS DateTime), CAST(N'2025-01-10T00:00:00.0000000' AS DateTime2), 5, NULL)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (11, 14, N'ok', CAST(N'2025-10-03T00:33:05.727' AS DateTime), CAST(N'2025-10-03T00:33:05.7266667' AS DateTime2), 3, NULL)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (12, 14, N'ok', CAST(N'2025-10-03T13:13:01.637' AS DateTime), CAST(N'2025-10-03T13:13:01.6366667' AS DateTime2), 5, NULL)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (13, 14, N'xe ok', CAST(N'2025-10-03T14:28:18.123' AS DateTime), CAST(N'2025-10-03T14:28:18.1233333' AS DateTime2), 5, NULL)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (14, 14, N'ok', CAST(N'2025-10-08T14:30:33.880' AS DateTime), CAST(N'2025-10-08T14:30:33.8800000' AS DateTime2), 5, NULL)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (15, 14, N'ok', CAST(N'2025-10-08T14:34:17.837' AS DateTime), CAST(N'2025-10-08T14:34:17.8366667' AS DateTime2), 5, NULL)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (16, 14, N'x?n', CAST(N'2025-10-19T14:36:34.433' AS DateTime), CAST(N'2025-10-19T14:36:34.4333333' AS DateTime2), 5, NULL)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (17, 14, N'good', NULL, CAST(N'2025-10-21T23:50:45.8833333' AS DateTime2), 5, 4)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (18, 14, N'bad', NULL, CAST(N'2025-10-21T23:52:58.0266667' AS DateTime2), 1, 4)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (19, 14, N'ok', NULL, CAST(N'2025-10-21T23:54:20.7066667' AS DateTime2), 4, 4)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (20, 14, N'normal', NULL, CAST(N'2025-10-21T23:55:10.3700000' AS DateTime2), 3, 4)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (21, 14, N'bth', NULL, CAST(N'2025-10-22T00:00:17.3800000' AS DateTime2), 3, 4)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (22, 14, N'ok', NULL, CAST(N'2025-10-22T00:05:52.5700000' AS DateTime2), 3, 4)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (23, 14, N'ok', NULL, CAST(N'2025-10-22T00:06:36.0533333' AS DateTime2), 3, 4)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (24, 14, N'ok', NULL, CAST(N'2025-10-22T00:15:55.6700000' AS DateTime2), 3, 4)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (25, 14, N'ok', NULL, CAST(N'2025-10-22T00:18:26.9633333' AS DateTime2), 3, 4)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (26, 14, N'ok', NULL, CAST(N'2025-10-22T00:23:11.2766667' AS DateTime2), 3, 4)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (27, 14, N'ok', NULL, CAST(N'2025-10-22T00:25:17.6700000' AS DateTime2), 3, 4)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (28, 14, N'ok', NULL, CAST(N'2025-10-22T00:27:28.0700000' AS DateTime2), 3, 4)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (29, 14, N'ok', NULL, CAST(N'2025-10-22T00:31:24.0433333' AS DateTime2), 2, 4)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (30, 14, N'ok', NULL, CAST(N'2025-10-22T00:41:42.1433333' AS DateTime2), 2, 4)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (31, 14, N'ok', NULL, CAST(N'2025-10-22T00:44:10.0533333' AS DateTime2), 3, 4)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (32, 14, N'ok', NULL, CAST(N'2025-10-22T00:45:28.8400000' AS DateTime2), 3, 4)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (33, 14, N'ok', NULL, CAST(N'2025-10-22T00:47:04.3866667' AS DateTime2), 3, 4)
+INSERT [dbo].[Feedback] ([feedbackId], [customerId], [content], [createdAt], [FeedbackDate], [Rating], [VehicleModelId]) VALUES (34, 14, N'ok', NULL, CAST(N'2025-10-22T00:50:05.4933333' AS DateTime2), 3, 4)
 GO
 SET IDENTITY_INSERT [dbo].[Manufacturer] ON 
 
@@ -435,35 +486,61 @@ INSERT [dbo].[Manufacturer] ([manufacturerId], [name], [country], [address]) VAL
 INSERT [dbo].[Manufacturer] ([manufacturerId], [name], [country], [address]) VALUES (26, N'BYD', N'China', N'Shenzhen, Guangdong, China')
 SET IDENTITY_INSERT [dbo].[Manufacturer] OFF
 GO
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (0, 1, 1, 2, N'Pending', CAST(N'2025-10-01' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (1, 1, 1, 1, N'Pending', CAST(N'2025-01-01' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (2, 1, 2, 2, N'Confirmed', CAST(N'2025-01-02' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (3, 2, 3, 3, N'Shipped', CAST(N'2025-01-03' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (4, 2, 4, 4, N'Delivered', CAST(N'2025-01-04' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (5, 3, 5, 5, N'Cancelled', CAST(N'2025-01-05' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (6, 3, 6, 6, N'Pending', CAST(N'2025-01-06' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (7, 4, 7, 7, N'Confirmed', CAST(N'2025-01-07' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (8, 4, 8, 8, N'Shipped', CAST(N'2025-01-08' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (9, 5, 9, 9, N'Delivered', CAST(N'2025-01-09' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (10, 5, 10, 10, N'Pending', CAST(N'2025-01-10' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (11, 1, 1, 1, N'Pending', CAST(N'2025-10-03' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (12, 1, 14, 2, N'Completed', CAST(N'2025-10-03' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (13, 1, 14, 8, N'Completed', CAST(N'2025-10-03' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (14, 1, 14, 4, N'Completed', CAST(N'2025-10-03' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (15, 1, 14, 3, N'Completed', CAST(N'2025-10-03' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (16, 1, 14, 1, N'Completed', CAST(N'2025-10-03' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (17, 1, 14, 2, N'Completed', CAST(N'2025-10-03' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (18, 1, 11, 4, N'Pending', CAST(N'2025-10-10' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (19, 1, 11, 4, N'Pending', CAST(N'2025-10-10' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (20, 1, 14, 1, N'Completed', CAST(N'2025-10-14' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (21, 1, 14, 1, N'Completed', CAST(N'2025-10-17' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (22, 1, 14, 1, N'Completed', CAST(N'2025-10-18' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (23, 1, 14, 1, N'Completed', CAST(N'2025-10-19' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (24, 1, 14, 7, N'Completed', CAST(N'2025-10-19' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (25, 1, 14, 1, N'Completed', CAST(N'2025-10-19' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (26, 1, 14, 1, N'Pending', CAST(N'2025-10-19' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (27, 1, 14, 9, N'Pending', CAST(N'2025-10-19' AS Date))
-INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate]) VALUES (28, 1, 14, 1, N'Pending', CAST(N'2025-10-19' AS Date))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (0, 1, 1, 2, N'Completed', CAST(N'2023-12-22' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (1, 1, 1, 1, N'Completed', CAST(N'2025-07-22' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (2, 1, 2, 2, N'Completed', CAST(N'2024-05-22' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (3, 2, 3, 3, N'Completed', CAST(N'2025-08-22' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (4, 2, 4, 4, N'Completed', CAST(N'2024-10-22' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (5, 3, 5, 5, N'Completed', CAST(N'2024-09-22' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (6, 3, 6, 6, N'Completed', CAST(N'2024-02-22' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (7, 4, 7, 7, N'Completed', CAST(N'2024-10-22' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (8, 4, 8, 8, N'Completed', CAST(N'2024-01-22' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (9, 5, 9, 9, N'Completed', CAST(N'2025-04-22' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (10, 5, 10, 10, N'Completed', CAST(N'2024-04-22' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (11, 1, 1, 1, N'Completed', CAST(N'2024-08-22' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (12, 1, 14, 2, N'Completed', CAST(N'2025-10-03' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (13, 1, 14, 8, N'Completed', CAST(N'2025-10-03' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (14, 1, 14, 4, N'Completed', CAST(N'2025-10-03' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (15, 1, 14, 3, N'Completed', CAST(N'2025-10-03' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (16, 1, 14, 1, N'Completed', CAST(N'2025-10-03' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (17, 1, 14, 2, N'Completed', CAST(N'2025-10-03' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (18, 1, 11, 4, N'Completed', CAST(N'2024-03-22' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (19, 1, 11, 4, N'Completed', CAST(N'2024-04-22' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (20, 1, 14, 1, N'Completed', CAST(N'2025-10-14' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (21, 1, 14, 1, N'Completed', CAST(N'2025-10-17' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (22, 1, 14, 1, N'Completed', CAST(N'2025-10-18' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (23, 1, 14, 1, N'Completed', CAST(N'2025-10-19' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (24, 1, 14, 7, N'Completed', CAST(N'2025-10-19' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (25, 1, 14, 1, N'Completed', CAST(N'2025-10-19' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (26, 1, 14, 1, N'Completed', CAST(N'2024-01-22' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (27, 1, 14, 9, N'Rejected', CAST(N'2025-10-19' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (28, 1, 14, 1, N'Confirmed', CAST(N'2025-10-19' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (29, 1, 14, 5, N'Confirmed', CAST(N'2025-10-19' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (30, 1, 14, 7, N'Completed', CAST(N'2025-10-19' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (31, 1, 14, 7, N'Completed', CAST(N'2025-10-19' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (32, 1, 14, 3, N'Completed', CAST(N'2025-10-19' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (33, 1, 14, 1, N'Rejected', CAST(N'2025-10-19' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (34, 1, 14, 1, N'Cancelled', CAST(N'2025-10-19' AS Date), 1, NULL)
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (35, 1, 14, 1, N'Completed', CAST(N'2025-10-21' AS Date), 3, CAST(90000.00 AS Decimal(12, 2)))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (36, 1, 14, 1, N'Completed', CAST(N'2025-10-21' AS Date), 4, CAST(120000.00 AS Decimal(12, 2)))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (37, 1, 14, 9, N'Completed', CAST(N'2025-10-21' AS Date), 3, CAST(210000.00 AS Decimal(12, 2)))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (38, 1, 14, 7, N'Completed', CAST(N'2025-10-21' AS Date), 1, CAST(55000.00 AS Decimal(12, 2)))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (39, 1, 14, 1, N'Completed', CAST(N'2025-04-22' AS Date), 1, CAST(30000.00 AS Decimal(12, 2)))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (40, 1, 14, 2, N'Completed', CAST(N'2024-10-22' AS Date), 1, CAST(35000.00 AS Decimal(12, 2)))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (41, 1, 14, 3, N'Completed', CAST(N'2024-04-22' AS Date), 1, CAST(20000.00 AS Decimal(12, 2)))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (42, 1, 14, 1, N'Completed', CAST(N'2023-10-22' AS Date), 1, CAST(30000.00 AS Decimal(12, 2)))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (43, 1, 14, 2, N'Completed', CAST(N'2025-07-22' AS Date), 1, CAST(35000.00 AS Decimal(12, 2)))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (44, 1, 14, 3, N'Completed', CAST(N'2025-01-22' AS Date), 1, CAST(20000.00 AS Decimal(12, 2)))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (45, 1, 14, 2, N'Completed', CAST(N'2024-07-22' AS Date), 1, CAST(35000.00 AS Decimal(12, 2)))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (46, 1, 14, 3, N'Completed', CAST(N'2023-07-22' AS Date), 1, CAST(20000.00 AS Decimal(12, 2)))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (47, 1, 14, 2, N'Completed', CAST(N'2023-04-22' AS Date), 1, CAST(35000.00 AS Decimal(12, 2)))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (48, 1, 14, 8, N'Completed', CAST(N'2025-10-22' AS Date), 1, CAST(65000.00 AS Decimal(12, 2)))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (49, 1, 14, 1, N'Completed', CAST(N'2025-02-22' AS Date), 1, CAST(30000.00 AS Decimal(12, 2)))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (50, 1, 14, 2, N'Completed', CAST(N'2024-08-22' AS Date), 1, CAST(35000.00 AS Decimal(12, 2)))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (51, 1, 14, 3, N'Completed', CAST(N'2024-02-22' AS Date), 1, CAST(20000.00 AS Decimal(12, 2)))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (52, 1, 14, 2, N'Completed', CAST(N'2025-05-22' AS Date), 1, CAST(35000.00 AS Decimal(12, 2)))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (53, 1, 14, 7, N'Completed', CAST(N'2024-12-22' AS Date), 1, CAST(55000.00 AS Decimal(12, 2)))
+INSERT [dbo].[Order] ([orderId], [dealerId], [customerId], [variantId], [status], [orderDate], [quantity], [totalPrice]) VALUES (54, 1, 14, 2, N'Completed', CAST(N'2025-10-22' AS Date), 1, CAST(35000.00 AS Decimal(12, 2)))
 GO
 SET IDENTITY_INSERT [dbo].[Payment] ON 
 
@@ -490,6 +567,15 @@ INSERT [dbo].[Payment] ([paymentId], [orderId], [amount], [method], [PaymentMeth
 INSERT [dbo].[Payment] ([paymentId], [orderId], [amount], [method], [PaymentMethod], [paymentDate], [Status]) VALUES (21, 23, CAST(30000.00 AS Decimal(12, 2)), NULL, N'Cash', CAST(N'2025-10-19T11:17:56.9496618' AS DateTime2), N'Completed')
 INSERT [dbo].[Payment] ([paymentId], [orderId], [amount], [method], [PaymentMethod], [paymentDate], [Status]) VALUES (22, 25, CAST(30000.00 AS Decimal(12, 2)), NULL, N'Cash', CAST(N'2025-10-19T11:20:18.8676307' AS DateTime2), N'Received')
 INSERT [dbo].[Payment] ([paymentId], [orderId], [amount], [method], [PaymentMethod], [paymentDate], [Status]) VALUES (23, 22, CAST(30000.00 AS Decimal(12, 2)), NULL, N'Cash', CAST(N'2025-10-19T11:25:08.0833289' AS DateTime2), N'Completed')
+INSERT [dbo].[Payment] ([paymentId], [orderId], [amount], [method], [PaymentMethod], [paymentDate], [Status]) VALUES (24, 32, CAST(20000.00 AS Decimal(12, 2)), NULL, N'Cash', CAST(N'2025-10-19T15:27:49.3781043' AS DateTime2), N'Received')
+INSERT [dbo].[Payment] ([paymentId], [orderId], [amount], [method], [PaymentMethod], [paymentDate], [Status]) VALUES (25, 31, CAST(55000.00 AS Decimal(12, 2)), NULL, N'Cash', CAST(N'2025-10-19T15:35:04.8442325' AS DateTime2), N'Received')
+INSERT [dbo].[Payment] ([paymentId], [orderId], [amount], [method], [PaymentMethod], [paymentDate], [Status]) VALUES (26, 30, CAST(55000.00 AS Decimal(12, 2)), NULL, N'Cash', CAST(N'2025-10-19T15:37:37.5641789' AS DateTime2), N'Completed')
+INSERT [dbo].[Payment] ([paymentId], [orderId], [amount], [method], [PaymentMethod], [paymentDate], [Status]) VALUES (27, 35, CAST(90000.00 AS Decimal(12, 2)), NULL, N'Cash', CAST(N'2025-10-21T14:21:34.6564087' AS DateTime2), N'Received')
+INSERT [dbo].[Payment] ([paymentId], [orderId], [amount], [method], [PaymentMethod], [paymentDate], [Status]) VALUES (28, 36, CAST(120000.00 AS Decimal(12, 2)), NULL, N'Cash', CAST(N'2025-10-21T22:48:16.6422376' AS DateTime2), N'Received')
+INSERT [dbo].[Payment] ([paymentId], [orderId], [amount], [method], [PaymentMethod], [paymentDate], [Status]) VALUES (29, 37, CAST(210000.00 AS Decimal(12, 2)), NULL, N'Cash', CAST(N'2025-10-21T23:40:36.7133107' AS DateTime2), N'Received')
+INSERT [dbo].[Payment] ([paymentId], [orderId], [amount], [method], [PaymentMethod], [paymentDate], [Status]) VALUES (30, 38, CAST(55000.00 AS Decimal(12, 2)), NULL, N'Cash', CAST(N'2025-10-22T16:43:52.0229394' AS DateTime2), N'Completed')
+INSERT [dbo].[Payment] ([paymentId], [orderId], [amount], [method], [PaymentMethod], [paymentDate], [Status]) VALUES (31, 48, CAST(65000.00 AS Decimal(12, 2)), NULL, N'Cash', CAST(N'2025-10-22T17:32:43.8119381' AS DateTime2), N'Received')
+INSERT [dbo].[Payment] ([paymentId], [orderId], [amount], [method], [PaymentMethod], [paymentDate], [Status]) VALUES (32, 54, CAST(35000.00 AS Decimal(12, 2)), NULL, N'Cash', CAST(N'2025-10-22T17:47:00.8812923' AS DateTime2), N'Received')
 SET IDENTITY_INSERT [dbo].[Payment] OFF
 GO
 INSERT [dbo].[Promotion] ([promotionId], [orderId], [discountAmount], [promotionCode], [validUntil]) VALUES (1, 1, CAST(500.00 AS Decimal(12, 2)), N'PROMO500', CAST(N'2025-12-31' AS Date))
@@ -570,16 +656,19 @@ INSERT [dbo].[TestDrive] ([testDriveId], [customerId], [variantId], [scheduledDa
 INSERT [dbo].[TestDrive] ([testDriveId], [customerId], [variantId], [scheduledDate], [status], [ScheduledTime]) VALUES (55, 14, 3, CAST(N'2025-10-11' AS Date), N'Completed', CAST(N'09:00:00' AS Time))
 INSERT [dbo].[TestDrive] ([testDriveId], [customerId], [variantId], [scheduledDate], [status], [ScheduledTime]) VALUES (56, 14, 6, CAST(N'2025-10-20' AS Date), N'Completed', CAST(N'09:00:00' AS Time))
 INSERT [dbo].[TestDrive] ([testDriveId], [customerId], [variantId], [scheduledDate], [status], [ScheduledTime]) VALUES (57, 14, 5, CAST(N'2025-10-20' AS Date), N'Completed', CAST(N'09:00:00' AS Time))
+INSERT [dbo].[TestDrive] ([testDriveId], [customerId], [variantId], [scheduledDate], [status], [ScheduledTime]) VALUES (58, 14, 5, CAST(N'2025-10-22' AS Date), N'Confirmed', CAST(N'09:00:00' AS Time))
+INSERT [dbo].[TestDrive] ([testDriveId], [customerId], [variantId], [scheduledDate], [status], [ScheduledTime]) VALUES (59, 14, 5, CAST(N'2025-10-22' AS Date), N'Cancelled', CAST(N'09:00:00' AS Time))
+INSERT [dbo].[TestDrive] ([testDriveId], [customerId], [variantId], [scheduledDate], [status], [ScheduledTime]) VALUES (60, 14, 9, CAST(N'2025-10-23' AS Date), N'Confirmed', CAST(N'13:00:00' AS Time))
 GO
-INSERT [dbo].[User] ([userId], [fullName], [email], [phone], [password], [role], [dealerId], [manufacturerId]) VALUES (0, N'Pham Nhat Thong', N'phamnhatthong1712@gmail.com', N'0366993031', N'123456', N'customer', NULL, NULL)
-INSERT [dbo].[User] ([userId], [fullName], [email], [phone], [password], [role], [dealerId], [manufacturerId]) VALUES (4, N'Manufacturer Manager 1', N'manu1@carsales.com', N'0933333333', N'manu123', N'Manufacturer', NULL, 1)
-INSERT [dbo].[User] ([userId], [fullName], [email], [phone], [password], [role], [dealerId], [manufacturerId]) VALUES (5, N'Manufacturer Manager 2', N'manu2@carsales.com', N'0934444444', N'manu123', N'Manufacturer', NULL, 2)
-INSERT [dbo].[User] ([userId], [fullName], [email], [phone], [password], [role], [dealerId], [manufacturerId]) VALUES (6, N'Customer User 1', N'cust1@carsales.com', N'0945555555', N'cust123', N'Customer', NULL, NULL)
-INSERT [dbo].[User] ([userId], [fullName], [email], [phone], [password], [role], [dealerId], [manufacturerId]) VALUES (7, N'Customer User 2', N'cust2@carsales.com', N'0946666666', N'cust123', N'Customer', NULL, NULL)
-INSERT [dbo].[User] ([userId], [fullName], [email], [phone], [password], [role], [dealerId], [manufacturerId]) VALUES (8, N'Dealer Manager 3', N'dealeruser3@carsales.com', N'0903333333', N'dealer123', N'Dealer', 3, NULL)
-INSERT [dbo].[User] ([userId], [fullName], [email], [phone], [password], [role], [dealerId], [manufacturerId]) VALUES (9, N'Manufacturer Manager 3', N'manu3@carsales.com', N'0937777777', N'manu123', N'Manufacturer', NULL, 3)
-INSERT [dbo].[User] ([userId], [fullName], [email], [phone], [password], [role], [dealerId], [manufacturerId]) VALUES (10, N'Customer User 3', N'cust3@carsales.com', N'0947777777', N'cust123', N'Customer', NULL, NULL)
-INSERT [dbo].[User] ([userId], [fullName], [email], [phone], [password], [role], [dealerId], [manufacturerId]) VALUES (11, N'Dealer', N'dealer1@carsales.com', N'0123456789', N'dealer123', N'Dealer', 1, NULL)
+INSERT [dbo].[User] ([userId], [fullName], [email], [phone], [password], [role], [dealerId], [manufacturerId], [Address]) VALUES (0, N'Pham Nhat Thong', N'phamnhatthong1712@gmail.com', N'0366993031', N'123456', N'customer', NULL, NULL, NULL)
+INSERT [dbo].[User] ([userId], [fullName], [email], [phone], [password], [role], [dealerId], [manufacturerId], [Address]) VALUES (4, N'Manufacturer Manager 1', N'manu1@carsales.com', N'0933333333', N'manu123', N'Manufacturer', NULL, 1, NULL)
+INSERT [dbo].[User] ([userId], [fullName], [email], [phone], [password], [role], [dealerId], [manufacturerId], [Address]) VALUES (5, N'Manufacturer Manager 2', N'manu2@carsales.com', N'0934444444', N'manu123', N'Manufacturer', NULL, 2, NULL)
+INSERT [dbo].[User] ([userId], [fullName], [email], [phone], [password], [role], [dealerId], [manufacturerId], [Address]) VALUES (6, N'Customer User 1', N'cust1@carsales.com', N'0945555555', N'cust123', N'Customer', NULL, NULL, NULL)
+INSERT [dbo].[User] ([userId], [fullName], [email], [phone], [password], [role], [dealerId], [manufacturerId], [Address]) VALUES (7, N'Customer User 2', N'cust2@carsales.com', N'0946666666', N'cust123', N'Customer', NULL, NULL, NULL)
+INSERT [dbo].[User] ([userId], [fullName], [email], [phone], [password], [role], [dealerId], [manufacturerId], [Address]) VALUES (8, N'Dealer Manager 3', N'dealeruser3@carsales.com', N'0903333333', N'dealer123', N'Dealer', 3, NULL, NULL)
+INSERT [dbo].[User] ([userId], [fullName], [email], [phone], [password], [role], [dealerId], [manufacturerId], [Address]) VALUES (9, N'Manufacturer Manager 3', N'manu3@carsales.com', N'0937777777', N'manu123', N'Manufacturer', NULL, 3, NULL)
+INSERT [dbo].[User] ([userId], [fullName], [email], [phone], [password], [role], [dealerId], [manufacturerId], [Address]) VALUES (10, N'Customer User 3', N'cust3@carsales.com', N'0947777777', N'cust123', N'Customer', NULL, NULL, NULL)
+INSERT [dbo].[User] ([userId], [fullName], [email], [phone], [password], [role], [dealerId], [manufacturerId], [Address]) VALUES (11, N'Dealer', N'dealer1@carsales.com', N'0123456789', N'dealer123', N'Dealer', 1, NULL, NULL)
 GO
 SET IDENTITY_INSERT [dbo].[VehicleModel] ON 
 
@@ -602,130 +691,173 @@ INSERT [dbo].[VehicleModel] ([vehicleModelId], [manufacturerId], [name], [catego
 INSERT [dbo].[VehicleModel] ([vehicleModelId], [manufacturerId], [name], [category], [imageUrl]) VALUES (24, 26, N'Han EV', N'Sedan', N'https://www.byd.com/content/dam/byd/global/vehicles/han/hero/han-hero-desktop.jpg')
 SET IDENTITY_INSERT [dbo].[VehicleModel] OFF
 GO
-INSERT [dbo].[VehicleVariant] ([variantId], [vehicleModelId], [version], [color], [productYear], [price], [Quantity]) VALUES (1, 1, N'2.0G', N'Black', 2024, CAST(30000.00 AS Decimal(12, 2)), 10)
-INSERT [dbo].[VehicleVariant] ([variantId], [vehicleModelId], [version], [color], [productYear], [price], [Quantity]) VALUES (2, 1, N'2.5Q', N'White', 2024, CAST(35000.00 AS Decimal(12, 2)), 10)
+INSERT [dbo].[VehicleVariant] ([variantId], [vehicleModelId], [version], [color], [productYear], [price], [Quantity]) VALUES (1, 1, N'2.0G', N'Black', 2024, CAST(30000.00 AS Decimal(12, 2)), 4)
+INSERT [dbo].[VehicleVariant] ([variantId], [vehicleModelId], [version], [color], [productYear], [price], [Quantity]) VALUES (2, 1, N'2.5Q', N'White', 2024, CAST(35000.00 AS Decimal(12, 2)), 9)
 INSERT [dbo].[VehicleVariant] ([variantId], [vehicleModelId], [version], [color], [productYear], [price], [Quantity]) VALUES (3, 2, N'1.8E', N'Silver', 2024, CAST(20000.00 AS Decimal(12, 2)), 10)
 INSERT [dbo].[VehicleVariant] ([variantId], [vehicleModelId], [version], [color], [productYear], [price], [Quantity]) VALUES (4, 3, N'1.5 Turbo', N'Blue', 2024, CAST(25000.00 AS Decimal(12, 2)), 10)
 INSERT [dbo].[VehicleVariant] ([variantId], [vehicleModelId], [version], [color], [productYear], [price], [Quantity]) VALUES (5, 4, N'2.0 Turbo', N'Red', 2024, CAST(35000.00 AS Decimal(12, 2)), 10)
 INSERT [dbo].[VehicleVariant] ([variantId], [vehicleModelId], [version], [color], [productYear], [price], [Quantity]) VALUES (6, 5, N'Wildtrak', N'Gray', 2024, CAST(40000.00 AS Decimal(12, 2)), 15)
-INSERT [dbo].[VehicleVariant] ([variantId], [vehicleModelId], [version], [color], [productYear], [price], [Quantity]) VALUES (7, 6, N'GT', N'Yellow', 2024, CAST(55000.00 AS Decimal(12, 2)), 15)
-INSERT [dbo].[VehicleVariant] ([variantId], [vehicleModelId], [version], [color], [productYear], [price], [Quantity]) VALUES (8, 7, N'xDrive40i', N'Black', 2024, CAST(65000.00 AS Decimal(12, 2)), 15)
-INSERT [dbo].[VehicleVariant] ([variantId], [vehicleModelId], [version], [color], [productYear], [price], [Quantity]) VALUES (9, 8, N'C300 AMG', N'White', 2024, CAST(70000.00 AS Decimal(12, 2)), 15)
+INSERT [dbo].[VehicleVariant] ([variantId], [vehicleModelId], [version], [color], [productYear], [price], [Quantity]) VALUES (7, 6, N'GT', N'Yellow', 2024, CAST(55000.00 AS Decimal(12, 2)), 14)
+INSERT [dbo].[VehicleVariant] ([variantId], [vehicleModelId], [version], [color], [productYear], [price], [Quantity]) VALUES (8, 7, N'xDrive40i', N'Black', 2024, CAST(65000.00 AS Decimal(12, 2)), 14)
+INSERT [dbo].[VehicleVariant] ([variantId], [vehicleModelId], [version], [color], [productYear], [price], [Quantity]) VALUES (9, 8, N'C300 AMG', N'White', 2024, CAST(70000.00 AS Decimal(12, 2)), 12)
 INSERT [dbo].[VehicleVariant] ([variantId], [vehicleModelId], [version], [color], [productYear], [price], [Quantity]) VALUES (10, 9, N'Standard Range', N'Blue', 2024, CAST(45000.00 AS Decimal(12, 2)), 15)
 GO
-/****** Object:  Index [IX_Customer_dealerId]    Script Date: 10/19/2025 2:55:06 PM ******/
+SET IDENTITY_INSERT [dbo].[Warranty] ON 
+
+INSERT [dbo].[Warranty] ([WarrantyId], [OrderId], [CustomerId], [DealerId], [ManufacturerId], [WarrantyType], [Reason], [RequestDate], [DealerConfirmedDate], [ManufacturerReceivedDate], [RepairCompletedDate], [CustomerReceivedDate], [Status], [Notes]) VALUES (1, 0, 1, 1, NULL, N'ManufacturerDefect', N'Động cơ có tiếng kêu bất thường khi khởi động. Tiếng kêu xuất hiện từ tuần trước và ngày càng to hơn.', CAST(N'2025-10-22T16:58:14.5733333' AS DateTime2), NULL, NULL, NULL, NULL, N'Pending', NULL)
+INSERT [dbo].[Warranty] ([WarrantyId], [OrderId], [CustomerId], [DealerId], [ManufacturerId], [WarrantyType], [Reason], [RequestDate], [DealerConfirmedDate], [ManufacturerReceivedDate], [RepairCompletedDate], [CustomerReceivedDate], [Status], [Notes]) VALUES (2, 35, 14, 1, NULL, N'ManufacturerDefect', N'Động cơ có tiếng kêu bất thường khi khởi động. Tiếng kêu xuất hiện từ tuần trước và ngày càng to hơn.', CAST(N'2025-10-22T17:23:16.5900000' AS DateTime2), NULL, NULL, NULL, NULL, N'Pending', NULL)
+INSERT [dbo].[Warranty] ([WarrantyId], [OrderId], [CustomerId], [DealerId], [ManufacturerId], [WarrantyType], [Reason], [RequestDate], [DealerConfirmedDate], [ManufacturerReceivedDate], [RepairCompletedDate], [CustomerReceivedDate], [Status], [Notes]) VALUES (3, 36, 14, 1, NULL, N'ManufacturerDefect', N'Lỗi cần kiểm tra và sửa chữa trong thời gian bảo hành.', CAST(N'2025-09-18T17:30:24.4533333' AS DateTime2), NULL, NULL, NULL, NULL, N'Pending', NULL)
+INSERT [dbo].[Warranty] ([WarrantyId], [OrderId], [CustomerId], [DealerId], [ManufacturerId], [WarrantyType], [Reason], [RequestDate], [DealerConfirmedDate], [ManufacturerReceivedDate], [RepairCompletedDate], [CustomerReceivedDate], [Status], [Notes]) VALUES (4, 37, 14, 1, NULL, N'ManufacturerDefect', N'Lỗi cần kiểm tra và sửa chữa trong thời gian bảo hành.', CAST(N'2025-09-16T17:30:24.4533333' AS DateTime2), NULL, NULL, NULL, NULL, N'Pending', NULL)
+INSERT [dbo].[Warranty] ([WarrantyId], [OrderId], [CustomerId], [DealerId], [ManufacturerId], [WarrantyType], [Reason], [RequestDate], [DealerConfirmedDate], [ManufacturerReceivedDate], [RepairCompletedDate], [CustomerReceivedDate], [Status], [Notes]) VALUES (5, 38, 14, 1, NULL, N'ElectricalIssue', N'Lỗi cần kiểm tra và sửa chữa trong thời gian bảo hành.', CAST(N'2025-08-30T17:30:24.4533333' AS DateTime2), NULL, NULL, NULL, NULL, N'Pending', NULL)
+INSERT [dbo].[Warranty] ([WarrantyId], [OrderId], [CustomerId], [DealerId], [ManufacturerId], [WarrantyType], [Reason], [RequestDate], [DealerConfirmedDate], [ManufacturerReceivedDate], [RepairCompletedDate], [CustomerReceivedDate], [Status], [Notes]) VALUES (6, 23, 14, 1, NULL, N'MechanicalIssue', N'Lỗi cần kiểm tra và sửa chữa trong thời gian bảo hành.', CAST(N'2025-09-25T17:30:24.4533333' AS DateTime2), NULL, NULL, NULL, NULL, N'Approved', NULL)
+INSERT [dbo].[Warranty] ([WarrantyId], [OrderId], [CustomerId], [DealerId], [ManufacturerId], [WarrantyType], [Reason], [RequestDate], [DealerConfirmedDate], [ManufacturerReceivedDate], [RepairCompletedDate], [CustomerReceivedDate], [Status], [Notes]) VALUES (7, 12, 14, 1, NULL, N'ManufacturerDefect', N'hư', CAST(N'2025-10-22T17:53:27.3063553' AS DateTime2), CAST(N'2025-10-22T17:54:00.4198916' AS DateTime2), NULL, CAST(N'2025-10-22T17:54:14.6890941' AS DateTime2), CAST(N'2025-10-22T17:54:37.4699262' AS DateTime2), N'CustomerReceived', NULL)
+SET IDENTITY_INSERT [dbo].[Warranty] OFF
+GO
+/****** Object:  Index [IX_Customer_dealerId]    Script Date: 10/22/2025 5:59:54 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Customer_dealerId] ON [dbo].[Customer]
 (
 	[dealerId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_DealerContract_dealerId]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Index [IX_DealerContract_dealerId]    Script Date: 10/22/2025 5:59:54 PM ******/
 CREATE NONCLUSTERED INDEX [IX_DealerContract_dealerId] ON [dbo].[DealerContract]
 (
 	[dealerId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_DealerContract_manufacturerId]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Index [IX_DealerContract_manufacturerId]    Script Date: 10/22/2025 5:59:54 PM ******/
 CREATE NONCLUSTERED INDEX [IX_DealerContract_manufacturerId] ON [dbo].[DealerContract]
 (
 	[manufacturerId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Feedback_customerId]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Index [IX_Feedback_customerId]    Script Date: 10/22/2025 5:59:54 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Feedback_customerId] ON [dbo].[Feedback]
 (
 	[customerId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Order_customerId]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Index [IX_Feedback_VehicleModelId]    Script Date: 10/22/2025 5:59:54 PM ******/
+CREATE NONCLUSTERED INDEX [IX_Feedback_VehicleModelId] ON [dbo].[Feedback]
+(
+	[VehicleModelId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX_Order_customerId]    Script Date: 10/22/2025 5:59:54 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Order_customerId] ON [dbo].[Order]
 (
 	[customerId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Order_dealerId]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Index [IX_Order_dealerId]    Script Date: 10/22/2025 5:59:54 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Order_dealerId] ON [dbo].[Order]
 (
 	[dealerId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Order_variantId]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Index [IX_Order_variantId]    Script Date: 10/22/2025 5:59:54 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Order_variantId] ON [dbo].[Order]
 (
 	[variantId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Payment_orderId]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Index [IX_Payment_orderId]    Script Date: 10/22/2025 5:59:54 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Payment_orderId] ON [dbo].[Payment]
 (
 	[orderId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Promotion_orderId]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Index [IX_Promotion_orderId]    Script Date: 10/22/2025 5:59:54 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Promotion_orderId] ON [dbo].[Promotion]
 (
 	[orderId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Quotation_customerId]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Index [IX_Quotation_customerId]    Script Date: 10/22/2025 5:59:54 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Quotation_customerId] ON [dbo].[Quotation]
 (
 	[customerId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Quotation_dealerId]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Index [IX_Quotation_dealerId]    Script Date: 10/22/2025 5:59:54 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Quotation_dealerId] ON [dbo].[Quotation]
 (
 	[dealerId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Quotation_variantId]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Index [IX_Quotation_variantId]    Script Date: 10/22/2025 5:59:54 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Quotation_variantId] ON [dbo].[Quotation]
 (
 	[variantId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_SalesContract_orderId]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Index [IX_SalesContract_orderId]    Script Date: 10/22/2025 5:59:54 PM ******/
 CREATE NONCLUSTERED INDEX [IX_SalesContract_orderId] ON [dbo].[SalesContract]
 (
 	[orderId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_TestDrive_customerId]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Index [IX_TestDrive_customerId]    Script Date: 10/22/2025 5:59:54 PM ******/
 CREATE NONCLUSTERED INDEX [IX_TestDrive_customerId] ON [dbo].[TestDrive]
 (
 	[customerId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_TestDrive_variantId]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Index [IX_TestDrive_variantId]    Script Date: 10/22/2025 5:59:54 PM ******/
 CREATE NONCLUSTERED INDEX [IX_TestDrive_variantId] ON [dbo].[TestDrive]
 (
 	[variantId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_User_dealerId]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Index [IX_User_dealerId]    Script Date: 10/22/2025 5:59:54 PM ******/
 CREATE NONCLUSTERED INDEX [IX_User_dealerId] ON [dbo].[User]
 (
 	[dealerId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_User_manufacturerId]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Index [IX_User_manufacturerId]    Script Date: 10/22/2025 5:59:54 PM ******/
 CREATE NONCLUSTERED INDEX [IX_User_manufacturerId] ON [dbo].[User]
 (
 	[manufacturerId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_VehicleModel_manufacturerId]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Index [IX_VehicleModel_manufacturerId]    Script Date: 10/22/2025 5:59:54 PM ******/
 CREATE NONCLUSTERED INDEX [IX_VehicleModel_manufacturerId] ON [dbo].[VehicleModel]
 (
 	[manufacturerId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_VehicleVariant_vehicleModelId]    Script Date: 10/19/2025 2:55:06 PM ******/
+/****** Object:  Index [IX_VehicleVariant_vehicleModelId]    Script Date: 10/22/2025 5:59:54 PM ******/
 CREATE NONCLUSTERED INDEX [IX_VehicleVariant_vehicleModelId] ON [dbo].[VehicleVariant]
 (
 	[vehicleModelId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX_Warranty_CustomerId]    Script Date: 10/22/2025 5:59:54 PM ******/
+CREATE NONCLUSTERED INDEX [IX_Warranty_CustomerId] ON [dbo].[Warranty]
+(
+	[CustomerId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX_Warranty_DealerId]    Script Date: 10/22/2025 5:59:54 PM ******/
+CREATE NONCLUSTERED INDEX [IX_Warranty_DealerId] ON [dbo].[Warranty]
+(
+	[DealerId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX_Warranty_ManufacturerId]    Script Date: 10/22/2025 5:59:54 PM ******/
+CREATE NONCLUSTERED INDEX [IX_Warranty_ManufacturerId] ON [dbo].[Warranty]
+(
+	[ManufacturerId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX_Warranty_OrderId]    Script Date: 10/22/2025 5:59:54 PM ******/
+CREATE NONCLUSTERED INDEX [IX_Warranty_OrderId] ON [dbo].[Warranty]
+(
+	[OrderId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Order] ADD  DEFAULT ((1)) FOR [quantity]
 GO
 ALTER TABLE [dbo].[VehicleVariant] ADD  DEFAULT ((0)) FOR [Quantity]
 GO
@@ -748,6 +880,11 @@ ALTER TABLE [dbo].[Feedback]  WITH NOCHECK ADD  CONSTRAINT [FK__Feedback__custom
 REFERENCES [dbo].[Customer] ([customerId])
 GO
 ALTER TABLE [dbo].[Feedback] NOCHECK CONSTRAINT [FK__Feedback__custom__02FC7413]
+GO
+ALTER TABLE [dbo].[Feedback]  WITH CHECK ADD  CONSTRAINT [FK_Feedback_VehicleModel_VehicleModelId] FOREIGN KEY([VehicleModelId])
+REFERENCES [dbo].[VehicleModel] ([vehicleModelId])
+GO
+ALTER TABLE [dbo].[Feedback] CHECK CONSTRAINT [FK_Feedback_VehicleModel_VehicleModelId]
 GO
 ALTER TABLE [dbo].[Order]  WITH NOCHECK ADD  CONSTRAINT [FK__Order__customerI__797309D9] FOREIGN KEY([customerId])
 REFERENCES [dbo].[Customer] ([customerId])
@@ -823,6 +960,29 @@ ALTER TABLE [dbo].[VehicleVariant]  WITH NOCHECK ADD  CONSTRAINT [FK__VehicleVa_
 REFERENCES [dbo].[VehicleModel] ([vehicleModelId])
 GO
 ALTER TABLE [dbo].[VehicleVariant] NOCHECK CONSTRAINT [FK__VehicleVa__vehic__75A278F5]
+GO
+ALTER TABLE [dbo].[Warranty]  WITH CHECK ADD  CONSTRAINT [FK_Warranty_Customer_CustomerId] FOREIGN KEY([CustomerId])
+REFERENCES [dbo].[Customer] ([customerId])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[Warranty] CHECK CONSTRAINT [FK_Warranty_Customer_CustomerId]
+GO
+ALTER TABLE [dbo].[Warranty]  WITH CHECK ADD  CONSTRAINT [FK_Warranty_Dealer_DealerId] FOREIGN KEY([DealerId])
+REFERENCES [dbo].[Dealer] ([dealerId])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[Warranty] CHECK CONSTRAINT [FK_Warranty_Dealer_DealerId]
+GO
+ALTER TABLE [dbo].[Warranty]  WITH CHECK ADD  CONSTRAINT [FK_Warranty_Manufacturer_ManufacturerId] FOREIGN KEY([ManufacturerId])
+REFERENCES [dbo].[Manufacturer] ([manufacturerId])
+GO
+ALTER TABLE [dbo].[Warranty] CHECK CONSTRAINT [FK_Warranty_Manufacturer_ManufacturerId]
+GO
+ALTER TABLE [dbo].[Warranty]  WITH CHECK ADD  CONSTRAINT [FK_Warranty_Order_OrderId] FOREIGN KEY([OrderId])
+REFERENCES [dbo].[Order] ([orderId])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[Warranty] CHECK CONSTRAINT [FK_Warranty_Order_OrderId]
 GO
 USE [master]
 GO

@@ -1,0 +1,194 @@
+@page
+@model ASM1.WebMVC.Pages.Customer.RequestWarrantyModel
+@{
+    ViewData["Title"] = "Gửi yêu cầu bảo hành";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-tools"></i> Gửi yêu cầu bảo hành</h4>
+                </div>
+                <div class="card-body">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    @if (!Model.EligibleOrders.Any())
+                    {
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Bạn không có đơn hàng nào đủ điều kiện bảo hành.
+                            <br />
+                            <small>Điều kiện: Đơn hàng đã hoàn thành và còn trong thời hạn bảo hành (3 năm).</small>
+                        </div>
+                        <a asp-page="./MyOrders" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Quay lại đơn hàng
+                        </a>
+                    }
+                    else
+                    {
+                        <form method="post">
+                            <div class="mb-3">
+                                <label asp-for="Warranty.OrderId" class="form-label">Đơn hàng <span class="text-danger">*</span></label>
+                                <select asp-for="Warranty.OrderId" class="form-select" id="orderSelect" required>
+                                    <option value="">-- Chọn đơn hàng cần bảo hành --</option>
+                                    @foreach (var order in Model.EligibleOrders)
+                                    {
+                                        var warrantyExpiry = order.OrderDate?.AddYears(3).ToString("dd/MM/yyyy");
+                                        <option value="@order.OrderId" 
+                                                data-vehicle="@order.ModelName @order.VariantVersion"
+                                                data-orderdate="@order.OrderDate?.ToString("dd/MM/yyyy")"
+                                                data-expiry="@warrantyExpiry">
+                                            Đơn hàng #@order.OrderId - @order.ModelName @order.VariantVersion 
+                                            (Ngày mua: @order.OrderDate?.ToString("dd/MM/yyyy"))
+                                        </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="Warranty.OrderId" class="text-danger"></span>
+                            </div>
+
+                            <div id="orderInfo" class="alert alert-info d-none mb-3">
+                                <strong>Thông tin đơn hàng:</strong><br />
+                                <span id="vehicleInfo"></span><br />
+                                <span id="dateInfo"></span><br />
+                                <span id="expiryInfo"></span>
+                            </div>
+
+							<div class="mb-3">
+								<label asp-for="Warranty.WarrantyType" class="form-label">
+									Loại bảo hành <span class="text-danger">*</span>
+								</label>
+								<select asp-for="Warranty.WarrantyType" class="form-select" id="warrantyType" required>
+									<option value="">-- Chọn loại bảo hành --</option>
+									<option value="ManufacturerDefect">Lỗi do hãng</option>
+									<option value="PeriodicMaintenance">Bảo hành định kỳ</option>
+								</select>
+								<span asp-validation-for="Warranty.WarrantyType" class="text-danger"></span>
+
+								<small class="form-text text-muted mt-1">
+									<strong>Lỗi do hãng:</strong> Áp dụng cho các lỗi kỹ thuật, lỗi sản xuất — ví dụ: động cơ kêu bất thường, hộp số rung, hệ thống điều hòa không hoạt động, phụ tùng lỗi...<br />
+									<strong>Bảo hành định kỳ:</strong> Áp dụng cho các lần bảo dưỡng, kiểm tra định kỳ — ví dụ: thay dầu máy, vệ sinh lọc gió, kiểm tra hệ thống phanh, bảo dưỡng sau 5.000km hoặc 10.000km...
+								</small>
+							</div>
+
+							<div class="mb-3">
+								<label asp-for="Warranty.Reason" class="form-label">
+									Mô tả vấn đề <span class="text-danger">*</span>
+								</label>
+								<textarea asp-for="Warranty.Reason"
+										  id="warrantyReason"
+										  class="form-control"
+										  rows="5"
+										  placeholder="Vui lòng mô tả chi tiết vấn đề của xe..."
+										  required></textarea>
+								<span asp-validation-for="Warranty.Reason" class="text-danger"></span>
+							</div>
+
+                            <div class="alert alert-warning">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>Lưu ý:</strong>
+                                <ul class="mb-0 mt-2">
+                                    <li>Thời gian bảo hành: 3 năm kể từ ngày mua xe</li>
+                                    <li>Đại lý sẽ xác nhận yêu cầu trong vòng 24-48 giờ</li>
+                                    <li>Vui lòng mô tả chi tiết vấn đề để đại lý hỗ trợ tốt hơn</li>
+                                    <li>Sau khi sửa chữa hoàn thành, vui lòng xác nhận đã nhận xe</li>
+                                </ul>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-paper-plane"></i> Gửi yêu cầu bảo hành
+                                </button>
+                                <a asp-page="./MyWarranties" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> Quay lại
+                                </a>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('orderSelect').addEventListener('change', function() {
+            const selected = this.options[this.selectedIndex];
+            const orderInfo = document.getElementById('orderInfo');
+            
+            if (selected.value) {
+                document.getElementById('vehicleInfo').textContent = 'Xe: ' + selected.dataset.vehicle;
+                document.getElementById('dateInfo').textContent = 'Ngày mua: ' + selected.dataset.orderdate;
+                document.getElementById('expiryInfo').textContent = 'Hết hạn bảo hành: ' + selected.dataset.expiry;
+                orderInfo.classList.remove('d-none');
+            } else {
+                orderInfo.classList.add('d-none');
+            }
+        });
+
+				document.addEventListener("DOMContentLoaded", function () {
+			const warrantyType = document.getElementById("warrantyType");
+			const reasonInput = document.getElementById("warrantyReason");
+
+			warrantyType.addEventListener("change", function () {
+				if (this.value === "ManufacturerDefect") {
+					reasonInput.placeholder =
+						"Vui lòng mô tả chi tiết lỗi kỹ thuật hoặc lỗi sản xuất (ví dụ: động cơ kêu to, hệ thống phanh không ăn, điều hòa không mát...)";
+				} else if (this.value === "PeriodicMaintenance") {
+					reasonInput.placeholder =
+						"Vui lòng ghi rõ nội dung cần bảo dưỡng định kỳ (ví dụ: thay dầu sau 5.000km, kiểm tra phanh, vệ sinh lọc gió...)";
+				} else {
+					reasonInput.placeholder =
+						"Vui lòng mô tả chi tiết vấn đề của xe...";
+				}
+			});
+		});
+    </script>
+}
+
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+    }
+    
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+        padding: 1.5rem;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        padding: 0.75rem;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+    
+    .btn-lg {
+        padding: 0.8rem;
+        font-size: 1.1rem;
+        border-radius: 8px;
+    }
+    
+    .alert {
+        border-radius: 8px;
+    }
+</style>
