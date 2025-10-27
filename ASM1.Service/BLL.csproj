@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ASM1.Repository\ASM1.Repository.csproj" />
+    <ProjectReference Include="..\ASM1.Repository\DAL.csproj" />
   </ItemGroup>
 
   <ItemGroup>

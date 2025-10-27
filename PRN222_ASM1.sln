@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASM1.WebMVC", "ASM1.WebMVC\ASM1.WebMVC.csproj", "{C0DD82A6-4C91-4A41-AEFD-1029E29852BA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PresentationLayer", "ASM1.WebMVC\PresentationLayer.csproj", "{C0DD82A6-4C91-4A41-AEFD-1029E29852BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASM1.Repository", "ASM1.Repository\ASM1.Repository.csproj", "{34A7B224-0639-4E73-B361-44988B7A09B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "ASM1.Repository\DAL.csproj", "{34A7B224-0639-4E73-B361-44988B7A09B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASM1.Service", "ASM1.Service\ASM1.Service.csproj", "{4ADD941E-181D-4DEE-ADEF-7E9515E7DDE9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL", "ASM1.Service\BLL.csproj", "{4ADD941E-181D-4DEE-ADEF-7E9515E7DDE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
